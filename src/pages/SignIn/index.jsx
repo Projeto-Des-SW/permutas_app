@@ -23,6 +23,8 @@ import Input from '../../components/input';
 import Button from '../../components/button';
 import Keyboard from '../../components/keyboard';
 
+import logo from '../../../assets/logo.png'
+
 import {
   Container,
   Title,
@@ -62,6 +64,7 @@ const SignIn = () => {
           password: data.password,
         });
       } catch (err) {
+
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
@@ -89,7 +92,7 @@ const SignIn = () => {
           keyboardShouldPersistTaps="handled"
         >
           <Container>
-            {/* <Image source={logo} /> */}
+            <Image source={logo} style={{width: 150, height: 150, borderRadius: 100 }} />
             <View>
               <Title>Faça seu login</Title>
             </View>
@@ -139,7 +142,7 @@ const SignIn = () => {
       </KeyboardAvoidingView>
       <Keyboard>
         <CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
-          <Feather name="log-in" size={20} color="#ff9000" />
+          <Feather name="log-in" size={20} color="#7c60f7" />
           <CreateAccountButtonText> Criar uma conta </CreateAccountButtonText>
         </CreateAccountButton>
       </Keyboard>
@@ -148,3 +151,4 @@ const SignIn = () => {
 };
 
 export default SignIn;
+

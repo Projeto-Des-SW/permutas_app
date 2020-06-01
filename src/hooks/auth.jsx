@@ -17,8 +17,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     async function loadStoragedDate() {
       const [token, user] = await AsyncStorage.multiGet([
-        '@Gobarber:token',
-        '@Gobarber:user',
+        '@Permutas:token',
+        '@Permutas:user',
       ]);
       if (token[1] && user[1]) {
         setData({ token: token[1], user: JSON.parse(user[1]) });
@@ -30,20 +30,21 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const signOut = useCallback(async () => {
-    await AsyncStorage.multiRemove(['@Gobarber:token', '@Gobarber:user']);
+    await AsyncStorage.multiRemove(['@Permutas:token', '@Permutas:user']);
 
     setData({});
   }, []);
 
   const singIn = useCallback(async ({ email, password }) => {
-    const response = await api.post('sessions', {
+    const response = await api.post('session', {
       email,
       password,
     });
+
     const { token, user } = response.data;
     await AsyncStorage.multiSet([
-      ['@Gobarber:token', token],
-      ['@Gobarber:user', JSON.stringify(user)],
+      ['@Permutas:token', token],
+      ['@Permutas:user', JSON.stringify(user)],
     ]);
 
     setData({ token, user });

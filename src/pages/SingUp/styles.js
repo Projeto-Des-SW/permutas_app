@@ -21,9 +21,9 @@ export const BackToSign = styled.TouchableOpacity`
   left: 0;
   bottom: 0;
   right: 0;
-  background: #312e38;
+  background: #fff;
   border-top-width: 1px;
-  border-color: #232129;
+  border-color: #000;
   padding: 16px 0;
 
   justify-content: center;
@@ -32,7 +32,7 @@ export const BackToSign = styled.TouchableOpacity`
 `;
 
 export const BackToSignText = styled.Text`
-  color: #fff;
+  color: #7c60f7;
   font-size: 18px;
   /* font-family: 'RobotoSlab-Regular'; */
   margin-left: 16px;

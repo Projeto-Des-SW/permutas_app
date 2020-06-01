@@ -12,9 +12,9 @@ import Routes from './src/routes';
 const App = () => {
   return (
     <NavigationContainer>
-      <StatusBar barStyle="light-content" backgroundColor="#312e38" />
+      <StatusBar barStyle="light-content" backgroundColor="#7c60f7" />
       <AppProvider>
-        <View style={{ flex: 1, backgroundColor: '#312e38' }}>
+        <View style={{ flex: 1, backgroundColor: '#7c60f7' }}>
           <Routes />
         </View>
       </AppProvider>

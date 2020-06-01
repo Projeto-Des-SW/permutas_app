@@ -59,7 +59,7 @@ const Input = (
       <Icon
         name={icon}
         size={20}
-        color={isFocused || isFilled ? '#ff9000' : '#666360'}
+        color={isFocused || isFilled ? '#f3dc5d' : '#666360'}
       />
       <TextInput
         ref={inputElementRef}

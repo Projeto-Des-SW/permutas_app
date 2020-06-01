@@ -1,0 +1,150 @@
+import React, { useRef, useCallback } from 'react';
+import {
+  Image,
+  ScrollView,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  TextInput,
+  Alert,
+} from 'react-native';
+
+import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import * as Yup from 'yup';
+
+import { Form } from '@unform/mobile';
+
+import { useAuth } from '../../hooks/auth';
+
+import getValidationErrors from '../../utils/getValidationErros';
+
+import Input from '../../components/input';
+import Button from '../../components/button';
+import Keyboard from '../../components/keyboard';
+
+import {
+  Container,
+  Title,
+  ForgotPassword,
+  ForgotPasswordText,
+  CreateAccountButton,
+  CreateAccountButtonText,
+} from './styles';
+
+
+const SignIn = () => {
+  const formRef = useRef(null);
+  const passwordInputRef = useRef(null);
+
+  const navigation = useNavigation();
+
+  const { singIn } = useAuth();
+
+  const handleSignIn = useCallback(
+    async (data) => {
+      try {
+        formRef.current?.setErrors({});
+
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .email('Digite um e-mail válido')
+            .required('E-mail obrigatório'),
+          password: Yup.string().required('Senha obrigatória'),
+        });
+
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        await singIn({
+          email: data.email,
+          password: data.password,
+        });
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+          return;
+        }
+        Alert.alert(
+          'Erro na autenticação',
+          'Ocorreu um erro ao fazer login, cheque as credenciais.',
+        );
+      }
+    },
+    [singIn],
+  );
+
+  return (
+    <>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        enabled
+      >
+        <ScrollView
+          contentContainerStyle={{ flex: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <Container>
+            {/* <Image source={logo} /> */}
+            <View>
+              <Title>Faça seu login</Title>
+            </View>
+            <Form ref={formRef} onSubmit={handleSignIn}>
+              <Input
+                autoCorrect={false}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                name="email"
+                icon="mail"
+                placeholder="E-mail"
+                returnKeyType="next"
+                onSubmitEditing={() => {
+                  passwordInputRef.current?.focus();
+                }}
+              />
+              <Input
+                ref={passwordInputRef}
+                secureTextEntry
+                name="password"
+                icon="lock"
+                placeholder="Senha"
+                returnKeyType="send"
+                onSubmitEditing={() => {
+                  formRef.current?.submitForm();
+                }}
+              />
+
+              <Button
+                onPress={() => {
+                  formRef.current?.submitForm();
+                }}
+              >
+                Entrar
+              </Button>
+            </Form>
+
+            <ForgotPassword
+              onPress={() => {
+                console.log('alo');
+              }}
+            >
+              <ForgotPasswordText>Esqueci minha senha</ForgotPasswordText>
+            </ForgotPassword>
+          </Container>
+        </ScrollView>
+      </KeyboardAvoidingView>
+      <Keyboard>
+        <CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
+          <Feather name="log-in" size={20} color="#ff9000" />
+          <CreateAccountButtonText> Criar uma conta </CreateAccountButtonText>
+        </CreateAccountButton>
+      </Keyboard>
+    </>
+  );
+};
+
+export default SignIn;

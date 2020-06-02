@@ -50,8 +50,18 @@ export const AuthProvider = ({ children }) => {
     setData({ token, user });
   }, []);
 
+  const signUp = useCallback(async (session) => {
+    const { token, user } = session;
+    await AsyncStorage.multiSet([
+      ['@Permutas:token', token],
+      ['@Permutas:user', JSON.stringify(user)],
+    ]);
+
+    setData({ token, user });
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user: data.user, loading, singIn, signOut }}>
+    <AuthContext.Provider value={{ user: data.user, loading, singIn, signOut, signUp }}>
       {children}
     </AuthContext.Provider>
   );

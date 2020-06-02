@@ -32,14 +32,7 @@
       "react/prop-types": "off",
       "react-hooks/exhaustive-deps": "warn",
       "import/prefer-default-export": "off",
-      "import/extensions": [
-        "error",
-        "ignorePackages",
-        {
-          "js": "never",
-          "jsx": "never"
-        }
-      ]
+
     },
     "settings": {
       "import/resolver": {
@@ -47,4 +40,3 @@
       }
     }
   }
-  

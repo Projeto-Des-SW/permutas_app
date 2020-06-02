@@ -4,6 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Dashboard from '../pages/Dashboard';
 import ListInstitutions from '../pages/ListInstitutions'
+import FirstStep from '../pages/ServerRegister/FirstStep';
+import CargoRegister from '../pages/CargoRegister';
 
 const App = createStackNavigator();
 
@@ -16,6 +18,8 @@ const AppRoutes = () => {
       }}
     >
       <App.Screen name="ListInstitutions" component={ListInstitutions} />
+      <App.Screen name="FirstStep" component={FirstStep} />
+      <App.Screen name="CargoRegister" component={CargoRegister} />
       <App.Screen name="Dashboard" component={Dashboard} />
     </App.Navigator>
   );

@@ -30,7 +30,7 @@ import { Container, Title, BackToSign, BackToSignText } from './styles';
 
 
 const SignUp = () => {
-  const navigate = useNavigation();
+  const { navigate } = useNavigation();
 
   const formRef = useRef(null);
 
@@ -57,12 +57,17 @@ const SignUp = () => {
         await schema.validate(data, {
           abortEarly: false,
         });
-        
+
         const response = await api.post('/users', data);
 
         Alert.alert('Cadastro realizado com sucesso!');
 
+        console.log(response.data)
+
         await signUp(response.data.session);
+
+        navigate('FirstStep');
+
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);

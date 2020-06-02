@@ -7,20 +7,22 @@ import {
   Platform,
   Alert,
 } from 'react-native';
-
-import { Container, Title } from './styles';
-import Button from '../../components/button';
-import Input from '../../components/input';
 import { Form } from '@unform/mobile';
-
-import getValidationErrors from '../../utils/getValidationErros';
-import * as Yup from 'yup';
-
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
-import api from '../../services/api';
+import * as Yup from 'yup';
 
-const CargoRegister = () => {
+import Button from '../../components/button';
+import Input from '../../components/input';
+import api from '../../services/api';
+import getValidationErrors from '../../utils/getValidationErros';
+
+import { Container, Title } from './styles';
+
+
+
+const CargoRegister = ({ route }) => {
+  const { institutionId } = route.params;
   const navigation = useNavigation();
 
   const formRef = useRef(null);
@@ -52,12 +54,25 @@ const CargoRegister = () => {
         });
 
         const { id } = response.data;
-        console.log(id);
+        console.log('foi aquiu meu parceiro');
 
-        Alert.alert('Sucesso!', 'Cargo cadastrado.');
+        const governmentEmployee = {
+          position: id,
+          institution: institutionId
+        }
+
+        const employeeResponse = await api.post('/government-employee', governmentEmployee, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        Alert.alert('Sucesso!', 'Servidor cadastrado com sucesso.');
         navigation.navigate('Dashboard');
 
       } catch (error) {
+        console.log(error.response.data)
+
         if (error instanceof Yup.ValidationError) {
           const errors = getValidationErrors(error);
 
@@ -68,7 +83,7 @@ const CargoRegister = () => {
 
         Alert.alert(
           'Ocorreu um problema',
-          error.toString(),
+          error.response.data.message,
         );
       }
     }, []);

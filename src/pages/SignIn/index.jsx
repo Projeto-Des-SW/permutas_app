@@ -63,6 +63,8 @@ const SignIn = () => {
           email: data.email,
           password: data.password,
         });
+
+        navigation.navigate('Dashboard');
       } catch (err) {
 
         if (err instanceof Yup.ValidationError) {

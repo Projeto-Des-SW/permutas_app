@@ -15,6 +15,8 @@ import * as Yup from 'yup';
 
 import { Form } from '@unform/mobile';
 
+import { useAuth } from '../../hooks/auth';
+
 import getValidationErrors from '../../utils/getValidationErros';
 import api from '../../services/api';
 
@@ -35,6 +37,8 @@ const SignUp = () => {
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
 
+  const { signUp } = useAuth();
+
   const handleSignUp = useCallback(
     async (data) => {
       try {
@@ -53,14 +57,12 @@ const SignUp = () => {
         await schema.validate(data, {
           abortEarly: false,
         });
-        await api.post('/users', data);
+        
+        const response = await api.post('/users', data);
 
-        Alert.alert(
-          'Cadastro realizado com sucesso!',
-          'Você já pode fazer login na aplicação.',
-        );
+        Alert.alert('Cadastro realizado com sucesso!');
 
-        navigate.goBack();
+        await signUp(response.data.session);
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -68,6 +70,7 @@ const SignUp = () => {
           formRef.current?.setErrors(errors);
           return;
         }
+        console.log(err.toString());
         Alert.alert(
           'Erro no cadastro',
           ' Ocorreu um erro ao fazer cadastro, tente novamente.',

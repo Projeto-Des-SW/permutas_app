@@ -27,7 +27,7 @@ const FirstStep = () => {
         Authorization: `Bearer ${token}`
       }
     });
-    navigation.navigate('Dashboard');
+    navigation.navigate('CargoRegister');
   }
 
   return (

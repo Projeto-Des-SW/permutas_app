@@ -41,7 +41,7 @@ function HomeTabScreen() {
           },
         })}
         tabBarOptions={{
-          activeTintColor: '#000',
+          activeTintColor: '#7c60f7',
           inactiveTintColor: 'gray',
         }}
       >

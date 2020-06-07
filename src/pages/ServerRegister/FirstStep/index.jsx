@@ -14,20 +14,36 @@ const FirstStep = () => {
   const { signOut, user } = useAuth();
   const navigation = useNavigation();
 
-  const handleVisitor = () => {
-    navigation.navigate('Dashboard');
+  const handleVisitor = async () => {
+    try {
+      user.isGovernmentEmployee = false;
+      const token = await AsyncStorage.getItem('@Permutas:token');
+
+      await api.put('users', user, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      navigation.navigate('Dashboard');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleServer = async () => {
-    user.isGovernmentEmployee = true;
-    const token = await AsyncStorage.getItem('@Permutas:token');
+    try {
+      user.isGovernmentEmployee = true;
+      const token = await AsyncStorage.getItem('@Permutas:token');
 
-    await api.put('users', user , {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    navigation.navigate('ListInstitutions');
+      await api.put('users', user , {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      navigation.navigate('ListInstitutions');
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (

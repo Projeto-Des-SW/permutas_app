@@ -66,7 +66,7 @@ const SignUp = () => {
 
         await signUp(response.data.session);
 
-        navigate('FirstStep');
+        navigate('ListInstitutions');
 
       } catch (err) {
         if (err instanceof Yup.ValidationError) {

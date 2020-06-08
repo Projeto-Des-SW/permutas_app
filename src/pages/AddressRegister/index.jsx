@@ -1,4 +1,5 @@
 import React, { useRef, useCallback } from 'react';
+
 import {
   Image,
   ScrollView,
@@ -8,6 +9,12 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
+
+import { Container, Title, BackToSign, BackToSignText } from './styles';
+
+import Button from '../../components/button';
+import Input from '../../components/input';
+import Keyboard from '../../components/keyboard';
 
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
@@ -20,22 +27,15 @@ import { useAuth } from '../../hooks/auth';
 import getValidationErrors from '../../utils/getValidationErros';
 import api from '../../services/api';
 
-import Input from '../../components/input';
-import Button from '../../components/button';
-import Keyboard from '../../components/keyboard';
+const AddressRegister = ({ route }) => {
+  const { institutionId } = route.params;
 
-// import logo from '../../assets/logo.png';
-
-import { Container, Title, BackToSign, BackToSignText } from './styles';
-
-
-const SignUp = () => {
   const { navigate } = useNavigation();
 
   const formRef = useRef(null);
 
-  const emailInputRef = useRef(null);
-  const passwordInputRef = useRef(null);
+  const cityInputRef = useRef(null);
+  const stateInputRef = useRef(null);
 
   const { signUp } = useAuth();
 
@@ -45,28 +45,29 @@ const SignUp = () => {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          name: Yup.string().required('Nome obrigatório'),
-          email: Yup.string()
-            .email('Digite um e-mail válido')
-            .required('E-mail obrigatório'),
-          password: Yup.string()
-            .required('Senha obrigatória')
-            .min(6, 'Digite pelo menos 6 caracteres'),
+          street: Yup.string().required('Rua obrigatória'),
+          city: Yup.string()
+            .required('Cidade obrigatória'),
+          state: Yup.string()
+            .required('Estado obrigatório'),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
+        
 
-        const response = await api.post('/users', data);
+        //const response = await api.post('/address',data);
 
-        Alert.alert('Cadastro realizado com sucesso!');
+        //console.log(response.data);
+        console.log(data);
 
-        console.log(response.data)
+        //await signUp(response.data.session);
 
-        await signUp(response.data.session);
-
-        navigate('FirstStep');
+        //navigate('FirstStep');
+        navigate('CargoRegister',{
+          institutionId: institutionId
+        });
 
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -97,61 +98,53 @@ const SignUp = () => {
           keyboardShouldPersistTaps="handled"
         >
           <Container>
-            {/* <Image source={logo} /> */}
             <View>
-              <Title>Crie sua conta</Title>
+              <Title>Endereço da instuição</Title>
             </View>
             <Form ref={formRef} onSubmit={handleSignUp}>
               <Input
                 autoCapitalize="words"
-                name="name"
-                icon="user"
-                placeholder="Nome"
+                name="street"
+                placeholder="Rua"
                 returnKeyType="next"
                 onSubmitEditing={() => {
-                  emailInputRef.current?.focus();
+                  cityInputRef.current?.focus();
                 }}
               />
 
               <Input
-                ref={emailInputRef}
-                keyboardType="email-address"
-                autoCorrect={false}
-                autoCapitalize="none"
-                name="email"
-                icon="mail"
-                placeholder="E-mail"
+                ref={cityInputRef}
+                name="city"
+                placeholder="Cidade"
                 returnKeyType="next"
                 onSubmitEditing={() => {
-                  passwordInputRef.current?.focus();
+                  stateInputRef.current?.focus();
                 }}
               />
               <Input
-                ref={passwordInputRef}
-                secureTextEntry
-                name="password"
-                icon="lock"
-                placeholder="Senha"
-                textContentType="newPassword"
+                ref={stateInputRef}
+                name="state"
+                placeholder="Estado"
                 returnKeyType="send"
                 onSubmitEditing={() => formRef.current?.submitForm()}
               />
 
               <Button onPress={() => formRef.current?.submitForm()}>
-                Cadastrar
+                Adicionar
               </Button>
             </Form>
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
       <Keyboard>
-        <BackToSign onPress={() => navigate('SignIn')}>
+        <BackToSign onPress={() => navigate('ListInstitutions')}>
           <Feather name="arrow-left" size={20} color="#7c60f7" />
-          <BackToSignText> Voltar para login </BackToSignText>
+          <BackToSignText> Voltar para seleção da instituição </BackToSignText>
         </BackToSign>
       </Keyboard>
     </>
   );
+
 };
 
-export default SignUp;
+export default AddressRegister;

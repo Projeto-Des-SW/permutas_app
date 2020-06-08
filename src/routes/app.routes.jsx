@@ -7,6 +7,7 @@ import Dashboard from '../pages/Dashboard';
 import ListInstitutions from '../pages/ListInstitutions'
 import FirstStep from '../pages/ServerRegister/FirstStep';
 import CargoRegister from '../pages/CargoRegister';
+import AddressRegister from '../pages/AddressRegister'
 
 const App = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -63,6 +64,7 @@ const AppRoutes = () => {
         <App.Screen name="ListInstitutions" component={ListInstitutions} />
         <App.Screen name="FirstStep" component={FirstStep} />
         <App.Screen name="CargoRegister" component={CargoRegister} />
+        <App.Screen name="AddressRegister" component={AddressRegister} />
       </App.Navigator>
   );
 };

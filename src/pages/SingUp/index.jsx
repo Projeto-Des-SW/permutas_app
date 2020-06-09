@@ -50,7 +50,7 @@ const SignUp = () => {
             .email('Digite um e-mail válido')
             .required('E-mail obrigatório'),
           password: Yup.string()
-            .required('Senha obrigatoria')
+            .required('Senha obrigatória')
             .min(6, 'Digite pelo menos 6 caracteres'),
         });
 

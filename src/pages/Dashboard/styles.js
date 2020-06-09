@@ -18,7 +18,7 @@ export const Title = styled.Text`
 
 export const Card = styled.View`
   width: 100%;
-  height: 100px;
+  height: 80px;
   background-color: #efefef;
   padding: 10px;
   align-items: center;
@@ -36,14 +36,35 @@ export const MatchsList = styled(FlatList)`
 `;
 
 export const MatchCard = styled.View`
+  height: 100px;
   flex-direction: row;
   background-color: #efefef;
   border-radius: 15;
   padding: 12px;
   margin-bottom: 10px;
+  align-items: center;
+`;
+
+export const ContentMatch = styled.View`
+  flex: 1;
+  flex-direction: column;
+  margin-left: 15px;
+`;
+
+export const TitleMatch = styled.Text`
+  font-size: 18px;
+  font-weight: bold;
 `;
 
 export const TextMatch = styled.Text`
-  margin-left: 15px;
   font-size: 16px;
+`;
+
+export const MessageView = styled.View`
+  margin-top: 50px;
+`;
+
+export const MessageText = styled.Text`
+  color: #efefef;
+  font-size: 22px;
 `;

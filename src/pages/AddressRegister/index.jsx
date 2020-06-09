@@ -1,4 +1,5 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useEffect, useState } from 'react';
+import DropDown from '../../components/dropDown'
 
 import {
   Image,
@@ -10,7 +11,7 @@ import {
   Alert,
 } from 'react-native';
 
-import { Container, Title, BackToSign, BackToSignText } from './styles';
+import { Container, Title, BackToSign, BackToSignText, PickerSelectStyles } from './styles';
 
 import Button from '../../components/button';
 import Input from '../../components/input';
@@ -26,6 +27,7 @@ import { useAuth } from '../../hooks/auth';
 
 import getValidationErrors from '../../utils/getValidationErros';
 import api from '../../services/api';
+import apiIbge from '../../services/apiIBGE';
 
 const AddressRegister = ({ route }) => {
   const { institutionId } = route.params;
@@ -36,37 +38,73 @@ const AddressRegister = ({ route }) => {
 
   const cityInputRef = useRef(null);
   const stateInputRef = useRef(null);
-
   const { signUp } = useAuth();
+
+  const [state, setState] = useState([]);
+  const [nomeCidade, setNomeCidade] = useState("");
+  const [cities, setCities] = useState([]);
+  const [uf, setUf] = useState("");
+
+  useEffect(() => {
+    async function getState(){
+      try {
+        const response = await apiIbge.get('/localidades/estados');
+        const stateResponse = response.data
+        setState(stateResponse);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    getState();
+  }, []);
+
+  useEffect(() => {
+    setCities([])
+    setNomeCidade("")
+    getCities()
+  }, [uf]);
+
+  async function getCities() {    
+    const selectedUf = state.find(estado => estado.sigla === uf);
+    
+    if (!selectedUf) {
+      return;
+    }
+    try {
+      const response = await apiIbge.get(`/localidades/estados/${selectedUf.id}/municipios`);
+      const cidades = response.data;
+
+      setCities(cidades);    
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const handleSignUp = useCallback(
     async (data) => {
       try {
         formRef.current?.setErrors({});
+        const address = {
+          neighborhood: data.neighborhood,
+          city: nomeCidade,
+          state: uf
+        };
 
         const schema = Yup.object().shape({
-          street: Yup.string().required('Rua obrigatória'),
+          neighborhood: Yup.string().required('Bairro obrigatório'),
           city: Yup.string()
             .required('Cidade obrigatória'),
           state: Yup.string()
             .required('Estado obrigatório'),
         });
 
-        await schema.validate(data, {
+        await schema.validate(address, {
           abortEarly: false,
-        });
-        
+        });        
 
-        //const response = await api.post('/address',data);
-
-        //console.log(response.data);
-        console.log(data);
-
-        //await signUp(response.data.session);
-
-        //navigate('FirstStep');
         navigate('CargoRegister',{
-          institutionId: institutionId
+          institutionId: institutionId,
+          address: address
         });
 
       } catch (err) {
@@ -101,32 +139,32 @@ const AddressRegister = ({ route }) => {
             <View>
               <Title>Endereço da instuição</Title>
             </View>
-            <Form ref={formRef} onSubmit={handleSignUp}>
-              <Input
+            <Form ref={formRef} onSubmit={handleSignUp}>             
+              <DropDown
+                onChange={(value) => setUf(value)}
+                valores={state.map(estado => {
+                  return { 
+                    label: estado.sigla,
+                    value: estado.sigla
+                  }
+                })}
+                description="Selecione um estado"
+              />
+              <DropDown
+                onChange={(value) => setNomeCidade(value)}
+                valores={cities.map(cidade => {
+                  return { 
+                    label: cidade.nome,
+                    value: cidade.nome
+                  }
+                })}
+                
+                description="Selecione ums cidade"
+              />
+               <Input
                 autoCapitalize="words"
-                name="street"
-                placeholder="Rua"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  cityInputRef.current?.focus();
-                }}
-              />
-
-              <Input
-                ref={cityInputRef}
-                name="city"
-                placeholder="Cidade"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  stateInputRef.current?.focus();
-                }}
-              />
-              <Input
-                ref={stateInputRef}
-                name="state"
-                placeholder="Estado"
-                returnKeyType="send"
-                onSubmitEditing={() => formRef.current?.submitForm()}
+                name="neighborhood"
+                placeholder="Bairro"
               />
 
               <Button onPress={() => formRef.current?.submitForm()}>

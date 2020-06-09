@@ -50,6 +50,7 @@ const AddressRegister = ({ route }) => {
       try {
         const response = await apiIbge.get('/localidades/estados');
         const stateResponse = response.data
+        stateResponse.sort((a, b) => (a.sigla > b.sigla));
         setState(stateResponse);
       } catch (err) {
         console.log(err);
@@ -80,7 +81,7 @@ const AddressRegister = ({ route }) => {
     }
   }
 
-  const handleSignUp = useCallback(
+  const handleSubmit = useCallback(
     async (data) => {
       try {
         formRef.current?.setErrors({});
@@ -100,7 +101,7 @@ const AddressRegister = ({ route }) => {
 
         await schema.validate(address, {
           abortEarly: false,
-        });        
+        });
 
         navigate('CargoRegister',{
           institutionId: institutionId,
@@ -139,7 +140,7 @@ const AddressRegister = ({ route }) => {
             <View>
               <Title>Endereço da instuição</Title>
             </View>
-            <Form ref={formRef} onSubmit={handleSignUp}>             
+            <Form ref={formRef} onSubmit={handleSubmit}>             
               <DropDown
                 onChange={(value) => setUf(value)}
                 valores={state.map(estado => {
@@ -159,7 +160,7 @@ const AddressRegister = ({ route }) => {
                   }
                 })}
                 
-                description="Selecione ums cidade"
+                description="Selecione uma cidade"
               />
                <Input
                 autoCapitalize="words"

@@ -23,7 +23,7 @@ export const Card = styled.View`
   padding: 10px;
   align-items: center;
   justify-content: center;
-  border-radius: 25;
+  border-radius: 25px;
 `;
 
 export const TextCard = styled.Text`
@@ -39,7 +39,7 @@ export const MatchCard = styled.View`
   height: 100px;
   flex-direction: row;
   background-color: #efefef;
-  border-radius: 15;
+  border-radius: 15px;
   padding: 12px;
   margin-bottom: 10px;
   align-items: center;

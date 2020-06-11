@@ -50,7 +50,7 @@ const SignUp = () => {
             .email('Digite um e-mail válido')
             .required('E-mail obrigatório'),
           password: Yup.string()
-            .required('Senha obrigatoria')
+            .required('Senha obrigatória')
             .min(6, 'Digite pelo menos 6 caracteres'),
         });
 
@@ -66,7 +66,7 @@ const SignUp = () => {
 
         await signUp(response.data.session);
 
-        navigate('FirstStep');
+        navigate('ListInstitutions');
 
       } catch (err) {
         if (err instanceof Yup.ValidationError) {

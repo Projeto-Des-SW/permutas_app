@@ -17,9 +17,12 @@ import * as Yup from 'yup';
 import Button from '../../components/button';
 import DialogButton from '../../components/dialogButton'
 import Modal from '../../components/modal'
+import Loading from '../../components/loading'
+
 
 import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErros';
+
 
 import { Container, Title } from './styles';
 
@@ -32,6 +35,8 @@ const CargoRegister = ({ route }) => {
   const [openNameDialog, setOpenNameDialog] = useState(false);
   const [openTitrationDialog, setOpenTitrationDialog] = useState(false);
   const [openQualificationDialog, setOpenQualificationDialog] = useState(false);
+  const [loading, setLoading] = useState(false)
+
 
 
   const formRef = useRef(null);
@@ -41,19 +46,16 @@ const CargoRegister = ({ route }) => {
 
 
   const toggleNameModal = () => {
-    console.log('modal name')
     setOpenQualificationDialog(false);
     setOpenTitrationDialog(false);
     setOpenNameDialog(!openNameDialog);
   };
   const toggleTitrationModal = () => {
-    console.log('modal titulação')
     setOpenQualificationDialog(false);
     setOpenNameDialog(false);
     setOpenTitrationDialog(!openTitrationDialog);
   };
   const toggleQualificationModal = () => {
-    console.log('modal qualification')
     setOpenTitrationDialog(false);
     setOpenNameDialog(false);
     setOpenQualificationDialog(!openQualificationDialog);
@@ -135,6 +137,54 @@ const CargoRegister = ({ route }) => {
       }
     }, []);
 
+
+  const getNameData = useCallback(async(page, name) => {
+    console.log('alo')
+    try {
+      const token = await AsyncStorage.getItem('@Permutas:token')
+      const response = await api.get(`/position/name/?page=${page}&name=${name}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data
+    } catch (err){
+      throw new Error(err)
+    }
+
+  }, [])
+
+  const getQualificationData = useCallback(async(page, name) => {
+    try {
+      const token = await AsyncStorage.getItem('@Permutas:token')
+      const response = await api.get(`/position/qualification/?page=${page}&name=${name}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data
+    } catch (err){
+      throw new Error(err)
+    }
+
+  }, [])
+
+  const getTitrationData = useCallback(async(page, name) => {
+    try {
+      const token = await AsyncStorage.getItem('@Permutas:token')
+      const response = await api.get(`/position/titration/?page=${page}&name=${name}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data
+    } catch (err){
+      throw new Error(err)
+
+    }
+
+  }, [])
+
   return (
     <>
       <KeyboardAvoidingView
@@ -149,31 +199,40 @@ const CargoRegister = ({ route }) => {
           <Container>
             <Modal
               icon="clipboard"
+              getDataFunction={getNameData}
               newPlaceHolder="Adicione o nome do seu cargo"
               isVisible={openNameDialog}
-              data={positions}
+              dataValues={positions}
               setValue={setName}
               value={name}
               togleModal={toggleNameModal}
               inputPlaceHolder="Procure o nome do seu cargo"
+              loading={loading}
+              setLoading={setLoading}
             />
             <Modal
               icon="bookmark"
+              getDataFunction={getTitrationData}
               isVisible={openTitrationDialog}
-              data={positions}
+              dataValues={positions}
               value={titration}
               setValue={setTitration}
               togleModal={toggleTitrationModal}
               inputPlaceHolder="Procure a titulação do seu cargo"
+              loading={loading}
+              setLoading={setLoading}
             />
             <Modal
+              getDataFunction={getQualificationData}
               icon="award"
               isVisible={openQualificationDialog}
-              data={positions}
+              dataValues={positions}
               value={qualification}
               setValue={setQualification}
               togleModal={toggleQualificationModal}
               inputPlaceHolder="Procure a sua formação"
+              loading={loading}
+              setLoading={setLoading}
             />
             <View>
               <Title>Informações do Cargo</Title>
@@ -205,6 +264,7 @@ const CargoRegister = ({ route }) => {
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
+      {loading && ( <Loading/>)}
     </>
   );
 };

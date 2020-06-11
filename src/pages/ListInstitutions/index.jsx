@@ -116,9 +116,9 @@ const ListInstitutions = () => {
 
   const handlerCargoRegister = useCallback((id) => {
     console.log(id)
-    navigation.navigate('CargoRegister', {
-      institutionId: id
-    });
+    // navigation.navigate('CargoRegister', {
+    //   institutionId: id
+    // });
   }, [])
 
   const handlerAddressRegister = useCallback((id) => {

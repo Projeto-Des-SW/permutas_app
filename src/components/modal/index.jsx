@@ -1,10 +1,13 @@
-import React, { useState, useRef, useCallback} from 'react';
-import { View, FlatList, TouchableOpacity, Text } from 'react-native';
+import React, { useState, useRef, useCallback, useEffect} from 'react';
+import { View, FlatList, ActivityIndicator, Text } from 'react-native';
 import Modal from 'react-native-modal';
 import { Feather } from '@expo/vector-icons';
+import { debounce } from 'lodash'
+
 
 import { Form } from '@unform/mobile'
 import Input from '../input'
+import Loading from '../loading'
 
 import {
   ModalView,
@@ -22,22 +25,98 @@ import {
 
 const modal = ({
   isVisible,
-  data,
-  setSearchValue,
   setValue,
   togleModal,
   inputPlaceHolder,
   icon,
   newPlaceHolder,
+  getDataFunction,
+  setLoading,
+  loading
 }) => {
   const newFormRef = useRef(null);
   const searchRef = useRef(null);
   const addNewRef = useRef(null);
 
-
+  const [data, setData] = useState([])
 
   const [newField, setNewField] = useState(false);
   const [newFieldValue, setNewFieldValue] = useState('')
+  const [page, setPage] = useState(1);
+  const [name, setName] = useState('')
+  const [ended, setEnded] = useState(false);
+
+  const handler = useCallback(debounce(getData, 1000), []);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true)
+        const responseData = await getDataFunction(1, name)
+        setPage(page + 1)
+
+        if(responseData.length === 0) {
+          setEnded(true)
+        }
+        console.log(responseData)
+
+        setData(responseData)
+        setLoading(false)
+      } catch (err) {
+        setLoading(false)
+        console.log(err)
+      }
+    }
+    loadData()
+  }, [])
+
+  const loadDataPagination = useCallback(async () => {
+    console.log('load data')
+    if(loading || ended){
+      return;
+    }
+    setLoading(true)
+    try {
+      const responseData = await getDataFunction(page +1 , name)
+      console.log(responseData)
+      console.log(loading, ended)
+      setPage(page + 1)
+
+      if (responseData.length === 0) {
+        setEnded(true)
+        setLoading(false)
+        return;
+      }
+
+      const newData = data.concat(responseData)
+      setData(newData)
+      setLoading(false)
+    } catch (err) {
+      console.log(err)
+      setLoading(false)
+    }
+  } , [])
+
+  async function getData(value) {
+    setEnded(false)
+    setLoading(true)
+    try {
+      setName(value)
+      setPage(1)
+      const responseData = await getDataFunction(1, value)
+
+      if(!responseData && responseData.length < 20) {
+        setEnded(true)
+      }
+      setLoading(false)
+      setData(responseData)
+    } catch(err) {
+      setLoading(false)
+    }
+  }
+
+
+
 
   return (
     <Modal
@@ -65,19 +144,21 @@ const modal = ({
           {!newField && (
           <>
             <SearchInput>
-              <Form >
+              <Form>
                 <Input
                   name="search"
                   icon="search"
                   placeholder={inputPlaceHolder}
                   returnKeyType="send"
-                  onChangeText={(value) => setSearchValue(value)}
+                  onChangeText={handler}
                 />
               </Form>
             </SearchInput>
           <FlatList
             data={data}
-            key={item => item.name}
+            keyExtractor={(item, index) => `${item.name}${index}`}
+            onEndReached={loadDataPagination}
+            onEndReachedThreshold={0.3}
             renderItem={({item}) => (
               <ModalItens onPress={() => {
                 setValue(item.name)

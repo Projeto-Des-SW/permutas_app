@@ -8,11 +8,11 @@ export const Container = styled.View`
   width: 100%;
   height: 60px;
   padding: 0 16px;
-  background: #a5a3e6;
+  background: #fff;
   border-radius: 10px;
   margin-bottom: 8px;
-  border-width: 2px;
-  border-color: #a5a3e6;
+  /* border-width: 2px;
+  border-color: #efefef; */
 
   ${(props) =>
     props.isErrored &&

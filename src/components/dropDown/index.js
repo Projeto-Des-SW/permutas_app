@@ -31,6 +31,7 @@ const pickerText = StyleSheet.create({
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     minWidth: '100%',
+    height: 60,
     fontSize: 16,
     paddingVertical: 12,
     paddingHorizontal: 10,
@@ -43,7 +44,7 @@ const pickerSelectStyles = StyleSheet.create({
   },
   inputAndroid: {
     minWidth: '100%',
-    height: 50,
+    height: 60,
     fontSize: 16,
     paddingHorizontal: 10,
     paddingVertical: 8,

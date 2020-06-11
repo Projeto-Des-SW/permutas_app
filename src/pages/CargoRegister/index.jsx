@@ -29,7 +29,7 @@ import { Container, Title } from './styles';
 
 
 const CargoRegister = ({ route }) => {
-  //const { institutionId } = route.params;
+  const { institutionId, address } = route.params;
   const navigation = useNavigation();
   const [positions, setPositions] = useState([]);
   const [openNameDialog, setOpenNameDialog] = useState(false);
@@ -95,6 +95,8 @@ const CargoRegister = ({ route }) => {
           abortEarly: false,
         });
 
+        console.log(data)
+
         const token = await AsyncStorage.getItem('@Permutas:token');
 
         const response = await api.post('position', data, {
@@ -107,7 +109,8 @@ const CargoRegister = ({ route }) => {
 
         const governmentEmployee = {
           position: id,
-          institution: institutionId
+          institution: institutionId,
+          address
         }
 
         const employeeResponse = await api.post('/government-employee', governmentEmployee, {

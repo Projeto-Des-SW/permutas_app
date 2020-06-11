@@ -32,7 +32,7 @@ import apiIbge from '../../services/apiIBGE';
 const AddressRegister = ({ route }) => {
   const { institutionId } = route.params;
 
-  const { navigate } = useNavigation();
+  const navigation = useNavigation();
 
   const formRef = useRef(null);
 
@@ -83,6 +83,7 @@ const AddressRegister = ({ route }) => {
 
   const handleSubmit = useCallback(
     async (data) => {
+      console.log('alou')
       try {
         formRef.current?.setErrors({});
         const address = {
@@ -93,17 +94,14 @@ const AddressRegister = ({ route }) => {
 
         const schema = Yup.object().shape({
           neighborhood: Yup.string().required('Bairro obrigatório'),
-          city: Yup.string()
-            .required('Cidade obrigatória'),
-          state: Yup.string()
-            .required('Estado obrigatório'),
         });
 
         await schema.validate(address, {
           abortEarly: false,
         });
 
-        navigate('CargoRegister',{
+        console.log('alou de novo')
+        navigation.navigate('CargoRegister',{
           institutionId: institutionId,
           address: address
         });
@@ -122,7 +120,7 @@ const AddressRegister = ({ route }) => {
         );
       }
     },
-    [navigate],
+    [navigation],
   );
 
   return (

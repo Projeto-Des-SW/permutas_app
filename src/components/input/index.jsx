@@ -64,7 +64,7 @@ const Input = (
       <TextInput
         ref={inputElementRef}
         keyboardAppearance="dark"
-        placeholderTextColor="#666360"
+        placeholderTextColor="#9EA0A4"
         defaultValue={defaultValue}
         onFocus={handleInputFocus}
         onBlur={handleBlur}

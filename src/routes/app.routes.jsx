@@ -7,7 +7,8 @@ import Dashboard from '../pages/Dashboard';
 import ListInstitutions from '../pages/ListInstitutions'
 import FirstStep from '../pages/ServerRegister/FirstStep';
 import CargoRegister from '../pages/CargoRegister';
-import AddressRegister from '../pages/AddressRegister'
+import AddressRegister from '../pages/AddressRegister';
+import InterestRegister from '../pages/InterestRegister';
 
 const App = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,10 +31,11 @@ function HomeTabScreen() {
                   color={color}
                 />
               );
-            } else if (route.name === 'Interest') {
+            }
+            else if (route.name === 'Novo Interesse') {
               return (
                 <Ionicons
-                  name={focused ? 'ios-list-box' : 'ios-list'}
+                  name={focused ? 'ios-add-circle' : 'ios-add-circle-outline'}
                   size={size}
                   color={color}
                 />
@@ -47,7 +49,7 @@ function HomeTabScreen() {
         }}
       >
       <Tab.Screen name="Dashboard" component={Dashboard}/>
-      <Tab.Screen name="Interest" component={ListInstitutions} />
+      <Tab.Screen name="Novo Interesse" component={InterestRegister} />
     </Tab.Navigator>
   )
 }
@@ -60,12 +62,11 @@ const AppRoutes = () => {
           cardStyle: { backgroundColor: '#7c60f7' },
         }}
       >
-        <App.Screen name="CargoRegister" component={CargoRegister} />
-
         <App.Screen name="Home" component={HomeTabScreen} />
         <App.Screen name="ListInstitutions" component={ListInstitutions} />
         {/* <App.Screen name="FirstStep" component={FirstStep} /> */}
         <App.Screen name="AddressRegister" component={AddressRegister} />
+        <App.Screen name="CargoRegister" component={CargoRegister} />
       </App.Navigator>
   );
 };

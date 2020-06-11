@@ -38,7 +38,8 @@ const InterestRegister = () => {
   const [institutions, setInstitutions] = useState([]);
   const [city, setCity] = useState("");
   const [uf, setUf] = useState("");
-  const [idInstitution, setIdInstitution] = useState('');
+  const [region, setRegion] = useState("");
+  const [institution, setInstitution] = useState("");
 
   useEffect(() => {
     async function getStates() {
@@ -57,6 +58,7 @@ const InterestRegister = () => {
 
   useEffect(() => {
     setCity('');
+    setCities([]);
     getCities();
   }, [uf]);
 
@@ -89,6 +91,53 @@ const InterestRegister = () => {
     }
   }
 
+  const handleSubmit = async (data) => {
+      try {
+        formRef.current?.setErrors({});
+
+        const interest = {
+          institution: institution,
+          neighborhood: data.neighborhood,
+          city: city,
+          state: uf
+        };
+
+        const schema = Yup.object().shape({
+          institution: Yup.string().required('Instituição obrigatória'),
+          neighborhood: Yup.string().required('Bairro obrigatório'),
+          city: Yup.string()
+            .required('Cidade obrigatória'),
+          state: Yup.string()
+            .required('Estado obrigatório'),
+        });
+
+        await schema.validate(interest, {
+          abortEarly: false,
+        });
+        console.log('-----------------------');
+        console.log(interest);
+
+        const token = await AsyncStorage.getItem('@Permutas:token');
+        const response = await api.post('interest', interest, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        navigate('Dashboard');
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+          return;
+        }
+        Alert.alert(
+          'Erro no cadastro',
+          ' Ocorreu um erro ao fazer cadastro, tente novamente.',
+        );
+      }
+    };
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -101,16 +150,17 @@ const InterestRegister = () => {
       >
         <Container>
           <Title>Cadastro de Interesse</Title>
-          <Form ref={formRef} onSubmit={() => { }}>
+          <Form ref={formRef} onSubmit={handleSubmit}>
             <Subtitle>Informações da instituição:</Subtitle>
             <DropDown
-              onChange={(value) => setIdInstitution(value)}
+              onChange={(value) => setInstitution(value)}
               valores={institutions.map(item => {
                 return {
                   label: item.name,
                   value: item.id
                 }
               })}
+              name="institution"
               description="Selecione uma instituição"
             />
             <Subtitle>Informações do destino:</Subtitle>
@@ -122,6 +172,7 @@ const InterestRegister = () => {
                   value: estado.sigla
                 }
               })}
+              name="state"
               description="Selecione um estado"
             />
             <DropDown
@@ -132,6 +183,7 @@ const InterestRegister = () => {
                   value: cidade.nome
                 }
               })}
+              name="city"
 
               description="Selecione uma cidade"
             />
@@ -143,7 +195,7 @@ const InterestRegister = () => {
 
             <Button onPress={() => formRef.current?.submitForm()}>
               Adicionar
-              </Button>
+            </Button>
           </Form>
         </Container>
       </ScrollView>

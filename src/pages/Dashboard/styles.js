@@ -23,12 +23,12 @@ export const Card = styled.View`
   padding: 10px;
   align-items: center;
   justify-content: center;
-  border-radius: 25;
+  border-radius: 25px;
 `;
 
 export const TextCard = styled.Text`
   font-size: 18px;
-`;  
+`;
 
 export const MatchsList = styled(FlatList)`
   margin-top: 30px;
@@ -38,7 +38,7 @@ export const MatchsList = styled(FlatList)`
 export const MatchCard = styled.View`
   flex-direction: row;
   background-color: #efefef;
-  border-radius: 15;
+  border-radius: 15px;
   padding: 12px;
   margin-bottom: 10px;
 `;

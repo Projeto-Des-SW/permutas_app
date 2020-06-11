@@ -59,10 +59,10 @@ const AppRoutes = () => {
           cardStyle: { backgroundColor: '#7c60f7' },
         }}
       >
+        <App.Screen name="CargoRegister" component={CargoRegister} />
         <App.Screen name="Home" component={HomeTabScreen} />
         <App.Screen name="ListInstitutions" component={ListInstitutions} />
         <App.Screen name="FirstStep" component={FirstStep} />
-        <App.Screen name="CargoRegister" component={CargoRegister} />
       </App.Navigator>
   );
 };

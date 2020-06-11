@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useEffect, useState } from 'react';
 
 import {
   ScrollView,
@@ -6,14 +6,18 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Text
 } from 'react-native';
 import { Form } from '@unform/mobile';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Yup from 'yup';
 
+
 import Button from '../../components/button';
-import Input from '../../components/input';
+import DialogButton from '../../components/dialogButton'
+import Modal from '../../components/modal'
+
 import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErros';
 
@@ -22,18 +26,62 @@ import { Container, Title } from './styles';
 
 
 const CargoRegister = ({ route }) => {
-  const { institutionId } = route.params;
+  //const { institutionId } = route.params;
   const navigation = useNavigation();
+  const [positions, setPositions] = useState([]);
+  const [openNameDialog, setOpenNameDialog] = useState(false);
+  const [openTitrationDialog, setOpenTitrationDialog] = useState(false);
+  const [openQualificationDialog, setOpenQualificationDialog] = useState(false);
+
 
   const formRef = useRef(null);
-  const nameInputRef = useRef(null);
-  const titrationInputRef = useRef(null);
-  const qualificationInputRef = useRef(null);
+  const [name, setName] = useState('');
+  const [titration, setTitration] = useState('');
+  const [qualification, setQualification] = useState('');
 
-  const handleSubmit = useCallback(
-    async (data) => {
+
+  const toggleNameModal = () => {
+    console.log('modal name')
+    setOpenQualificationDialog(false);
+    setOpenTitrationDialog(false);
+    setOpenNameDialog(!openNameDialog);
+  };
+  const toggleTitrationModal = () => {
+    console.log('modal titulação')
+    setOpenQualificationDialog(false);
+    setOpenNameDialog(false);
+    setOpenTitrationDialog(!openTitrationDialog);
+  };
+  const toggleQualificationModal = () => {
+    console.log('modal qualification')
+    setOpenTitrationDialog(false);
+    setOpenNameDialog(false);
+    setOpenQualificationDialog(!openQualificationDialog);
+  };
+
+  useEffect(() => {
+    async function getPositions() {
+      const token = await AsyncStorage.getItem('@Permutas:token');
+
+      const response = await api.get('/position', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      setPositions(response.data)
+    }
+
+    getPositions()
+  }, [])
+
+  const handleSubmit = useCallback(async () => {
       try {
-        formRef.current?.setErrors({});
+        const data = {
+          name: name,
+          titration: titration,
+          qualification: qualification
+        }
 
         const schema = Yup.object().shape({
           name: Yup.string().required('Nome do cargo obrigatório'),
@@ -54,7 +102,6 @@ const CargoRegister = ({ route }) => {
         });
 
         const { id } = response.data;
-        console.log('foi aquiu meu parceiro');
 
         const governmentEmployee = {
           position: id,
@@ -100,38 +147,55 @@ const CargoRegister = ({ route }) => {
           keyboardShouldPersistTaps="handled"
         >
           <Container>
+            <Modal
+              icon="clipboard"
+              newPlaceHolder="Adicione o nome do seu cargo"
+              isVisible={openNameDialog}
+              data={positions}
+              setValue={setName}
+              value={name}
+              togleModal={toggleNameModal}
+              inputPlaceHolder="Procure o nome do seu cargo"
+            />
+            <Modal
+              icon="bookmark"
+              isVisible={openTitrationDialog}
+              data={positions}
+              value={titration}
+              setValue={setTitration}
+              togleModal={toggleTitrationModal}
+              inputPlaceHolder="Procure a titulação do seu cargo"
+            />
+            <Modal
+              icon="award"
+              isVisible={openQualificationDialog}
+              data={positions}
+              value={qualification}
+              setValue={setQualification}
+              togleModal={toggleQualificationModal}
+              inputPlaceHolder="Procure a sua formação"
+            />
             <View>
               <Title>Informações do Cargo</Title>
             </View>
             <Form ref={formRef} onSubmit={handleSubmit}>
-              <Input
-                autoCapitalize="words"
-                name="name"
+              <DialogButton
                 icon="clipboard"
+                value={name}
                 placeholder="Nome"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  nameInputRef.current?.focus();
-                }}
+                onPress={toggleNameModal}
               />
-
-              <Input
-                ref={titrationInputRef}
-                name="titration"
+              <DialogButton
                 icon="bookmark"
+                value={titration}
                 placeholder="Titulação"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  titrationInputRef.current?.focus();
-                }}
+                onPress={toggleTitrationModal}
               />
-              <Input
-                ref={qualificationInputRef}
-                name="qualification"
+              <DialogButton
                 icon="award"
+                value={qualification}
                 placeholder="Formação"
-                returnKeyType="send"
-                onSubmitEditing={() => formRef.current?.submitForm()}
+                onPress={toggleQualificationModal}
               />
 
               <Button onPress={() => formRef.current?.submitForm()}>

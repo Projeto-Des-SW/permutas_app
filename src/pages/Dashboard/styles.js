@@ -28,7 +28,7 @@ export const Card = styled.View`
 
 export const TextCard = styled.Text`
   font-size: 18px;
-`;  
+`;
 
 export const MatchsList = styled(FlatList)`
   margin-top: 30px;

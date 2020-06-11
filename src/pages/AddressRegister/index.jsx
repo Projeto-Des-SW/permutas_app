@@ -32,7 +32,7 @@ import apiIbge from '../../services/apiIBGE';
 const AddressRegister = ({ route }) => {
   const { institutionId } = route.params;
 
-  const { navigate } = useNavigation();
+  const navigation = useNavigation();
 
   const formRef = useRef(null);
 
@@ -65,9 +65,9 @@ const AddressRegister = ({ route }) => {
     getCities()
   }, [uf]);
 
-  async function getCities() {    
+  async function getCities() {
     const selectedUf = state.find(estado => estado.sigla === uf);
-    
+
     if (!selectedUf) {
       return;
     }
@@ -75,7 +75,7 @@ const AddressRegister = ({ route }) => {
       const response = await apiIbge.get(`/localidades/estados/${selectedUf.id}/municipios`);
       const cidades = response.data;
 
-      setCities(cidades);    
+      setCities(cidades);
     } catch (err) {
       console.log(err);
     }
@@ -83,6 +83,7 @@ const AddressRegister = ({ route }) => {
 
   const handleSubmit = useCallback(
     async (data) => {
+      console.log('alou')
       try {
         formRef.current?.setErrors({});
         const address = {
@@ -93,17 +94,14 @@ const AddressRegister = ({ route }) => {
 
         const schema = Yup.object().shape({
           neighborhood: Yup.string().required('Bairro obrigatório'),
-          city: Yup.string()
-            .required('Cidade obrigatória'),
-          state: Yup.string()
-            .required('Estado obrigatório'),
         });
 
         await schema.validate(address, {
           abortEarly: false,
         });
 
-        navigate('CargoRegister',{
+        console.log('alou de novo')
+        navigation.navigate('CargoRegister',{
           institutionId: institutionId,
           address: address
         });
@@ -122,7 +120,7 @@ const AddressRegister = ({ route }) => {
         );
       }
     },
-    [navigate],
+    [navigation],
   );
 
   return (
@@ -140,11 +138,11 @@ const AddressRegister = ({ route }) => {
             <View>
               <Title>Endereço da instuição</Title>
             </View>
-            <Form ref={formRef} onSubmit={handleSubmit}>             
+            <Form ref={formRef} onSubmit={handleSubmit}>
               <DropDown
                 onChange={(value) => setUf(value)}
                 valores={state.map(estado => {
-                  return { 
+                  return {
                     label: estado.sigla,
                     value: estado.sigla
                   }
@@ -154,12 +152,12 @@ const AddressRegister = ({ route }) => {
               <DropDown
                 onChange={(value) => setNomeCidade(value)}
                 valores={cities.map(cidade => {
-                  return { 
+                  return {
                     label: cidade.nome,
                     value: cidade.nome
                   }
                 })}
-                
+
                 description="Selecione uma cidade"
               />
                <Input

@@ -4,7 +4,7 @@ import { Feather } from '@expo/vector-icons';
 
 
 
-export const Container = styled.View`
+export const Container = styled.TouchableOpacity`
   width: 100%;
   height: 60px;
   padding: 0 16px;
@@ -30,11 +30,17 @@ export const Container = styled.View`
   align-items: center;
 `;
 
-export const TextInput = styled.TextInput`
-  flex: 1;
+
+
+export const ButtonText = styled.Text`
+  /* font-family: 'RobotoSlab-Medium'; */
   color: #000;
+  font-size: 18px;
+`;
+export const ButtonPlaceholder = styled.Text`
+  /* font-family: 'RobotoSlab-Medium'; */
+  color: #666360;
   font-size: 16px;
-  /* font-family: 'RobotoSlab-Regular'; */
 `;
 
 export const Icon = styled(Feather)`

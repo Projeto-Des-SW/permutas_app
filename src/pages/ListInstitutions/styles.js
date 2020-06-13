@@ -5,13 +5,13 @@ export const Container = styled.View`
   flex: 1;
   align-items: center;
   /* justify-content: center; */
-  background-color: #fff;
+  background-color: #2d2d39;
   padding: 0 0 ${Platform.OS === 'android' ? 100 : 0}px;
 `;
 
 export const Header = styled.View`
   height: 100px;
-  background-color: #7c60f7;
+  background-color: #1c1d29;
   align-items: center;
   justify-content: center;
   padding: 0 20px;
@@ -32,8 +32,9 @@ export const InstitutionButton = styled.TouchableOpacity`
 `;
 
 export const  InstitutionContainer = styled.View`
-  background: #f3dc5d;
+  background: #e32245;
   border-radius: 30px;
   margin: 8px;
   height: 80px;
 `;
+

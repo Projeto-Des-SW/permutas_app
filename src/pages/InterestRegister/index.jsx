@@ -27,7 +27,7 @@ import { useAuth } from '../../hooks/auth';
 
 const InterestRegister = () => {
   const { user } = useAuth();
-  const { navigate } = useNavigation();
+  const { navigate, goBack } = useNavigation();
 
   const formRef = useRef(null);
   const cityInputRef = useRef(null);
@@ -92,51 +92,54 @@ const InterestRegister = () => {
   }
 
   const handleSubmit = async (data) => {
-      try {
-        formRef.current?.setErrors({});
+    try {
+      formRef.current?.setErrors({});
 
-        const interest = {
-          institution: institution,
-          neighborhood: data.neighborhood,
-          city: city,
-          state: uf
-        };
+      const interest = {
+        institution: institution,
+        neighborhood: data.neighborhood,
+        city: city,
+        state: uf
+      };
 
-        const schema = Yup.object().shape({
-          institution: Yup.string().required('Instituição obrigatória'),
-          neighborhood: Yup.string().required('Bairro obrigatório'),
-          city: Yup.string()
-            .required('Cidade obrigatória'),
-          state: Yup.string()
-            .required('Estado obrigatório'),
-        });
+      const schema = Yup.object().shape({
+        institution: Yup.string().required('Instituição obrigatória'),
+        neighborhood: Yup.string().required('Bairro obrigatório'),
+        city: Yup.string()
+          .required('Cidade obrigatória'),
+        state: Yup.string()
+          .required('Estado obrigatório'),
+      });
 
-        await schema.validate(interest, {
-          abortEarly: false,
-        });
-        console.log('-----------------------');
-        console.log(interest);
+      await schema.validate(interest, {
+        abortEarly: false,
+      });
 
-        const token = await AsyncStorage.getItem('@Permutas:token');
-        const response = await api.post('interest', interest, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        navigate('Dashboard');
-      } catch (err) {
-        if (err instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(err);
-
-          formRef.current?.setErrors(errors);
-          return;
+      const token = await AsyncStorage.getItem('@Permutas:token');
+      const response = await api.post('interest', interest, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-        Alert.alert(
-          'Erro no cadastro',
-          ' Ocorreu um erro ao fazer cadastro, tente novamente.',
-        );
+      })
+      Alert.alert('Sucesso!', 'O interesse foi cadastrado!');
+      navigate('Interesses');
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
+
+        formRef.current?.setErrors(errors);
+        return;
       }
-    };
+      Alert.alert(
+        'Erro no cadastro',
+        ' Ocorreu um erro ao fazer cadastro, tente novamente.',
+      );
+    }
+  };
+
+  const handleCancel = () => {
+    goBack();
+  }
 
   return (
     <KeyboardAvoidingView
@@ -195,6 +198,9 @@ const InterestRegister = () => {
 
             <Button onPress={() => formRef.current?.submitForm()}>
               Adicionar
+            </Button>
+            <Button onPress={handleCancel} style={{ backgroundColor: '#7b7b7b' }}>
+              Cancelar
             </Button>
           </Form>
         </Container>

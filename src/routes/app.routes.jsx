@@ -70,9 +70,9 @@ const AppRoutes = () => {
       >
         <App.Screen name="Home" component={HomeTabScreen} />
         <App.Screen name="ListInstitutions" component={ListInstitutions} />
-        <App.Screen name="InterestRegister" component={InterestRegister} />
         <App.Screen name="AddressRegister" component={AddressRegister} />
         <App.Screen name="CargoRegister" component={CargoRegister} />
+        <App.Screen name="InterestRegister" component={InterestRegister} />
       </App.Navigator>
   );
 };

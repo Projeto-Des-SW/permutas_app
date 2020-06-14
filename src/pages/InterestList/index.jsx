@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
 import AsyncStorage from '@react-native-community/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -25,6 +27,7 @@ import api from '../../services/api.js';
 const Dashboard = () => {
   const { signOut, user } = useAuth();
   const [data, setData] = useState([]);
+  const { navigate } = useNavigation();
 
   useEffect(() => {
     async function loadInterests() {
@@ -43,6 +46,10 @@ const Dashboard = () => {
     }
     loadInterests();
   }, []);
+
+  const handleRegister = () => {
+    navigate('InterestRegister');
+  }
 
   const renderItem = (item) => {
     return (
@@ -87,7 +94,7 @@ const Dashboard = () => {
           </MessageView>
       }
       <View style={{ width: '100%', marginTop: 30 }}>
-        <Button onPress={() => { }}>Novo Interesse</Button>
+        <Button onPress={handleRegister}>Novo Interesse</Button>
       </View>
     </Container>
   );

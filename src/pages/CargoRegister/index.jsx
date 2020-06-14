@@ -29,7 +29,7 @@ import { Container, Title } from './styles';
 
 
 const CargoRegister = ({ route }) => {
-  const { institutionId, address } = route.params;
+  // const { institutionId, address } = route.params;
   const navigation = useNavigation();
   const [positions, setPositions] = useState([]);
   const [openNameDialog, setOpenNameDialog] = useState(false);
@@ -77,40 +77,40 @@ const CargoRegister = ({ route }) => {
     getPositions()
   }, [])
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(async (nome, titulacao, formacao) => {
       try {
         const data = {
-          name: name,
-          titration: titration,
-          qualification: qualification
+          name: nome,
+          titration: titulacao,
+          qualification: formacao
+        }
+        if(!data.name || !data.titration || !data.qualification) {
+          Alert.alert('Erro!', 'Preencha todos os campos.');
+          return;
         }
 
-        const schema = Yup.object().shape({
-          name: Yup.string().required('Nome do cargo obrigatório'),
-          titration: Yup.string().required('Titulação obrigatória'),
-          qualification: Yup.string().required('Formação obrigatória')
-        });
-
-        await schema.validate(data, {
-          abortEarly: false,
-        });
-
-        console.log(data)
 
         const token = await AsyncStorage.getItem('@Permutas:token');
 
-        const response = await api.post('position', data, {
+        const response = await api.post('/position', data, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
 
+
+
         const { id } = response.data;
 
         const governmentEmployee = {
           position: id,
-          institution: institutionId,
-          address
+          institution: '84be6520-b7ff-4c96-ad11-69bf54731dd7',
+          address: {
+            "region": "Nordeste",
+            "state": "Pernambuco",
+            "city": "Garanhuns",
+            "neighborhood": "Santo antonio"
+          }
         }
 
         const employeeResponse = await api.post('/government-employee', governmentEmployee, {
@@ -123,7 +123,7 @@ const CargoRegister = ({ route }) => {
         navigation.navigate('Dashboard');
 
       } catch (error) {
-        console.log(error.response.data)
+        console.log(error.toString())
 
         if (error instanceof Yup.ValidationError) {
           const errors = getValidationErrors(error);
@@ -240,7 +240,7 @@ const CargoRegister = ({ route }) => {
             <View>
               <Title>Informações do Cargo</Title>
             </View>
-            <Form ref={formRef} onSubmit={handleSubmit}>
+            <Form ref={formRef} onSubmit={() => handleSubmit(name, titration, qualification)}>
               <DialogButton
                 icon="clipboard"
                 value={name}

@@ -31,7 +31,6 @@ const Dashboard = () => {
     async function loadMatchs() {
       try {
         const token = await AsyncStorage.getItem('@Permutas:token');
-        console.log(token);
         const response = await api.get('/match', { headers: {
           Authorization: `Bearer ${token}`
         }});
@@ -74,9 +73,6 @@ const Dashboard = () => {
         Bem-Vindo, {user.name}
       </Title>
       <Card>
-        <TextCard>
-          Interesses: {1}
-        </TextCard>
         <TextCard>
           Matchs: {data.length}
         </TextCard>

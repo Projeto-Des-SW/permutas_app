@@ -175,7 +175,7 @@ const AddressRegister = ({ route }) => {
       </KeyboardAvoidingView>
       <Keyboard>
         <BackToSign onPress={() => navigate('ListInstitutions')}>
-          <Feather name="arrow-left" size={20} color="#7c60f7" />
+          <Feather name="arrow-left" size={20} color="#1c1d29" />
           <BackToSignText> Voltar para seleção da instituição </BackToSignText>
         </BackToSign>
       </Keyboard>

@@ -5,7 +5,7 @@ export const Container = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  background-color: #7c60f7;
+  background-color: #1c1d29;
   padding: 0 30px;
   padding: 0 30px ${Platform.OS === 'android' ? 100 : 40}px;
 `;

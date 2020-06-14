@@ -44,11 +44,16 @@ function HomeTabScreen() {
           },
         })}
         tabBarOptions={{
-          activeTintColor: '#7c60f7',
+          activeTintColor: '#e32245',
           inactiveTintColor: 'gray',
+          style: {
+            backgroundColor: '#1c1d29',
+            //borderTopWidth:2,
+            //borderColor: '#000',
+          }, 
         }}
       >
-      <Tab.Screen name="Dashboard" component={Dashboard}/>
+      <Tab.Screen name="Dashboard" component={Dashboard} />
       <Tab.Screen name="Novo Interesse" component={InterestRegister} />
     </Tab.Navigator>
   )
@@ -59,7 +64,7 @@ const AppRoutes = () => {
       <App.Navigator
         screenOptions={{
           headerShown: false,
-          cardStyle: { backgroundColor: '#7c60f7' },
+          cardStyle: { backgroundColor: '#1c1d29' },
         }}
       >
         <App.Screen name="Home" component={HomeTabScreen} />

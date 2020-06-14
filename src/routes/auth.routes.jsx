@@ -12,7 +12,7 @@ const AuthRoutes = () => {
     <Auth.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: '#7c60f7' },
+        cardStyle: { backgroundColor: '#1c1d29' },
       }}
     >
       <Auth.Screen name="SignIn" component={SignIn} />

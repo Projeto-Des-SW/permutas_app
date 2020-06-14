@@ -10,7 +10,7 @@ export const Container = styled.View`
 
 export const Title = styled.Text`
   font-size: 24px;
-  color: #f4ede8;
+  color: #ffffff;
   /* font-family: 'RobotoSlab-Medium'; */
   margin: 40px 0 24px;
 `;
@@ -20,7 +20,7 @@ export const ForgotPassword = styled.TouchableOpacity`
 `;
 
 export const ForgotPasswordText = styled.Text`
-  color: #f4ede8;
+  color: #ffffff;
   font-size: 16px;
   /* font-family: 'RobotoSlab-Regular'; */
 `;
@@ -30,7 +30,7 @@ export const CreateAccountButton = styled.TouchableOpacity`
   left: 0;
   bottom: 0;
   right: 0;
-  background: #fff;
+  background: #1c1d29;
   border-top-width: 1px;
   border-color: #000;
   padding: 16px 0;
@@ -41,7 +41,7 @@ export const CreateAccountButton = styled.TouchableOpacity`
 `;
 
 export const CreateAccountButtonText = styled.Text`
-  color: #7c60f7;
+  color: #ffffff;
   font-size: 18px;
   /* font-family: 'RobotoSlab-Regular'; */
   margin-left: 16px;

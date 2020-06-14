@@ -6,7 +6,7 @@ export const Container = styled.View`
   align-items: center;
   padding: 0 30px;
   padding: 0 30px ${Platform.OS === 'android' ? 100 : 40}px;
-  background-color: #7c60f7;
+  background-color: #1c1d29;
 `;
 
 export const Title = styled.Text`
@@ -19,7 +19,7 @@ export const Title = styled.Text`
 export const Card = styled.View`
   width: 100%;
   height: 80px;
-  background-color: #efefef;
+  background-color: #2d2d39;
   padding: 10px;
   align-items: center;
   justify-content: center;
@@ -28,6 +28,7 @@ export const Card = styled.View`
 
 export const TextCard = styled.Text`
   font-size: 18px;
+  color: #fff;
 `;
 
 export const MatchsList = styled(FlatList)`

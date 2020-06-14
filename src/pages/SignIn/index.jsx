@@ -144,7 +144,7 @@ const SignIn = () => {
       </KeyboardAvoidingView>
       <Keyboard>
         <CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
-          <Feather name="log-in" size={20} color="#7c60f7" />
+          <Feather name="log-in" size={20} color="#ffffff" />
           <CreateAccountButtonText> Criar uma conta </CreateAccountButtonText>
         </CreateAccountButton>
       </Keyboard>

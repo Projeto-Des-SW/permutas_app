@@ -8,7 +8,7 @@ export const Container = styled.TouchableOpacity`
   width: 100%;
   height: 60px;
   padding: 0 16px;
-  background: #fff;
+  background: #2d2d39;
   border-radius: 10px;
   margin-bottom: 8px;
   border-width: 2px;
@@ -34,15 +34,16 @@ export const Container = styled.TouchableOpacity`
 
 export const ButtonText = styled.Text`
   /* font-family: 'RobotoSlab-Medium'; */
-  color: #000;
+  color: #ffffff;
   font-size: 18px;
 `;
 export const ButtonPlaceholder = styled.Text`
   /* font-family: 'RobotoSlab-Medium'; */
-  color: #666360;
+  color: #9c9a9a;
   font-size: 16px;
 `;
 
 export const Icon = styled(Feather)`
   margin-right: 16px;
+  color: #ffffff;
 `;

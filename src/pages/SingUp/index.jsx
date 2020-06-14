@@ -146,7 +146,7 @@ const SignUp = () => {
       </KeyboardAvoidingView>
       <Keyboard>
         <BackToSign onPress={() => navigate('SignIn')}>
-          <Feather name="arrow-left" size={20} color="#7c60f7" />
+          <Feather name="arrow-left" size={20} color="#ffffff" />
           <BackToSignText> Voltar para login </BackToSignText>
         </BackToSign>
       </Keyboard>

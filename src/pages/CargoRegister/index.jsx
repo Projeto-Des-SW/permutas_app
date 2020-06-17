@@ -21,7 +21,7 @@ import Modal from '../../components/modal'
 import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErros';
 
-import { Container, Title } from './styles';
+import { Container, Title, Restrictions } from './styles';
 
 
 
@@ -185,6 +185,9 @@ const CargoRegister = ({ route }) => {
                 placeholder="Nome"
                 onPress={toggleNameModal}
               />
+
+              <Restrictions>Restrições do cargo *</Restrictions>
+
               <DialogButton
                 icon="bookmark"
                 value={titration}

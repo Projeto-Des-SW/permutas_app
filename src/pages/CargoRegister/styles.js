@@ -16,4 +16,9 @@ export const Title = styled.Text`
   margin: 64px 0 24px;
 `;
 
+export const Restrictions = styled.Text`
+  font-size: 20px;
+  padding: 16px 0px;
+  color: #f4ede8;
 
+`;

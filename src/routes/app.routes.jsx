@@ -5,8 +5,11 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Dashboard from '../pages/Dashboard';
 import ListInstitutions from '../pages/ListInstitutions'
-import FirstStep from '../pages/ServerRegister/FirstStep';
+// import FirstStep from '../pages/ServerRegister/FirstStep';
 import CargoRegister from '../pages/CargoRegister';
+import AddressRegister from '../pages/AddressRegister';
+import InterestRegister from '../pages/InterestRegister';
+import InterestList from '../pages/InterestList';
 
 const App = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -29,7 +32,8 @@ function HomeTabScreen() {
                   color={color}
                 />
               );
-            } else if (route.name === 'Interest') {
+            }
+            else if (route.name === 'Interesses') {
               return (
                 <Ionicons
                   name={focused ? 'ios-list-box' : 'ios-list'}
@@ -41,12 +45,17 @@ function HomeTabScreen() {
           },
         })}
         tabBarOptions={{
-          activeTintColor: '#7c60f7',
+          activeTintColor: '#e32245',
           inactiveTintColor: 'gray',
+          style: {
+            backgroundColor: '#1c1d29',
+            //borderTopWidth:2,
+            //borderColor: '#000',
+          }, 
         }}
       >
-      <Tab.Screen name="Dashboard" component={Dashboard}/>
-      <Tab.Screen name="Interest" component={ListInstitutions} />
+      <Tab.Screen name="Dashboard" component={Dashboard} />
+      <Tab.Screen name="Interesses" component={InterestList} />
     </Tab.Navigator>
   )
 }
@@ -56,13 +65,14 @@ const AppRoutes = () => {
       <App.Navigator
         screenOptions={{
           headerShown: false,
-          cardStyle: { backgroundColor: '#7c60f7' },
+          cardStyle: { backgroundColor: '#1c1d29' },
         }}
       >
-        <App.Screen name="CargoRegister" component={CargoRegister} />
         <App.Screen name="Home" component={HomeTabScreen} />
         <App.Screen name="ListInstitutions" component={ListInstitutions} />
-        <App.Screen name="FirstStep" component={FirstStep} />
+        <App.Screen name="AddressRegister" component={AddressRegister} />
+        <App.Screen name="CargoRegister" component={CargoRegister} />
+        <App.Screen name="InterestRegister" component={InterestRegister} />
       </App.Navigator>
   );
 };

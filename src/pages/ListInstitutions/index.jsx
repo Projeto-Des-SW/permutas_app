@@ -32,7 +32,6 @@ const ListInstitutions = () => {
 
   useEffect(() => {
     async function loadInstitutions() {
-      console.log('alo')
       try {
         setLoading(true)
         const token = await AsyncStorage.getItem('@Permutas:token')
@@ -117,15 +116,21 @@ const ListInstitutions = () => {
 
   const handlerCargoRegister = useCallback((id) => {
     console.log(id)
-    navigation.navigate('CargoRegister', {
+    // navigation.navigate('CargoRegister', {
+    //   institutionId: id
+    // });
+  }, [])
+
+  const handlerAddressRegister = useCallback((id) => {
+    navigation.navigate('AddressRegister', {
       institutionId: id
     });
-  }, [])
+  },[])
 
   const renderItem = useCallback(({item}) => {
       return (
         <InstitutionContainer>
-          <InstitutionButton onPress={() => handlerCargoRegister(item.id)}>
+          <InstitutionButton onPress={() => handlerAddressRegister(item.id)}>
             <InstitutionButtonText>
               {item.name}
             </InstitutionButtonText>

@@ -5,32 +5,23 @@ export const Container = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  padding: 0 30px ${Platform.OS === 'android' ? 100 : 0}px;
+  padding: 0 30px;
+  padding: 0 30px ${Platform.OS === 'android' ? 100 : 40}px;
 `;
 
 export const Title = styled.Text`
   font-size: 24px;
-  color: #ffffff;
+  color: #f4ede8;
   /* font-family: 'RobotoSlab-Medium'; */
-  margin: 40px 0 24px;
+  margin: 64px 0 24px;
 `;
 
-export const ForgotPassword = styled.TouchableOpacity`
-  margin-top: 24px;
-`;
-
-export const ForgotPasswordText = styled.Text`
-  color: #ffffff;
-  font-size: 16px;
-  /* font-family: 'RobotoSlab-Regular'; */
-`;
-
-export const CreateAccountButton = styled.TouchableOpacity`
+export const BackToSign = styled.TouchableOpacity`
   position: absolute;
   left: 0;
   bottom: 0;
   right: 0;
-  background: #1c1d29;
+  background: #fff;
   border-top-width: 1px;
   border-color: #000;
   padding: 16px 0;
@@ -40,9 +31,11 @@ export const CreateAccountButton = styled.TouchableOpacity`
   flex-direction: row;
 `;
 
-export const CreateAccountButtonText = styled.Text`
-  color: #ffffff;
+export const BackToSignText = styled.Text`
+  color: #1c1d29;
   font-size: 18px;
   /* font-family: 'RobotoSlab-Regular'; */
   margin-left: 16px;
 `;
+
+

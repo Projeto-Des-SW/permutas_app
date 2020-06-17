@@ -24,6 +24,7 @@ export const Card = styled.View`
   align-items: center;
   justify-content: center;
   border-radius: 25px;
+  margin-top: 64px;
 `;
 
 export const TextCard = styled.Text`
@@ -31,12 +32,12 @@ export const TextCard = styled.Text`
   color: #fff;
 `;
 
-export const MatchsList = styled(FlatList)`
+export const InterestsList = styled(FlatList)`
   margin-top: 30px;
   width: 100%;
 `;
 
-export const MatchCard = styled.View`
+export const InterestCard = styled.View`
   height: 100px;
   flex-direction: row;
   background-color: #efefef;
@@ -46,18 +47,18 @@ export const MatchCard = styled.View`
   align-items: center;
 `;
 
-export const ContentMatch = styled.View`
+export const ContentInterest = styled.View`
   flex: 1;
   flex-direction: column;
   margin-left: 15px;
 `;
 
-export const TitleMatch = styled.Text`
-  font-size: 18px;
+export const TitleInterest = styled.Text`
+  font-size: 16px;
   font-weight: bold;
 `;
 
-export const TextMatch = styled.Text`
+export const TextInterest = styled.Text`
   font-size: 16px;
 `;
 

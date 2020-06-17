@@ -17,6 +17,8 @@ import * as Yup from 'yup';
 import Button from '../../components/button';
 import DialogButton from '../../components/dialogButton'
 import Modal from '../../components/modal'
+import Loading from '../../components/loading'
+
 
 import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErros';
@@ -26,12 +28,14 @@ import { Container, Title, Restrictions } from './styles';
 
 
 const CargoRegister = ({ route }) => {
-  //const { institutionId } = route.params;
+  // const { institutionId, address } = route.params;
   const navigation = useNavigation();
   const [positions, setPositions] = useState([]);
   const [openNameDialog, setOpenNameDialog] = useState(false);
   const [openTitrationDialog, setOpenTitrationDialog] = useState(false);
   const [openQualificationDialog, setOpenQualificationDialog] = useState(false);
+  const [loading, setLoading] = useState(false)
+
 
 
   const formRef = useRef(null);
@@ -41,19 +45,16 @@ const CargoRegister = ({ route }) => {
 
 
   const toggleNameModal = () => {
-    console.log('modal name')
     setOpenQualificationDialog(false);
     setOpenTitrationDialog(false);
     setOpenNameDialog(!openNameDialog);
   };
   const toggleTitrationModal = () => {
-    console.log('modal titulação')
     setOpenQualificationDialog(false);
     setOpenNameDialog(false);
     setOpenTitrationDialog(!openTitrationDialog);
   };
   const toggleQualificationModal = () => {
-    console.log('modal qualification')
     setOpenTitrationDialog(false);
     setOpenNameDialog(false);
     setOpenQualificationDialog(!openQualificationDialog);
@@ -75,37 +76,40 @@ const CargoRegister = ({ route }) => {
     getPositions()
   }, [])
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(async (nome, titulacao, formacao) => {
       try {
         const data = {
-          name: name,
-          titration: titration,
-          qualification: qualification
+          name: nome,
+          titration: titulacao,
+          qualification: formacao
+        }
+        if(!data.name || !data.titration || !data.qualification) {
+          Alert.alert('Erro!', 'Preencha todos os campos.');
+          return;
         }
 
-        const schema = Yup.object().shape({
-          name: Yup.string().required('Nome do cargo obrigatório'),
-          titration: Yup.string().required('Titulação obrigatória'),
-          qualification: Yup.string().required('Formação obrigatória')
-        });
-
-        await schema.validate(data, {
-          abortEarly: false,
-        });
 
         const token = await AsyncStorage.getItem('@Permutas:token');
 
-        const response = await api.post('position', data, {
+        const response = await api.post('/position', data, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
 
+
+
         const { id } = response.data;
 
         const governmentEmployee = {
           position: id,
-          institution: institutionId
+          institution: '84be6520-b7ff-4c96-ad11-69bf54731dd7',
+          address: {
+            "region": "Nordeste",
+            "state": "Pernambuco",
+            "city": "Garanhuns",
+            "neighborhood": "Santo antonio"
+          }
         }
 
         const employeeResponse = await api.post('/government-employee', governmentEmployee, {
@@ -118,7 +122,7 @@ const CargoRegister = ({ route }) => {
         navigation.navigate('Dashboard');
 
       } catch (error) {
-        console.log(error.response.data)
+        console.log(error.toString())
 
         if (error instanceof Yup.ValidationError) {
           const errors = getValidationErrors(error);
@@ -135,6 +139,54 @@ const CargoRegister = ({ route }) => {
       }
     }, []);
 
+
+  const getNameData = useCallback(async(page, name) => {
+    console.log('alo')
+    try {
+      const token = await AsyncStorage.getItem('@Permutas:token')
+      const response = await api.get(`/position/name/?page=${page}&name=${name}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data
+    } catch (err){
+      throw new Error(err)
+    }
+
+  }, [])
+
+  const getQualificationData = useCallback(async(page, name) => {
+    try {
+      const token = await AsyncStorage.getItem('@Permutas:token')
+      const response = await api.get(`/position/qualification/?page=${page}&name=${name}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data
+    } catch (err){
+      throw new Error(err)
+    }
+
+  }, [])
+
+  const getTitrationData = useCallback(async(page, name) => {
+    try {
+      const token = await AsyncStorage.getItem('@Permutas:token')
+      const response = await api.get(`/position/titration/?page=${page}&name=${name}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data
+    } catch (err){
+      throw new Error(err)
+
+    }
+
+  }, [])
+
   return (
     <>
       <KeyboardAvoidingView
@@ -149,36 +201,45 @@ const CargoRegister = ({ route }) => {
           <Container>
             <Modal
               icon="clipboard"
+              getDataFunction={getNameData}
               newPlaceHolder="Adicione o nome do seu cargo"
               isVisible={openNameDialog}
-              data={positions}
+              dataValues={positions}
               setValue={setName}
               value={name}
               togleModal={toggleNameModal}
               inputPlaceHolder="Procure o nome do seu cargo"
+              loading={loading}
+              setLoading={setLoading}
             />
             <Modal
               icon="bookmark"
+              getDataFunction={getTitrationData}
               isVisible={openTitrationDialog}
-              data={positions}
+              dataValues={positions}
               value={titration}
               setValue={setTitration}
               togleModal={toggleTitrationModal}
               inputPlaceHolder="Procure a titulação do seu cargo"
+              loading={loading}
+              setLoading={setLoading}
             />
             <Modal
+              getDataFunction={getQualificationData}
               icon="award"
               isVisible={openQualificationDialog}
-              data={positions}
+              dataValues={positions}
               value={qualification}
               setValue={setQualification}
               togleModal={toggleQualificationModal}
               inputPlaceHolder="Procure a sua formação"
+              loading={loading}
+              setLoading={setLoading}
             />
             <View>
               <Title>Informações do Cargo</Title>
             </View>
-            <Form ref={formRef} onSubmit={handleSubmit}>
+            <Form ref={formRef} onSubmit={() => handleSubmit(name, titration, qualification)}>
               <DialogButton
                 icon="clipboard"
                 value={name}
@@ -208,6 +269,7 @@ const CargoRegister = ({ route }) => {
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
+      {loading && ( <Loading/>)}
     </>
   );
 };

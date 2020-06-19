@@ -10,6 +10,7 @@ import CargoRegister from '../pages/CargoRegister';
 import AddressRegister from '../pages/AddressRegister';
 import InterestRegister from '../pages/InterestRegister';
 import InterestList from '../pages/InterestList';
+import Settings from '../pages/Settings';
 
 const App = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -42,6 +43,19 @@ function HomeTabScreen() {
                 />
               );
             }
+            else if (route.name === 'Configurações') {
+              return (
+                <MaterialCommunityIcons
+                  name={
+                    focused
+                      ? 'settings'
+                      : 'settings-outline'
+                  }
+                  size={size}
+                  color={color}
+                />
+              );
+            }
           },
         })}
         tabBarOptions={{
@@ -56,6 +70,7 @@ function HomeTabScreen() {
       >
       <Tab.Screen name="Dashboard" component={Dashboard} />
       <Tab.Screen name="Interesses" component={InterestList} />
+      <Tab.Screen name="Configurações" component={Settings} />
     </Tab.Navigator>
   )
 }

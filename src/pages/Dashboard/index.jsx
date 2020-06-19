@@ -23,7 +23,7 @@ import api from '../../services/api.js';
 
 
 const Dashboard = () => {
-  const { signOut, user } = useAuth();
+  const { user } = useAuth();
   // const data = ['Match teste', 'Match teste 2', 'Match teste 3', 'Match teste 4'];
   const [data, setData] = useState([]);
 
@@ -69,7 +69,7 @@ const Dashboard = () => {
 
   return (
     <Container>
-      <Title onPress={() => signOut()}>
+      <Title>
         Bem-Vindo, {user.name}
       </Title>
       <Card>

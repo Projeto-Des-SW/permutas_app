@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import AsyncStorage from '@react-native-community/async-storage';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 
 import {
   Container,
@@ -24,9 +24,12 @@ import { useAuth } from '../../hooks/auth';
 import api from '../../services/api.js';
 
 
-const Dashboard = () => {
+const InterestList = () => {
   const { signOut, user } = useAuth();
   const [data, setData] = useState([]);
+
+  const [refresh, setRefresh] = useState(new Date());
+
   const { navigate } = useNavigation();
 
   useEffect(() => {
@@ -39,16 +42,56 @@ const Dashboard = () => {
           }
         });
         setData(response.data);
-
       } catch (error) {
         console.log(error.response.data);
       }
     }
     loadInterests();
-  }, []);
+  }, [refresh]);
 
   const handleRegister = () => {
     navigate('InterestRegister');
+  }
+
+  const handleRemove = (item) => {
+    try {
+      Alert.alert(
+        'Remover',
+        `Tem certeza que quer remover o interesse em: ${item.institution.name}`,
+        [
+          {
+            text: 'Cancelar',
+            onPress: () => { return; },
+            style: 'cancel',
+          },
+          {
+            text: 'Remover',
+            onPress: () => removeInterest(item.id),
+            style: 'destructive'
+          },
+        ],
+        { cancelable: false }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const removeInterest = async (id) => {
+    try {
+      const token = await AsyncStorage.getItem('@Permutas:token');
+
+      const response = await api.delete(`interest/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setRefresh(new Date());
+      Alert.alert('Sucesso', 'O interesse foi removido!');
+    } catch (error) {
+      Alert.alert('Ops', 'Ocorreu um problema ao tentar remover o interesse');
+      console.log(error.response.data);
+    }
   }
 
   const renderItem = (item) => {
@@ -64,9 +107,16 @@ const Dashboard = () => {
               Instituição: {item.institution.name}
             </TitleInterest>
             <TextInterest>
-              Local: -
+              {item.destinationAddress.city + ' - ' + item.destinationAddress.state}
             </TextInterest>
           </ContentInterest>
+          <Feather
+            name={'x'}
+            size={30}
+            style={{ alignSelf: 'flex-start'}}
+            color='red'
+            onPress={() => handleRemove(item)}
+          />
         </InterestCard>
         :
         null
@@ -90,7 +140,7 @@ const Dashboard = () => {
           />
           :
           <MessageView>
-            <MessageText>Você ainda não possui nenhum interesse!</MessageText>
+            <MessageText>Você não possui nenhum interesse!</MessageText>
           </MessageView>
       }
       <View style={{ width: '100%', marginTop: 30 }}>
@@ -100,4 +150,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default InterestList;

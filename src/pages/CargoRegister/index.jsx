@@ -78,6 +78,8 @@ const CargoRegister = ({ route }) => {
 
   const handleSubmit = useCallback(async (nome, titulacao, formacao) => {
       try {
+        setLoading(true)
+
         const data = {
           name: nome,
           titration: titulacao,
@@ -85,10 +87,9 @@ const CargoRegister = ({ route }) => {
         }
         if(!data.name || !data.titration || !data.qualification) {
           Alert.alert('Erro!', 'Preencha todos os campos.');
+          setLoading(false)
           return;
         }
-
-
         const token = await AsyncStorage.getItem('@Permutas:token');
 
         const response = await api.post('/position', data, {
@@ -96,9 +97,6 @@ const CargoRegister = ({ route }) => {
             Authorization: `Bearer ${token}`
           }
         });
-
-
-
         const { id } = response.data;
 
         const governmentEmployee = {
@@ -117,13 +115,12 @@ const CargoRegister = ({ route }) => {
             Authorization: `Bearer ${token}`
           }
         });
-
+        setLoading(false)
         Alert.alert('Sucesso!', 'Servidor cadastrado com sucesso.');
         navigation.navigate('Dashboard');
 
       } catch (error) {
-        console.log(error.toString())
-
+        setLoading(false)
         if (error instanceof Yup.ValidationError) {
           const errors = getValidationErrors(error);
 
@@ -141,7 +138,7 @@ const CargoRegister = ({ route }) => {
 
 
   const getNameData = useCallback(async(page, name) => {
-    console.log('alo')
+    setLoading(true)
     try {
       const token = await AsyncStorage.getItem('@Permutas:token')
       const response = await api.get(`/position/name/?page=${page}&name=${name}`, {
@@ -149,8 +146,11 @@ const CargoRegister = ({ route }) => {
           Authorization: `Bearer ${token}`
         }
       });
+      setLoading(false)
       return response.data
     } catch (err){
+      setLoading(false)
+
       throw new Error(err)
     }
 
@@ -158,14 +158,17 @@ const CargoRegister = ({ route }) => {
 
   const getQualificationData = useCallback(async(page, name) => {
     try {
+      setLoading(true)
       const token = await AsyncStorage.getItem('@Permutas:token')
       const response = await api.get(`/position/qualification/?page=${page}&name=${name}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
+      setLoading(false)
       return response.data
     } catch (err){
+      setLoading(false)
       throw new Error(err)
     }
 
@@ -173,14 +176,19 @@ const CargoRegister = ({ route }) => {
 
   const getTitrationData = useCallback(async(page, name) => {
     try {
+      setLoading(true)
       const token = await AsyncStorage.getItem('@Permutas:token')
       const response = await api.get(`/position/titration/?page=${page}&name=${name}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
+      setLoading(false)
+
       return response.data
+
     } catch (err){
+      setLoading(false)
       throw new Error(err)
 
     }
@@ -194,6 +202,7 @@ const CargoRegister = ({ route }) => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         enabled
       >
+        <Loading isVisible={loading}/>
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           keyboardShouldPersistTaps="handled"
@@ -269,7 +278,6 @@ const CargoRegister = ({ route }) => {
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
-      {loading && ( <Loading/>)}
     </>
   );
 };

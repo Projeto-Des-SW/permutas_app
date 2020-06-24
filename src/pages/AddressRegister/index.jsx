@@ -23,11 +23,11 @@ import * as Yup from 'yup';
 
 import { Form } from '@unform/mobile';
 
-import { useAuth } from '../../hooks/auth';
+import Loading from '../../components/loading'
 
 import getValidationErrors from '../../utils/getValidationErros';
-import api from '../../services/api';
 import apiIbge from '../../services/apiIBGE';
+
 
 const AddressRegister = ({ route }) => {
   const { institutionId } = route.params;
@@ -36,23 +36,23 @@ const AddressRegister = ({ route }) => {
 
   const formRef = useRef(null);
 
-  const cityInputRef = useRef(null);
-  const stateInputRef = useRef(null);
-  const { signUp } = useAuth();
-
   const [state, setState] = useState([]);
   const [nomeCidade, setNomeCidade] = useState("");
   const [cities, setCities] = useState([]);
   const [uf, setUf] = useState("");
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     async function getState(){
       try {
+        setLoading(true)
         const response = await apiIbge.get('/localidades/estados');
         const stateResponse = response.data
         stateResponse.sort((a, b) => (a.sigla > b.sigla));
         setState(stateResponse);
+        setLoading(false)
       } catch (err) {
+        setLoading(false)
         console.log(err);
       }
     }
@@ -72,19 +72,24 @@ const AddressRegister = ({ route }) => {
       return;
     }
     try {
+      setLoading(true)
+
       const response = await apiIbge.get(`/localidades/estados/${selectedUf.id}/municipios`);
       const cidades = response.data;
+      setLoading(false)
 
       setCities(cidades);
     } catch (err) {
+      setLoading(false)
       console.log(err);
     }
   }
 
   const handleSubmit = useCallback(
     async (data) => {
-      console.log('alou')
       try {
+        setLoading(true)
+
         formRef.current?.setErrors({});
         const address = {
           neighborhood: data.neighborhood,
@@ -100,13 +105,15 @@ const AddressRegister = ({ route }) => {
           abortEarly: false,
         });
 
-        console.log('alou de novo')
+        setLoading(false)
         navigation.navigate('CargoRegister',{
           institutionId: institutionId,
           address: address
         });
 
       } catch (err) {
+        setLoading(false)
+
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
@@ -130,6 +137,7 @@ const AddressRegister = ({ route }) => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         enabled
       >
+        <Loading isVisible={loading}/>
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           keyboardShouldPersistTaps="handled"

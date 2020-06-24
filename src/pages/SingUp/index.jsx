@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -23,6 +23,7 @@ import api from '../../services/api';
 import Input from '../../components/input';
 import Button from '../../components/button';
 import Keyboard from '../../components/keyboard';
+import Loading from '../../components/loading';
 
 // import logo from '../../assets/logo.png';
 
@@ -36,11 +37,13 @@ const SignUp = () => {
 
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   const { signUp } = useAuth();
 
   const handleSignUp = useCallback(
     async (data) => {
+      setLoading(true)
       try {
         formRef.current?.setErrors({});
 
@@ -65,10 +68,12 @@ const SignUp = () => {
         console.log(response.data)
 
         await signUp(response.data.session);
+        setLoading(false)
 
         navigate('ListInstitutions');
 
       } catch (err) {
+        setLoading(false)
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
@@ -92,6 +97,7 @@ const SignUp = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         enabled
       >
+        <Loading isVisible={loading}/>
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           keyboardShouldPersistTaps="handled"

@@ -1,10 +1,5 @@
 import React from 'react';
-
-import {
-  View,
-} from 'react-native';
-
-import { Container } from './styles';
+import { Container, Exit } from './styles';
 
 import Button from '../../components/button';
 import { useAuth } from '../../hooks/auth';
@@ -12,10 +7,10 @@ import { useAuth } from '../../hooks/auth';
 const Settings = () => {
   const { signOut, user } = useAuth();
   return (
-    <Container>           
-      <View style={{ width: '100%', marginTop: 30 }}>
+    <Container>
+      <Exit>
         <Button onPress={() => signOut()}>Sair da Conta</Button>
-      </View>
+      </Exit>
     </Container>
   );
 

@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -22,6 +22,7 @@ import getValidationErrors from '../../utils/getValidationErros';
 import Input from '../../components/input';
 import Button from '../../components/button';
 import Keyboard from '../../components/keyboard';
+import Loading from '../../components/loading'
 
 import logo from '../../../assets/logo.png'
 
@@ -38,6 +39,7 @@ import {
 const SignIn = () => {
   const formRef = useRef(null);
   const passwordInputRef = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation();
 
@@ -46,6 +48,7 @@ const SignIn = () => {
   const handleSignIn = useCallback(
     async (data) => {
       try {
+        setLoading(true)
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
@@ -63,10 +66,10 @@ const SignIn = () => {
           email: data.email,
           password: data.password,
         });
-
+        setLoading(false)
         // navigation.navigate('Dashboard');
       } catch (err) {
-
+        setLoading(false)
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
@@ -89,6 +92,7 @@ const SignIn = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         enabled
       >
+        <Loading isVisible={loading}/>
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           keyboardShouldPersistTaps="handled"

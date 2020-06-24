@@ -13,6 +13,8 @@ import api from '../../services/api'
 
 
 import Input from '../../components/input'
+import Loading from '../../components/loading';
+
 
 import { Container, InstitutionButton, InstitutionContainer, Header, InstitutionButtonText } from './styles';
 
@@ -61,7 +63,7 @@ const ListInstitutions = () => {
 
 
   async function loadInstitutionsPagination() {
-    if(loading){
+    if(loading || ended){
       return;
     }
     setLoading(true)
@@ -114,13 +116,6 @@ const ListInstitutions = () => {
     }
   }
 
-  const handlerCargoRegister = useCallback((id) => {
-    console.log(id)
-    // navigation.navigate('CargoRegister', {
-    //   institutionId: id
-    // });
-  }, [])
-
   const handlerAddressRegister = useCallback((id) => {
     navigation.navigate('AddressRegister', {
       institutionId: id
@@ -138,17 +133,9 @@ const ListInstitutions = () => {
         </InstitutionContainer>
       )
     }, []);
-
-  const renderFooter = useCallback(() => {
-    if (!loading && ended) return null;
-    if (ended) return <Text>End Of catalog</Text>;
-
-
-    return <ActivityIndicator style={{ color: "#000" }} />;
-  }, []);
-
   return (
     <Container>
+      <Loading isVisible={loading}/>
       <Header>
         <Form>
           <Input
@@ -161,14 +148,15 @@ const ListInstitutions = () => {
           />
         </Form>
       </Header>
+      <View>
       <FlatList
         data={institutions}
         keyExtractor={item => item.id}
         onEndReached={loadInstitutionsPagination}
         onEndReachedThreshold={0.3}
         renderItem={renderItem}
-        ListFooterComponent={renderFooter}
       />
+      </View>
     </Container>
   )
 }

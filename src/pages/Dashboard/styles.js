@@ -69,3 +69,7 @@ export const MessageText = styled.Text`
   color: #efefef;
   font-size: 22px;
 `;
+
+export const ListContainer = styled.View`
+  width: 100%
+`

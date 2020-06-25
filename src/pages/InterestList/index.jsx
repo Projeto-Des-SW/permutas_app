@@ -111,7 +111,7 @@ const InterestList = () => {
               Instituição: {item.institution.name}
             </TitleInterest>
             <TextInterest>
-              {item.destinationAddress.city + ' - ' + item.destinationAddress.state}
+              {item.destinationAddress && item.destinationAddress.city + ' - ' + item.destinationAddress.state}
             </TextInterest>
           </ContentInterest>
           <Feather

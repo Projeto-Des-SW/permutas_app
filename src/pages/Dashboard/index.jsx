@@ -28,16 +28,19 @@ import Loading from '../../components/loading';
 const Dashboard = () => {
   const { user } = useAuth();
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     async function loadMatchs() {
       try {
         setLoading(true)
         const token = await AsyncStorage.getItem('@Permutas:token');
-        const response = await api.get('/match', { headers: {
-          Authorization: `Bearer ${token}`
-        }});
+        const response = await api.get('/match', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
 
         console.log(response.data[0]);
         setData(response.data);
@@ -49,7 +52,7 @@ const Dashboard = () => {
       }
     }
     loadMatchs();
-  }, []);
+  }, [refresh]);
 
   const handleRemove = (match) => {
     try {
@@ -64,7 +67,7 @@ const Dashboard = () => {
           },
           {
             text: 'Remover',
-            onPress: () => {},
+            onPress: () => removeMatch(match.id),
             style: 'destructive'
           },
         ],
@@ -75,33 +78,52 @@ const Dashboard = () => {
     }
   }
 
+  const removeMatch = async (id) => {
+    try {
+      const token = await AsyncStorage.getItem('@Permutas:token');
+
+      const response = await api.delete(`match/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      Alert.alert('Sucesso', 'O match foi removido!');
+      setRefresh(new Date());
+    } catch (error) {
+      Alert.alert('Ops', 'Ocorreu um problema ao tentar remover o interesse');
+      console.log(error.response.data);
+    }
+  }
+
   const renderMatch = (match) => {
     return (
       match ?
-      <MatchCard>
-        <Feather
-          name={'user'}
-          size={35}
-          color='white'
-        />
-        <ContentMatch>
-          <TitleMatch>
-            {match.interest_2.governmentEmployee.user.name}
-          </TitleMatch>
-          <TextMatch>
-            {match.interest_2.institution.name}
-          </TextMatch>
-        </ContentMatch>
-        <Feather
-            name={'x'}
-            size={30}
-            style={{ alignSelf: 'flex-start'}}
-            color='red'
-            onPress={() => handleRemove(match)}
+        <MatchCard>
+          <Feather
+            name={'user'}
+            size={35}
+            color='white'
           />
-      </MatchCard>
-      :
-      null
+          <ContentMatch>
+            <TitleMatch>
+              {match.interest_2.governmentEmployee.user.name}
+            </TitleMatch>
+            <TextMatch>
+              {match.interest_2.institution.name}
+            </TextMatch>
+          </ContentMatch>
+          <View style={{ height: '100%', justifyContent: 'space-between' }}>
+            <Feather
+              name={'x'}
+              size={30}
+              style={{ alignSelf: 'flex-end' }}
+              color='red'
+              onPress={() => handleRemove(match)}
+            />
+          </View>
+        </MatchCard>
+        :
+        null
     );
   };
 

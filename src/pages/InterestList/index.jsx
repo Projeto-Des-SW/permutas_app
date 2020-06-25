@@ -19,6 +19,7 @@ import {
 } from './styles.js';
 
 import Button from '../../components/button';
+import Loading from '../../components/loading'
 
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api.js';
@@ -29,12 +30,14 @@ const InterestList = () => {
   const [data, setData] = useState([]);
 
   const [refresh, setRefresh] = useState(new Date());
+  const [loading, setLoading] = useState(false);
 
   const { navigate } = useNavigation();
 
   useEffect(() => {
     async function loadInterests() {
       try {
+        setLoading(true);
         const token = await AsyncStorage.getItem('@Permutas:token');
         const response = await api.get('/interest', {
           headers: {
@@ -45,6 +48,7 @@ const InterestList = () => {
       } catch (error) {
         console.log(error.response.data);
       }
+      setLoading(false);
     }
     loadInterests();
   }, [refresh]);
@@ -125,6 +129,7 @@ const InterestList = () => {
 
   return (
     <Container>
+      <Loading isVisible={loading} />
       <Card>
         <TextCard>
           Interesses: {data.length}

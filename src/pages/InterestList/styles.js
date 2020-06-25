@@ -40,7 +40,7 @@ export const InterestsList = styled(FlatList)`
 export const InterestCard = styled.View`
   height: 100px;
   flex-direction: row;
-  background-color: #efefef;
+  background-color: #2D2D39;
   border-radius: 15px;
   padding: 12px;
   margin-bottom: 10px;
@@ -56,10 +56,18 @@ export const ContentInterest = styled.View`
 export const TitleInterest = styled.Text`
   font-size: 16px;
   font-weight: bold;
+  color: #fff;
 `;
 
 export const TextInterest = styled.Text`
   font-size: 16px;
+  color: #fff;
+`;
+
+export const DateInterest = styled.Text`
+  font-size: 10px;
+  color: #fff;
+  align-self: flex-end;
 `;
 
 export const MessageView = styled.View`

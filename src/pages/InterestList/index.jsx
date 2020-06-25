@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Alert } from 'react-native';
+import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -15,10 +16,12 @@ import {
   TextInterest,
   ContentInterest,
   MessageView,
-  MessageText
+  MessageText,
+  DateInterest
 } from './styles.js';
 
 import Button from '../../components/button';
+import Loading from '../../components/loading'
 
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api.js';
@@ -29,12 +32,14 @@ const InterestList = () => {
   const [data, setData] = useState([]);
 
   const [refresh, setRefresh] = useState(new Date());
+  const [loading, setLoading] = useState(false);
 
   const { navigate } = useNavigation();
 
   useEffect(() => {
     async function loadInterests() {
       try {
+        setLoading(true);
         const token = await AsyncStorage.getItem('@Permutas:token');
         const response = await api.get('/interest', {
           headers: {
@@ -45,6 +50,7 @@ const InterestList = () => {
       } catch (error) {
         console.log(error.response.data);
       }
+      setLoading(false);
     }
     loadInterests();
   }, [refresh]);
@@ -101,22 +107,28 @@ const InterestList = () => {
           <Ionicons
             name={'ios-business'}
             size={35}
+            color='white'
           />
           <ContentInterest>
             <TitleInterest>
               Instituição: {item.institution.name}
             </TitleInterest>
             <TextInterest>
-              {item.destinationAddress.city + ' - ' + item.destinationAddress.state}
+              {item.destinationAddress && item.destinationAddress.city + ' - ' + item.destinationAddress.state}
             </TextInterest>
           </ContentInterest>
-          <Feather
-            name={'x'}
-            size={30}
-            style={{ alignSelf: 'flex-start'}}
-            color='red'
-            onPress={() => handleRemove(item)}
-          />
+          <View style={{ height: '100%', justifyContent: 'space-between' }}>
+            <Feather
+              name={'x'}
+              size={30}
+              style={{ alignSelf: 'flex-end' }}
+              color='red'
+              onPress={() => handleRemove(item)}
+            />
+            <DateInterest>
+              {moment(item.created_at.get).format("DD/MM/YYYY")}
+            </DateInterest>
+          </View>
         </InterestCard>
         :
         null
@@ -125,6 +137,7 @@ const InterestList = () => {
 
   return (
     <Container>
+      <Loading isVisible={loading} />
       <Card>
         <TextCard>
           Interesses: {data.length}

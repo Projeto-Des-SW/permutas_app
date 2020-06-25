@@ -39,7 +39,7 @@ export const MatchsList = styled(FlatList)`
 export const MatchCard = styled.View`
   height: 100px;
   flex-direction: row;
-  background-color: #efefef;
+  background-color: #2D2D39;
   border-radius: 15px;
   padding: 12px;
   margin-bottom: 10px;
@@ -55,10 +55,12 @@ export const ContentMatch = styled.View`
 export const TitleMatch = styled.Text`
   font-size: 18px;
   font-weight: bold;
+  color: #fff;
 `;
 
 export const TextMatch = styled.Text`
   font-size: 16px;
+  color: #fff;
 `;
 
 export const MessageView = styled.View`

@@ -22,12 +22,11 @@ import {
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api.js';
 
-import Loading from '../../components/loading'
+import Loading from '../../components/loading';
 
 
 const Dashboard = () => {
   const { user } = useAuth();
-  // const data = ['Match teste', 'Match teste 2', 'Match teste 3', 'Match teste 4'];
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false)
 
@@ -40,6 +39,7 @@ const Dashboard = () => {
           Authorization: `Bearer ${token}`
         }});
 
+        console.log(response.data[0]);
         setData(response.data);
         setLoading(false)
       } catch (error) {
@@ -51,6 +51,30 @@ const Dashboard = () => {
     loadMatchs();
   }, []);
 
+  const handleRemove = (match) => {
+    try {
+      Alert.alert(
+        'Remover',
+        `Tem certeza que quer remover o match com ${match.interest_2.governmentEmployee.user.name}?`,
+        [
+          {
+            text: 'Cancelar',
+            onPress: () => { return; },
+            style: 'cancel',
+          },
+          {
+            text: 'Remover',
+            onPress: () => {},
+            style: 'destructive'
+          },
+        ],
+        { cancelable: false }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const renderMatch = (match) => {
     return (
       match ?
@@ -58,6 +82,7 @@ const Dashboard = () => {
         <Feather
           name={'user'}
           size={35}
+          color='white'
         />
         <ContentMatch>
           <TitleMatch>
@@ -67,6 +92,13 @@ const Dashboard = () => {
             {match.interest_2.institution.name}
           </TextMatch>
         </ContentMatch>
+        <Feather
+            name={'x'}
+            size={30}
+            style={{ alignSelf: 'flex-start'}}
+            color='red'
+            onPress={() => handleRemove(match)}
+          />
       </MatchCard>
       :
       null

@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons'; 
 
 import Dashboard from '../pages/Dashboard';
 import ListInstitutions from '../pages/ListInstitutions'
@@ -10,7 +11,7 @@ import CargoRegister from '../pages/CargoRegister';
 import AddressRegister from '../pages/AddressRegister';
 import InterestRegister from '../pages/InterestRegister';
 import InterestList from '../pages/InterestList';
-import Settings from '../pages/Settings';
+import Profile from '../pages/Profile';
 
 const App = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -43,14 +44,10 @@ function HomeTabScreen() {
                 />
               );
             }
-            else if (route.name === 'Configurações') {
+            else if (route.name === 'Perfil') {
               return (
-                <MaterialCommunityIcons
-                  name={
-                    focused
-                      ? 'settings'
-                      : 'settings-outline'
-                  }
+                <FontAwesome
+                  name={focused ? 'user-circle' : 'user-circle-o'}
                   size={size}
                   color={color}
                 />
@@ -70,7 +67,7 @@ function HomeTabScreen() {
       >
       <Tab.Screen name="Dashboard" component={Dashboard} />
       <Tab.Screen name="Interesses" component={InterestList} />
-      <Tab.Screen name="Configurações" component={Settings} />
+      <Tab.Screen name="Perfil" component={Profile} />
     </Tab.Navigator>
   )
 }

@@ -4,7 +4,7 @@ import { Container, Exit } from './styles';
 import Button from '../../components/button';
 import { useAuth } from '../../hooks/auth';
 
-const Settings = () => {
+const Profile = () => {
   const { signOut, user } = useAuth();
   return (
     <Container>
@@ -16,4 +16,4 @@ const Settings = () => {
 
 };
 
-export default Settings;
+export default Profile;

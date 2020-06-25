@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Alert } from 'react-native';
+import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -15,7 +16,8 @@ import {
   TextInterest,
   ContentInterest,
   MessageView,
-  MessageText
+  MessageText,
+  DateInterest
 } from './styles.js';
 
 import Button from '../../components/button';
@@ -105,6 +107,7 @@ const InterestList = () => {
           <Ionicons
             name={'ios-business'}
             size={35}
+            color='white'
           />
           <ContentInterest>
             <TitleInterest>
@@ -114,13 +117,18 @@ const InterestList = () => {
               {item.destinationAddress && item.destinationAddress.city + ' - ' + item.destinationAddress.state}
             </TextInterest>
           </ContentInterest>
-          <Feather
-            name={'x'}
-            size={30}
-            style={{ alignSelf: 'flex-start'}}
-            color='red'
-            onPress={() => handleRemove(item)}
-          />
+          <View style={{ height: '100%', justifyContent: 'space-between' }}>
+            <Feather
+              name={'x'}
+              size={30}
+              style={{ alignSelf: 'flex-end' }}
+              color='red'
+              onPress={() => handleRemove(item)}
+            />
+            <DateInterest>
+              {moment(item.created_at.get).format("DD/MM/YYYY")}
+            </DateInterest>
+          </View>
         </InterestCard>
         :
         null

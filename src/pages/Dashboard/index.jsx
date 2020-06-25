@@ -22,7 +22,7 @@ import {
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api.js';
 
-import Loading from '../../components/loading'
+import Loading from '../../components/loading';
 
 
 const Dashboard = () => {
@@ -58,6 +58,7 @@ const Dashboard = () => {
         <Feather
           name={'user'}
           size={35}
+          color='white'
         />
         <ContentMatch>
           <TitleMatch>
@@ -67,6 +68,13 @@ const Dashboard = () => {
             {match.interest_2.institution.name}
           </TextMatch>
         </ContentMatch>
+        <Feather
+            name={'x'}
+            size={30}
+            style={{ alignSelf: 'flex-start'}}
+            color='red'
+            onPress={() => handleRemove(item)}
+          />
       </MatchCard>
       :
       null

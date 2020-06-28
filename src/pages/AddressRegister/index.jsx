@@ -41,6 +41,7 @@ const AddressRegister = ({ route }) => {
   const [cities, setCities] = useState([]);
   const [uf, setUf] = useState("");
   const [loading, setLoading] = useState(false)
+  const [neighborhood, setNeighborhood] = useState("")
 
   useEffect(() => {
     async function getState(){
@@ -85,17 +86,17 @@ const AddressRegister = ({ route }) => {
     }
   }
 
-  const handleSubmit = useCallback(
-    async (data) => {
+  const handleSubmit = useCallback(async (bairro, cidade, estado) => {
       try {
         setLoading(true)
 
         formRef.current?.setErrors({});
         const address = {
-          neighborhood: data.neighborhood,
-          city: nomeCidade,
-          state: uf
+          neighborhood: bairro,
+          city: cidade,
+          state: estado
         };
+        console.log(address)
 
         const schema = Yup.object().shape({
           neighborhood: Yup.string().required('Bairro obrigatório'),
@@ -146,7 +147,7 @@ const AddressRegister = ({ route }) => {
             <View>
               <Title>Endereço da instuição</Title>
             </View>
-            <Form ref={formRef} onSubmit={handleSubmit}>
+            <Form ref={formRef} onSubmit={() => handleSubmit(uf, nomeCidade, neighborhood)}>
               <DropDown
                 onChange={(value) => setUf(value)}
                 valores={state.map(estado => {
@@ -158,7 +159,7 @@ const AddressRegister = ({ route }) => {
                 description="Selecione um estado"
               />
               <DropDown
-                onChange={(value) => setNomeCidade(value)}
+                onChange={(value) =>  { setNomeCidade(value); console.log(value)}}
                 valores={cities.map(cidade => {
                   return {
                     label: cidade.nome,
@@ -169,6 +170,7 @@ const AddressRegister = ({ route }) => {
                 description="Selecione uma cidade"
               />
                <Input
+                onChangeText={(value) => setNeighborhood(value)}
                 autoCapitalize="words"
                 name="neighborhood"
                 placeholder="Bairro"

@@ -28,7 +28,7 @@ import { Container, Title, Restrictions } from './styles';
 
 
 const CargoRegister = ({ route }) => {
-  // const { institutionId, address } = route.params;
+  const { institutionId, address } = route.params;
   const navigation = useNavigation();
   const [positions, setPositions] = useState([]);
   const [openNameDialog, setOpenNameDialog] = useState(false);
@@ -101,14 +101,11 @@ const CargoRegister = ({ route }) => {
 
         const governmentEmployee = {
           position: id,
-          institution: '84be6520-b7ff-4c96-ad11-69bf54731dd7',
-          address: {
-            "region": "Nordeste",
-            "state": "Pernambuco",
-            "city": "Garanhuns",
-            "neighborhood": "Santo antonio"
-          }
+          institution: institutionId,
+          address: address
         }
+
+        console.log(governmentEmployee)
 
         const employeeResponse = await api.post('/government-employee', governmentEmployee, {
           headers: {
@@ -248,8 +245,7 @@ const CargoRegister = ({ route }) => {
             <View>
               <Title>Informações do Cargo</Title>
             </View>
-            <Form ref={formRef} onSubmit={() => handleSubmit(name, titration, qualification)}>
-              <DialogButton
+            <DialogButton
                 icon="clipboard"
                 value={name}
                 placeholder="Nome"
@@ -270,11 +266,11 @@ const CargoRegister = ({ route }) => {
                 placeholder="Formação"
                 onPress={toggleQualificationModal}
               />
-
-              <Button onPress={() => formRef.current?.submitForm()}>
+            {/* <Form ref={formRef} onSubmit={() => handleSubmit(name, titration, qualification)}> */}
+              <Button style={{width: '100%'}} onPress={() => handleSubmit(name, titration, qualification)}>
                 Cadastrar
               </Button>
-            </Form>
+            {/* </Form> */}
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>

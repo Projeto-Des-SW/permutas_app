@@ -130,7 +130,7 @@ const Dashboard = () => {
     <Container>
       <Loading isVisible={loading} />
       <Title>
-        Destaque
+        Destaques
       </Title>
       <LineHeader />
       <ListContainer>

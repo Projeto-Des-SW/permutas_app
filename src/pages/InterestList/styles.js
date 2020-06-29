@@ -4,8 +4,7 @@ import { Platform, FlatList } from 'react-native';
 export const Container = styled.View`
   flex: 1;
   align-items: center;
-  padding: 0 30px;
-  padding: 0 30px ${Platform.OS === 'android' ? 100 : 40}px;
+  padding: 0 30px ${Platform.OS === 'android' ? 60 : 40}px;
   background-color: #1c1d29;
 `;
 
@@ -13,7 +12,8 @@ export const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
   color: #efefef;
-  margin: 64px 0 24px;
+  margin: 50px 8px 15px;
+  align-self: flex-start;
 `;
 
 export const Card = styled.View`
@@ -71,10 +71,23 @@ export const DateInterest = styled.Text`
 `;
 
 export const MessageView = styled.View`
-  margin-top: 50px;
+  height: 100px;
+  width: 100%;
+  background-color: #2D2D39;
+  border-radius: 8px;
+  padding: 20px;
+  justify-content: center;
 `;
 
 export const MessageText = styled.Text`
   color: #efefef;
-  font-size: 22px;
+  font-size: 18px;
+  text-align: center;
 `;
+
+export const ListContainer = styled.View`
+  flex: 1;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+`

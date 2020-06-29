@@ -5,7 +5,7 @@ export const Container = styled.View`
   flex: 1;
   align-items: center;
   padding: 0 30px;
-  padding: 0 30px ${Platform.OS === 'android' ? 100 : 40}px;
+  padding: 0 30px ${Platform.OS === 'android' ? 60 : 40}px;
   background-color: #1c1d29;
 `;
 
@@ -66,6 +66,7 @@ export const TextMatch = styled.Text`
 
 export const MessageView = styled.View`
   height: 100px;
+  width: 100%;
   background-color: #2D2D39;
   border-radius: 8px;
   padding: 20px;
@@ -75,6 +76,7 @@ export const MessageView = styled.View`
 export const MessageText = styled.Text`
   color: #efefef;
   font-size: 18px;
+  text-align: center;
 `;
 
 export const ListContainer = styled.View`

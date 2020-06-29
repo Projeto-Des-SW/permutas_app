@@ -8,8 +8,7 @@ import { Ionicons, Feather } from '@expo/vector-icons';
 
 import {
   Container,
-  Card,
-  TextCard,
+  Title,
   InterestsList,
   InterestCard,
   TitleInterest,
@@ -17,11 +16,13 @@ import {
   ContentInterest,
   MessageView,
   MessageText,
-  DateInterest
+  DateInterest,
+  ListContainer
 } from './styles.js';
 
 import Button from '../../components/button';
-import Loading from '../../components/loading'
+import Loading from '../../components/loading';
+import LineHeader from '../../components/lineHeader';
 
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api.js';
@@ -104,14 +105,9 @@ const InterestList = () => {
     return (
       item ?
         <InterestCard>
-          <Ionicons
-            name={'ios-business'}
-            size={35}
-            color='white'
-          />
           <ContentInterest>
             <TitleInterest>
-              Instituição: {item.institution.name}
+              {item.institution.name}
             </TitleInterest>
             <TextInterest>
               {item.destinationAddress && item.destinationAddress.city + ' - ' + item.destinationAddress.state}
@@ -138,11 +134,11 @@ const InterestList = () => {
   return (
     <Container>
       <Loading isVisible={loading} />
-      <Card>
-        <TextCard>
-          Interesses: {data.length}
-        </TextCard>
-      </Card>
+      <Title>
+        Interesses
+      </Title>
+      <LineHeader />
+      <ListContainer>
       {
         data.length > 0
           ?
@@ -153,12 +149,11 @@ const InterestList = () => {
           />
           :
           <MessageView>
-            <MessageText>Você não possui nenhum interesse!</MessageText>
+            <MessageText>Você ainda não criou nenhum interesse!</MessageText>
           </MessageView>
       }
-      <View style={{ width: '100%', marginTop: 30 }}>
-        <Button onPress={handleRegister}>Novo Interesse</Button>
-      </View>
+      </ListContainer>
+      <Button onPress={handleRegister} style={{ width: '100%'}}>Novo Interesse</Button>
     </Container>
   );
 };

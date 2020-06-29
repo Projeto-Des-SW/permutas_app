@@ -105,14 +105,9 @@ const InterestList = () => {
     return (
       item ?
         <InterestCard>
-          <Ionicons
-            name={'ios-business'}
-            size={35}
-            color='white'
-          />
           <ContentInterest>
             <TitleInterest>
-              Instituição: {item.institution.name}
+              {item.institution.name}
             </TitleInterest>
             <TextInterest>
               {item.destinationAddress && item.destinationAddress.city + ' - ' + item.destinationAddress.state}

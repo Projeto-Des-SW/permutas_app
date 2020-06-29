@@ -38,11 +38,11 @@ export const InterestsList = styled(FlatList)`
 `;
 
 export const InterestCard = styled.View`
-  height: 100px;
+  height: 90px;
   flex-direction: row;
   background-color: #2D2D39;
-  border-radius: 15px;
-  padding: 12px;
+  border-radius: 8px;
+  padding: 10px;
   margin-bottom: 10px;
   align-items: center;
 `;
@@ -50,7 +50,7 @@ export const InterestCard = styled.View`
 export const ContentInterest = styled.View`
   flex: 1;
   flex-direction: column;
-  margin-left: 15px;
+  margin-left: 10px;
 `;
 
 export const TitleInterest = styled.Text`
@@ -60,13 +60,13 @@ export const TitleInterest = styled.Text`
 `;
 
 export const TextInterest = styled.Text`
-  font-size: 16px;
+  font-size: 14px;
   color: #fff;
 `;
 
 export const DateInterest = styled.Text`
   font-size: 10px;
-  color: #fff;
+  color: #acacac;
   align-self: flex-end;
 `;
 

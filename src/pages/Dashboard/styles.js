@@ -13,7 +13,8 @@ export const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
   color: #efefef;
-  margin: 64px 0 24px;
+  margin: 50px 8px 15px;
+  align-self: flex-start;
 `;
 
 export const Card = styled.View`
@@ -64,14 +65,21 @@ export const TextMatch = styled.Text`
 `;
 
 export const MessageView = styled.View`
-  margin-top: 50px;
+  height: 100px;
+  background-color: #2D2D39;
+  border-radius: 8px;
+  padding: 20px;
+  justify-content: center;
 `;
 
 export const MessageText = styled.Text`
   color: #efefef;
-  font-size: 22px;
+  font-size: 18px;
 `;
 
 export const ListContainer = styled.View`
-  width: 100%
+  flex: 1;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 `

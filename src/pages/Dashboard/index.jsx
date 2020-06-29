@@ -7,8 +7,6 @@ import { Feather } from '@expo/vector-icons';
 import {
   Container,
   Title,
-  Card,
-  TextCard,
   MatchsList,
   MatchCard,
   TitleMatch,
@@ -23,6 +21,7 @@ import { useAuth } from '../../hooks/auth';
 import api from '../../services/api.js';
 
 import Loading from '../../components/loading';
+import LineHeader from '../../components/lineHeader';
 
 
 const Dashboard = () => {
@@ -131,13 +130,9 @@ const Dashboard = () => {
     <Container>
       <Loading isVisible={loading} />
       <Title>
-        Bem-Vindo, {user.name}
+        Destaque
       </Title>
-      <Card>
-        <TextCard>
-          Matchs: {data.length}
-        </TextCard>
-      </Card>
+      <LineHeader />
       <ListContainer>
         {data.length > 0 ?
           <MatchsList
@@ -147,7 +142,7 @@ const Dashboard = () => {
           />
           :
           <MessageView>
-            <MessageText>Você não possui nenhum Match!</MessageText>
+            <MessageText>Você ainda não criou nenhum interesse!</MessageText>
           </MessageView>
         }
       </ListContainer>

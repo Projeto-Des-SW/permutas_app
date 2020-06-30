@@ -146,23 +146,33 @@ const InterestList = () => {
       </Title>
       <LineHeader />
       <ListContainer>
-      {
-        data.length > 0
-          ?
-          <InterestsList
-            data={data}
-            keyExtractor={item => item.id}
-            renderItem={(item) => renderItem(item.item)}
-            onRefresh={onRefresh}
-            refreshing={refreshing}
-          />
-          :
-          <MessageView>
-            <MessageText>Você ainda não criou nenhum interesse!</MessageText>
-          </MessageView>
-      }
+        {
+          data.length > 0
+            ?
+            <InterestsList
+              data={data}
+              keyExtractor={item => item.id}
+              renderItem={(item) => renderItem(item.item)}
+              onRefresh={onRefresh}
+              refreshing={refreshing}
+            />
+            :
+            <MessageView>
+              <MessageText>Nenhum interesse encontrado!</MessageText>
+              <MessageText
+                style={{
+                  fontSize: 14,
+                  textDecorationLine: 'underline',
+                  color: '#e32245',
+                }}
+                onPress={() => setRefresh(new Date())}
+              >
+                Clique aqui para recarregar
+              </MessageText>
+            </MessageView>
+        }
       </ListContainer>
-      <Button onPress={handleRegister} style={{ width: '100%'}}>Novo Interesse</Button>
+      <Button onPress={handleRegister} style={{ width: '100%' }}>Novo Interesse</Button>
     </Container>
   );
 };

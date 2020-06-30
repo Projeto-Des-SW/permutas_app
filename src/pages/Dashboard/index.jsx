@@ -41,7 +41,6 @@ const Dashboard = () => {
             Authorization: `Bearer ${token}`
           }
         });
-
         setData(response.data);
         setLoading(false)
       } catch (error) {
@@ -146,7 +145,17 @@ const Dashboard = () => {
           />
           :
           <MessageView>
-            <MessageText>Nenhum interesse encontrado, aguarde até alguém cadastrar um novo interesse</MessageText>
+            <MessageText>Nenhum destaque encontrado!</MessageText>
+            <MessageText
+                style={{
+                  fontSize: 14,
+                  textDecorationLine: 'underline',
+                  color: '#e32245',
+                }}
+                onPress={() => setRefresh(new Date())}
+              >
+                Clique aqui para recarregar
+              </MessageText>
           </MessageView>
         }
       </ListContainer>

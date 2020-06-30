@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Button, Alert, Text } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
-import { Feather } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 import {
   Container,
@@ -28,29 +28,28 @@ const Dashboard = () => {
   const { user } = useAuth();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [refresh, setRefresh] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refresh, setRefresh] = useState(new Date());
 
   useEffect(() => {
-    async function loadMatchs() {
+    async function loadData() {
       try {
         setLoading(true)
         const token = await AsyncStorage.getItem('@Permutas:token');
-        const response = await api.get('/match', {
+        const response = await api.get('/highlights', {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
 
-        console.log(response.data[0]);
         setData(response.data);
         setLoading(false)
       } catch (error) {
         setLoading(false)
         console.log(error.response.data);
-        // Alert.alert('Ops', 'Ocorreu um erro ao buscar os MATCHS!');
       }
     }
-    loadMatchs();
+    loadData();
   }, [refresh]);
 
   const handleRemove = (match) => {
@@ -94,32 +93,35 @@ const Dashboard = () => {
     }
   }
 
-  const renderMatch = (match) => {
+  const onRefresh = () => {
+    setRefreshing(true);
+    setRefresh(new Date);
+    setRefreshing(false);
+  }
+
+  const renderMatch = (item) => {
     return (
-      match ?
+      item && item.governmentEmployee && item.institution ?
         <MatchCard>
-          <Feather
-            name={'user'}
-            size={35}
+          <FontAwesome
+            name={'user-circle'}
+            size={70}
             color='white'
           />
           <ContentMatch>
             <TitleMatch>
-              {match.interest_2.governmentEmployee.user.name}
+              {item.governmentEmployee.user.name}
             </TitleMatch>
             <TextMatch>
-              {match.interest_2.institution.name}
+              {item.institution.name}
+            </TextMatch>
+            <TextMatch>
+              {
+                item.governmentEmployee.institutionAddress &&
+                item.destinationAddress &&
+                `De: ${item.governmentEmployee.institutionAddress.city}/${item.governmentEmployee.institutionAddress.state} - Para: ${item.destinationAddress.city}/${item.destinationAddress.state}`}
             </TextMatch>
           </ContentMatch>
-          <View style={{ height: '100%', justifyContent: 'space-between' }}>
-            <Feather
-              name={'x'}
-              size={30}
-              style={{ alignSelf: 'flex-end' }}
-              color='red'
-              onPress={() => handleRemove(match)}
-            />
-          </View>
         </MatchCard>
         :
         null
@@ -139,10 +141,12 @@ const Dashboard = () => {
             data={data}
             keyExtractor={match => match.id}
             renderItem={(match) => renderMatch(match.item)}
+            onRefresh={onRefresh}
+            refreshing={refreshing}
           />
           :
           <MessageView>
-            <MessageText>Você ainda não criou nenhum interesse!</MessageText>
+            <MessageText>Nenhum interesse encontrado, aguarde até alguém cadastrar um novo interesse</MessageText>
           </MessageView>
         }
       </ListContainer>

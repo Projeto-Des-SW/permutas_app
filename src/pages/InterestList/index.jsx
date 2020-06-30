@@ -34,6 +34,7 @@ const InterestList = () => {
 
   const [refresh, setRefresh] = useState(new Date());
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const { navigate } = useNavigation();
 
@@ -101,6 +102,12 @@ const InterestList = () => {
     }
   }
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    setRefresh(new Date());
+    setRefreshing(false);
+  }
+
   const renderItem = (item) => {
     return (
       item ?
@@ -146,6 +153,8 @@ const InterestList = () => {
             data={data}
             keyExtractor={item => item.id}
             renderItem={(item) => renderItem(item.item)}
+            onRefresh={onRefresh}
+            refreshing={refreshing}
           />
           :
           <MessageView>

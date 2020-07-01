@@ -147,7 +147,7 @@ const AddressRegister = ({ route }) => {
             <View>
               <Title>Endereço da instuição</Title>
             </View>
-            <Form ref={formRef} onSubmit={() => handleSubmit(uf, nomeCidade, neighborhood)}>
+            <Form ref={formRef} onSubmit={() => handleSubmit(neighborhood, nomeCidade, uf)}>
               <DropDown
                 onChange={(value) => setUf(value)}
                 valores={state.map(estado => {

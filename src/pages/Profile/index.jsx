@@ -1,12 +1,18 @@
 import React from 'react';
 import {Alert} from 'react-native';
-import { Container, Exit } from './styles';
+import { Container, Exit, Title } from './styles';
 
 import Button from '../../components/button';
 import { useAuth } from '../../hooks/auth';
 
+import LineHeader from '../../components/lineHeader';
+
+import { useNavigation } from '@react-navigation/native';
+
 const Profile = () => {
-  const { signOut, user } = useAuth();
+  const { signOut } = useAuth();
+
+  const { navigate } = useNavigation();
 
   const handleSignOut = () => {
     try {
@@ -34,8 +40,15 @@ const Profile = () => {
 
   return (
     <Container>
+      <Title>
+        Perfil
+      </Title>
+      <LineHeader />
+      <Button style={{width: '100%', backgroundColor: '#2d2d39', alignItems: 'flex-start', paddingLeft: 30}} onPress={() => {}}>Alterar dados</Button>
+      <Button style={{width: '100%', backgroundColor: '#2d2d39', alignItems: 'flex-start', paddingLeft: 30}} onPress={() => {}}>Alterar Endereço</Button>
+      <Button style={{width: '100%', backgroundColor: '#2d2d39', alignItems: 'flex-start', paddingLeft: 30}} onPress={() => {}}>Alterar Cargo </Button>
       <Exit>
-        <Button onPress={() => handleSignOut()}>Sair da Conta</Button>
+        <Button style={{backgroundColor: '#2d2d39'}} onPress={() => handleSignOut()}>Sair da Conta</Button>
       </Exit>
     </Container>
   );

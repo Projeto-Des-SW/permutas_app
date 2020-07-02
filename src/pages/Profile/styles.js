@@ -14,3 +14,18 @@ export const Exit = styled.View`
   width: 100%;
   justify-content: flex-end
 `;
+
+export const Title = styled.Text`
+  font-size: 24px;
+  font-weight: bold;
+  color: #efefef;
+  margin: 50px 8px 15px;
+  align-self: flex-start;
+`;
+
+export const Restrictions = styled.Text`
+  font-size: 20px;
+  padding: 16px 0px;
+  color: #f4ede8;
+
+`;

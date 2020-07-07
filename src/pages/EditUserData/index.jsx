@@ -39,7 +39,7 @@ const EditUserData = () => {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
 
-  const { navigate } = useNavigation();
+  const { navigate, goBack } = useNavigation();
 
   useEffect(() => {
     async function getUserData() {
@@ -58,20 +58,10 @@ const EditUserData = () => {
     getUserData();
   }, [])
 
-  function modificarValores(order, value) {
-    switch (order) {
-      case 0:
-        setNome(value);
-        break;
-      case 1:
-        setEmail(value);
-        break;
-    }
-  }
-
   const handleSaveEdit = useCallback(
     async (data) => {
       try {
+        setLoading(true)
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
           name: Yup.string().required('Nome obrigatório'),
@@ -85,8 +75,6 @@ const EditUserData = () => {
             .required('Senha obrigatória')
             .min(6, 'Digite pelo menos 6 caracteres'),
         });
-        console.log("alooooooooou")
-        console.log(data);
 
         await schema.validate(data, {
           abortEarly: false,
@@ -98,12 +86,14 @@ const EditUserData = () => {
             Authorization: `Bearer ${token}`
           }
         });
+        setLoading(false)
 
         Alert.alert('Dados atualizados com sucesso!');
 
-        navigate('Profile')
+        goBack();
 
       } catch (err) {
+        setLoading(false)
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
@@ -170,7 +160,7 @@ const EditUserData = () => {
                 name="oldPassword"
                 icon="lock"
                 placeholder="Senha antiga"
-                textContentType="oldPassword"
+                textContentType="newPassword"
                 returnKeyType="next"
                 onSubmitEditing={() => {
                   newPasswordInputRef.current?.focus();

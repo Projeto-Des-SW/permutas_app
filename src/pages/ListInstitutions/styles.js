@@ -5,36 +5,46 @@ export const Container = styled.View`
   flex: 1;
   align-items: center;
   /* justify-content: center; */
-  background-color: #2d2d39;
-  padding: 0 0 ${Platform.OS === 'android' ? 100 : 0}px;
-`;
-
-export const Header = styled.View`
-  height: 100px;
   background-color: #1c1d29;
-  align-items: center;
-  justify-content: center;
-  padding: 0 20px;
-  padding-top: 20px;
 `;
-export const InstitutionButtonText = styled.Text`
-  font-size: 16px;
-  color: #000;
 
+export const InstitutionButtonText = styled.Text`
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+`
+export const SearchContainer = styled.View`
+  width: 100%;
+  padding: 0 30px;
 `
 
 export const InstitutionButton = styled.TouchableOpacity`
   flex: 1;
   justify-content: center;
   align-items: center;
-  padding: 16px 16px;
-
+  padding: 16px 0px;
 `;
 
 export const  InstitutionContainer = styled.View`
-  background: #e32245;
-  border-radius: 30px;
-  margin: 8px;
-  height: 80px;
+  background: #2D2D39;
+  border-radius: 10px;
+  margin: 5px 30px;
+  min-height: 80px;
+  padding: 0 10px;
 `;
 
+export const List = styled.View`
+  flex: 1;
+`;
+
+export const Title = styled.Text`
+  font-size: 18px;
+  color: #fff;
+  margin: 10px 0 25px;
+  text-align: center;
+`;
+
+export const Terms = styled.View`
+  width: 70%;
+  margin-bottom: 10px;
+`

@@ -185,7 +185,7 @@ const EditUserData = () => {
         </ScrollView>
       </KeyboardAvoidingView>
       <Keyboard>
-        <BackToProfile onPress={() => navigate('Profile')}>
+        <BackToProfile onPress={() => goBack()}>
           <Feather name="arrow-left" size={20} color="#ffffff" />
           <BackToProfileText> Voltar para o perfil </BackToProfileText>
         </BackToProfile>

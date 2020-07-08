@@ -23,7 +23,7 @@ import * as Yup from 'yup';
 
 import { Form } from '@unform/mobile';
 
-import Loading from '../../components/loading'
+import Loading from '../../components/loading';
 
 import getValidationErrors from '../../utils/getValidationErros';
 import apiIbge from '../../services/apiIBGE';
@@ -40,11 +40,11 @@ const AddressRegister = ({ route }) => {
   const [nomeCidade, setNomeCidade] = useState("");
   const [cities, setCities] = useState([]);
   const [uf, setUf] = useState("");
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [neighborhood, setNeighborhood] = useState("")
 
   useEffect(() => {
-    async function getState(){
+    async function getState() {
       try {
         setLoading(true)
         const response = await apiIbge.get('/localidades/estados');
@@ -87,47 +87,47 @@ const AddressRegister = ({ route }) => {
   }
 
   const handleSubmit = useCallback(async (bairro, cidade, estado) => {
-      try {
-        setLoading(true)
+    try {
+      setLoading(true)
 
-        formRef.current?.setErrors({});
-        const address = {
-          neighborhood: bairro,
-          city: cidade,
-          state: estado
-        };
-        console.log(address)
+      formRef.current?.setErrors({});
+      const address = {
+        neighborhood: bairro,
+        city: cidade,
+        state: estado
+      };
+      console.log(address)
 
-        const schema = Yup.object().shape({
-          neighborhood: Yup.string().required('Bairro obrigatório'),
-        });
+      const schema = Yup.object().shape({
+        neighborhood: Yup.string().required('Bairro obrigatório'),
+      });
 
-        await schema.validate(address, {
-          abortEarly: false,
-        });
+      await schema.validate(address, {
+        abortEarly: false,
+      });
 
-        setLoading(false)
-        navigation.navigate('CargoRegister',{
-          institutionId: institutionId,
-          address: address
-        });
+      setLoading(false)
+      navigation.navigate('CargoRegister', {
+        institutionId: institutionId,
+        address: address
+      });
 
-      } catch (err) {
-        setLoading(false)
+    } catch (err) {
+      setLoading(false)
 
-        if (err instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(err);
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
 
-          formRef.current?.setErrors(errors);
-          return;
-        }
-        console.log(err.toString());
-        Alert.alert(
-          'Erro no cadastro',
-          ' Ocorreu um erro ao fazer cadastro, tente novamente.',
-        );
+        formRef.current?.setErrors(errors);
+        return;
       }
-    },
+      console.log(err.toString());
+      Alert.alert(
+        'Erro no cadastro',
+        ' Ocorreu um erro ao fazer cadastro, tente novamente.',
+      );
+    }
+  },
     [navigation],
   );
 
@@ -138,7 +138,7 @@ const AddressRegister = ({ route }) => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         enabled
       >
-        <Loading isVisible={loading}/>
+        <Loading isVisible={loading} />
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           keyboardShouldPersistTaps="handled"
@@ -159,7 +159,7 @@ const AddressRegister = ({ route }) => {
                 description="Selecione um estado"
               />
               <DropDown
-                onChange={(value) =>  { setNomeCidade(value); console.log(value)}}
+                onChange={(value) => { setNomeCidade(value); console.log(value) }}
                 valores={cities.map(cidade => {
                   return {
                     label: cidade.nome,
@@ -169,7 +169,7 @@ const AddressRegister = ({ route }) => {
 
                 description="Selecione uma cidade"
               />
-               <Input
+              <Input
                 onChangeText={(value) => setNeighborhood(value)}
                 autoCapitalize="words"
                 name="neighborhood"

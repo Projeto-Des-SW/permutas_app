@@ -24,10 +24,11 @@ import Input from '../../components/input';
 import Button from '../../components/button';
 import Keyboard from '../../components/keyboard';
 import Loading from '../../components/loading';
+import InfoButton from '../../components/infoButton'
 
-// import logo from '../../assets/logo.png';
+import logo from '../../../assets/logo.png';
 
-import { Container, Title, BackToSign, BackToSignText } from './styles';
+import { Container, Title } from './styles';
 
 
 const SignUp = () => {
@@ -36,6 +37,7 @@ const SignUp = () => {
   const formRef = useRef(null);
 
   const emailInputRef = useRef(null);
+  const confirmPasswordRef = useRef(null);
   const passwordInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
 
@@ -55,6 +57,10 @@ const SignUp = () => {
           password: Yup.string()
             .required('Senha obrigatória')
             .min(6, 'Digite pelo menos 6 caracteres'),
+          confirmPassword: Yup.string().oneOf([Yup.ref('password')])
+            .required('Confirmação de senha obrigatoria')
+            .min(6, 'Digite pelo menos 6 caracteres'),
+
         });
 
         await schema.validate(data, {
@@ -65,8 +71,6 @@ const SignUp = () => {
 
         Alert.alert('Cadastro realizado com sucesso!');
 
-        console.log(response.data)
-
         await signUp(response.data.session);
         setLoading(false)
 
@@ -76,12 +80,18 @@ const SignUp = () => {
         setLoading(false)
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
+          console.log(errors)
+
+          if(errors['confirmPassword']) {
+            Alert.alert(
+              'Falha ao confirmar senha.',
+              'As senhas devem ser iguais, confira se digitou corretamente.',
+            );
+          }
 
           formRef.current?.setErrors(errors);
           return;
         }
-        console.log(err)
-        console.log(err.toString());
         Alert.alert(
           'Erro no cadastro',
           ' Ocorreu um erro ao fazer cadastro, tente novamente.',
@@ -104,9 +114,9 @@ const SignUp = () => {
           keyboardShouldPersistTaps="handled"
         >
           <Container>
-            {/* <Image source={logo} /> */}
+            <Image source={logo} style={{width: 150, height:150}} />
             <View>
-              <Title>Crie sua conta</Title>
+              <Title>Cadastre-se para localizar uma pessoa interessada na permuta.</Title>
             </View>
             <Form ref={formRef} onSubmit={handleSignUp}>
               <Input
@@ -140,6 +150,18 @@ const SignUp = () => {
                 icon="lock"
                 placeholder="Senha"
                 textContentType="newPassword"
+                returnKeyType="next"
+                onSubmitEditing={() => {
+                  confirmPasswordRef.current?.focus();
+                }}
+              />
+              <Input
+                ref={confirmPasswordRef}
+                secureTextEntry
+                name="confirmPassword"
+                icon="lock"
+                placeholder="Confirmar senha"
+                textContentType="newPassword"
                 returnKeyType="send"
                 onSubmitEditing={() => formRef.current?.submitForm()}
               />
@@ -148,15 +170,16 @@ const SignUp = () => {
                 Cadastrar
               </Button>
             </Form>
+
+            <Keyboard>
+              <InfoButton onPress={() => navigate('SignIn')}>
+                Tem uma conta? Conecte-se
+              </InfoButton>
+            </Keyboard>
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
-      <Keyboard>
-        <BackToSign onPress={() => navigate('SignIn')}>
-          <Feather name="arrow-left" size={20} color="#ffffff" />
-          <BackToSignText> Voltar para login </BackToSignText>
-        </BackToSign>
-      </Keyboard>
+
     </>
   );
 };

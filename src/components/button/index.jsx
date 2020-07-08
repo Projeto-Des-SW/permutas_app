@@ -4,7 +4,7 @@ import { Container, ButtonText } from './styles';
 
 const button = ({ children, ...rest }) => {
   return (
-    <Container {...rest}>
+    <Container sty {...rest}>
       <ButtonText>{children}</ButtonText>
     </Container>
   );

@@ -80,6 +80,7 @@ const SignUp = () => {
           formRef.current?.setErrors(errors);
           return;
         }
+        console.log(err)
         console.log(err.toString());
         Alert.alert(
           'Erro no cadastro',

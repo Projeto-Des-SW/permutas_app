@@ -37,7 +37,7 @@ export const MatchsList = styled(FlatList)`
   width: 100%;
 `;
 
-export const MatchCard = styled.View`
+export const MatchCard = styled.TouchableOpacity`
   height: 120px;
   flex-direction: row;
   background-color: #2D2D39;

@@ -6,14 +6,13 @@ export const Container = styled.View`
   align-items: center;
   justify-content: center;
   padding: 0 30px;
-  padding: 0 30px ${Platform.OS === 'android' ? 100 : 40}px;
 `;
 
 export const Title = styled.Text`
-  font-size: 24px;
-  color: #f4ede8;
-  /* font-family: 'RobotoSlab-Medium'; */
-  margin: 64px 0 24px;
+  font-size: 18px;
+  color: #fff;
+  margin: 10px 0 25px;
+  text-align: center;
 `;
 
 export const BackToSign = styled.TouchableOpacity`

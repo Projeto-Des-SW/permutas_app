@@ -7,6 +7,7 @@ import {
   Platform,
   TextInput,
   Alert,
+  Text
 } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
@@ -23,6 +24,7 @@ import Input from '../../components/input';
 import Button from '../../components/button';
 import Keyboard from '../../components/keyboard';
 import Loading from '../../components/loading'
+import InfoButton from '../../components/infoButton'
 
 import logo from '../../../assets/logo.png'
 
@@ -31,8 +33,9 @@ import {
   Title,
   ForgotPassword,
   ForgotPasswordText,
+  CreateAccountView,
   CreateAccountButton,
-  CreateAccountButtonText,
+  CreateAccountButtonText
 } from './styles';
 
 
@@ -98,10 +101,7 @@ const SignIn = () => {
           keyboardShouldPersistTaps="handled"
         >
           <Container>
-            <Image source={logo} style={{width: 150, height: 150, borderRadius: 100 }} />
-            <View>
-              <Title>Faça seu login</Title>
-            </View>
+            <Image source={logo} style={{width: 190, height: 150, borderRadius: 0 }} />
             <Form ref={formRef} onSubmit={handleSignIn}>
               <Input
                 autoCorrect={false}
@@ -127,7 +127,7 @@ const SignIn = () => {
                 }}
               />
 
-              <Button
+              <Button style={{ borderRadius: 20 }}
                 onPress={() => {
                   formRef.current?.submitForm();
                 }}
@@ -141,17 +141,18 @@ const SignIn = () => {
                 console.log('alo');
               }}
             >
-              <ForgotPasswordText>Esqueci minha senha</ForgotPasswordText>
+              <ForgotPasswordText>Esqueceu a senha?</ForgotPasswordText>
             </ForgotPassword>
+            <Keyboard>
+              <InfoButton onPress={() => navigation.navigate('SignUp')}>
+                Não tem uma conta? Cadastre-se
+              </InfoButton>
+            </Keyboard>
           </Container>
         </ScrollView>
+
       </KeyboardAvoidingView>
-      <Keyboard>
-        <CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
-          <Feather name="log-in" size={20} color="#ffffff" />
-          <CreateAccountButtonText> Criar uma conta </CreateAccountButtonText>
-        </CreateAccountButton>
-      </Keyboard>
+
     </>
   );
 };

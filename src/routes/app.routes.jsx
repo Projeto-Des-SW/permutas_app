@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons';
 
 import Dashboard from '../pages/Dashboard';
 import ListInstitutions from '../pages/ListInstitutions'
@@ -62,7 +62,7 @@ function HomeTabScreen() {
             backgroundColor: '#1c1d29',
             //borderTopWidth:2,
             //borderColor: '#000',
-          }, 
+          },
         }}
       >
       <Tab.Screen name="Dashboard" component={Dashboard} />

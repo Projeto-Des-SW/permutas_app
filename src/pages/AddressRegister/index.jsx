@@ -7,23 +7,23 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
-  TextInput,
   Alert,
 } from 'react-native';
 
-import { Container, Title, BackToSign, BackToSignText, PickerSelectStyles } from './styles';
+import { Container, Title, Terms } from './styles';
 
 import Button from '../../components/button';
 import Input from '../../components/input';
 import Keyboard from '../../components/keyboard';
+import logo from '../../../assets/logo.png'
 
 import { useNavigation } from '@react-navigation/native';
-import { Feather } from '@expo/vector-icons';
 import * as Yup from 'yup';
 
 import { Form } from '@unform/mobile';
 
 import Loading from '../../components/loading'
+import InfoButton from '../../components/infoButton'
 
 import getValidationErrors from '../../utils/getValidationErros';
 import apiIbge from '../../services/apiIBGE';
@@ -144,6 +144,7 @@ const AddressRegister = ({ route }) => {
           keyboardShouldPersistTaps="handled"
         >
           <Container>
+            <Image source={logo} style={{width: 150, height: 150}} />
             <View>
               <Title>Endereço da instuição</Title>
             </View>
@@ -156,7 +157,8 @@ const AddressRegister = ({ route }) => {
                     value: estado.sigla
                   }
                 })}
-                description="Selecione um estado"
+                description="Estado"
+                iconName="city"
               />
               <DropDown
                 onChange={(value) =>  { setNomeCidade(value); console.log(value)}}
@@ -167,13 +169,15 @@ const AddressRegister = ({ route }) => {
                   }
                 })}
 
-                description="Selecione uma cidade"
+                description="Cidade"
+                iconName="city-variant"
               />
                <Input
                 onChangeText={(value) => setNeighborhood(value)}
                 autoCapitalize="words"
                 name="neighborhood"
                 placeholder="Bairro"
+                icon="home"
               />
 
               <Button onPress={() => formRef.current?.submitForm()}>
@@ -181,17 +185,19 @@ const AddressRegister = ({ route }) => {
               </Button>
             </Form>
           </Container>
+          <Keyboard>
+              <Terms>
+              <InfoButton onPress={() => console.log('alou')}>
+                Termos de uso
+              </InfoButton>
+            </Terms>
+          </Keyboard>
         </ScrollView>
       </KeyboardAvoidingView>
-      <Keyboard>
-        <BackToSign onPress={() => navigate('ListInstitutions')}>
-          <Feather name="arrow-left" size={20} color="#1c1d29" />
-          <BackToSignText> Voltar para seleção da instituição </BackToSignText>
-        </BackToSign>
-      </Keyboard>
     </>
   );
 
 };
 
 export default AddressRegister;
+

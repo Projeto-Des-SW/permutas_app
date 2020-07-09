@@ -32,6 +32,7 @@ import { Container, Title, Restrictions, BackToProfile, BackToProfileText } from
 const CargoRegister = () => {
   const navigation = useNavigation();
   const [positions, setPositions] = useState([]);
+  const [employee, setEmployee] = useState(null);
   const [openNameDialog, setOpenNameDialog] = useState(false);
   const [openTitrationDialog, setOpenTitrationDialog] = useState(false);
   const [openQualificationDialog, setOpenQualificationDialog] = useState(false);
@@ -63,19 +64,24 @@ const CargoRegister = () => {
 
   useEffect(() => {
     async function getPositions() {
+      console.log("aloooooooooo 1");
       const token = await AsyncStorage.getItem('@Permutas:token');
 
-      const response = await api.get('/position', {
+      const response = await api.get('/government-employee/employee', {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-
-      setPositions(response.data)
+      console.log(employee);
+      setEmployee(response.data);
+      setPositions(response.data.position);
+      setName(positions.name)
+      console.log("aloooooooooo");
+      console.log(employee);
     }
 
     getPositions()
-  }, [])
+  }, [navigation])
 
   const handleSubmit = useCallback(async (nome, titulacao, formacao) => {
       try {
@@ -107,7 +113,7 @@ const CargoRegister = () => {
 
         console.log(governmentEmployee)
 
-        const employeeResponse = await api.post('/government-employee', governmentEmployee, {
+        const employeeResponse = await api.post('/government-employee/', governmentEmployee, {
           headers: {
             Authorization: `Bearer ${token}`
           }

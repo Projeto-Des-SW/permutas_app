@@ -18,6 +18,7 @@
     "@unform/mobile": "^2.1.0",
     "axios": "^0.19.2",
     "expo": "~37.0.3",
+    "expo-facebook": "~8.1.0",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.27.0",
     "react": "~16.9.0",

@@ -1,10 +1,7 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { FlatList, View, Text, ActivityIndicator } from 'react-native'
+import { FlatList, View, Text, Image } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import { useNavigation } from '@react-navigation/native';
-
-
-import {useAuth} from '../../hooks/auth'
 
 import { debounce } from 'lodash'
 import { Form } from '@unform/mobile';
@@ -14,9 +11,22 @@ import api from '../../services/api'
 
 import Input from '../../components/input'
 import Loading from '../../components/loading';
+import InfoButton from '../../components/infoButton'
+
+import logo from '../../../assets/logo.png'
 
 
-import { Container, InstitutionButton, InstitutionContainer, Header, InstitutionButtonText } from './styles';
+import {
+  Container,
+  InstitutionButton,
+  InstitutionContainer,
+  Header,
+  InstitutionButtonText,
+  List,
+  Title,
+  Terms,
+  SearchContainer
+} from './styles';
 
 const ListInstitutions = () => {
   const [page, setPage] = useState(1);
@@ -136,27 +146,36 @@ const ListInstitutions = () => {
   return (
     <Container>
       <Loading isVisible={loading}/>
-      <Header>
+      <Image source={logo} style={{width: 150, height:150}} />
+      <View>
+        <Title>Selecione o orgão.</Title>
+      </View>
+      <SearchContainer>
         <Form>
           <Input
             ref={searchInput}
             name="search"
             icon="search"
-            placeholder="Procure sua instituição"
+            placeholder="Pesquisar orgão"
             returnKeyType="send"
             onChangeText={handler}
           />
         </Form>
-      </Header>
-      <View>
-      <FlatList
-        data={institutions}
-        keyExtractor={item => item.id}
-        onEndReached={loadInstitutionsPagination}
-        onEndReachedThreshold={0.3}
-        renderItem={renderItem}
-      />
-      </View>
+      </SearchContainer>
+      <List>
+        <FlatList
+          data={institutions}
+          keyExtractor={item => item.id}
+          onEndReached={loadInstitutionsPagination}
+          onEndReachedThreshold={0.3}
+          renderItem={renderItem}
+        />
+      </List>
+      <Terms>
+        <InfoButton onPress={() => console.log('alo')}>
+          Termos de uso
+        </InfoButton>
+      </Terms>
     </Container>
   )
 }

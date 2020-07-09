@@ -6,7 +6,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
-  Text
 } from 'react-native';
 import { Form } from '@unform/mobile';
 import { useNavigation } from '@react-navigation/native';
@@ -20,12 +19,15 @@ import Button from '../../components/button';
 import DialogButton from '../../components/dialogButton'
 import Modal from '../../components/modal'
 import Loading from '../../components/loading'
+import Input from '../../components/input'
 
 
 import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErros';
 
 import { Container, Title, Restrictions, BackToProfile, BackToProfileText } from './styles';
+
+import logo from '../../../assets/logo.png'
 
 
 
@@ -42,8 +44,7 @@ const CargoRegister = () => {
 
   const formRef = useRef(null);
   const [name, setName] = useState('');
-  const [titration, setTitration] = useState('');
-  const [qualification, setQualification] = useState('');
+  const [description, setDescription] = useState('');
 
 
   const toggleNameModal = () => {
@@ -64,7 +65,6 @@ const CargoRegister = () => {
 
   useEffect(() => {
     async function getPositions() {
-      console.log("aloooooooooo 1");
       const token = await AsyncStorage.getItem('@Permutas:token');
 
       const response = await api.get('/government-employee/employee', {
@@ -72,57 +72,44 @@ const CargoRegister = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      console.log(employee);
       setEmployee(response.data);
       setPositions(response.data.position);
-      setName(positions.name)
-      console.log("aloooooooooo");
-      console.log(employee);
+      setName(response.data.position.name);
+      setDescription(response.data.position.description);
     }
 
     getPositions()
   }, [navigation])
 
-  const handleSubmit = useCallback(async (nome, titulacao, formacao) => {
+  const handleSaveEdit = async () => {
       try {
         setLoading(true)
 
         const data = {
-          name: nome,
-          titration: titulacao,
-          qualification: formacao
+          name: name,
+          description: description,
+          id_position: positions.id,
         }
-        if(!data.name || !data.titration || !data.qualification) {
+        if(!data.name || !data.description || !data.id_position) {
           Alert.alert('Erro!', 'Preencha todos os campos.');
           setLoading(false)
           return;
         }
         const token = await AsyncStorage.getItem('@Permutas:token');
 
-        const response = await api.post('/position', data, {
+        const response = await api.put('/position', data, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
-        const { id } = response.data;
+        console.log(response.data);
 
-        const governmentEmployee = {
-          position: id,
-          address: address
-        }
-
-        console.log(governmentEmployee)
-
-        const employeeResponse = await api.post('/government-employee/', governmentEmployee, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
         setLoading(false)
-        Alert.alert('Sucesso!', 'Servidor cadastrado com sucesso.');
-        navigation.navigate('Dashboard');
+        Alert.alert('Sucesso!', 'Cargo atualizado');
+        navigation.navigate('Perfil');
 
       } catch (error) {
+        
         setLoading(false)
         if (error instanceof Yup.ValidationError) {
           const errors = getValidationErrors(error);
@@ -130,14 +117,14 @@ const CargoRegister = () => {
           formRef.current?.setErrors(errors);
           return;
         }
-        console.log(error.toString());
+        console.log(error.response.data);
 
         Alert.alert(
           'Ocorreu um problema',
           error.response.data.message,
         );
       }
-    }, []);
+    };
 
 
   const getNameData = useCallback(async(page, name) => {
@@ -157,46 +144,7 @@ const CargoRegister = () => {
       throw new Error(err)
     }
 
-  }, [])
-
-  const getQualificationData = useCallback(async(page, name) => {
-    try {
-      setLoading(true)
-      const token = await AsyncStorage.getItem('@Permutas:token')
-      const response = await api.get(`/position/qualification/?page=${page}&name=${name}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setLoading(false)
-      return response.data
-    } catch (err){
-      setLoading(false)
-      throw new Error(err)
-    }
-
-  }, [])
-
-  const getTitrationData = useCallback(async(page, name) => {
-    try {
-      setLoading(true)
-      const token = await AsyncStorage.getItem('@Permutas:token')
-      const response = await api.get(`/position/titration/?page=${page}&name=${name}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setLoading(false)
-
-      return response.data
-
-    } catch (err){
-      setLoading(false)
-      throw new Error(err)
-
-    }
-
-  }, [])
+  }, [])  
 
   return (
     <>
@@ -224,30 +172,6 @@ const CargoRegister = () => {
               loading={loading}
               setLoading={setLoading}
             />
-            <Modal
-              icon="bookmark"
-              getDataFunction={getTitrationData}
-              isVisible={openTitrationDialog}
-              dataValues={positions}
-              value={titration}
-              setValue={setTitration}
-              togleModal={toggleTitrationModal}
-              inputPlaceHolder="Procure a titulação do seu cargo"
-              loading={loading}
-              setLoading={setLoading}
-            />
-            <Modal
-              getDataFunction={getQualificationData}
-              icon="award"
-              isVisible={openQualificationDialog}
-              dataValues={positions}
-              value={qualification}
-              setValue={setQualification}
-              togleModal={toggleQualificationModal}
-              inputPlaceHolder="Procure a sua formação"
-              loading={loading}
-              setLoading={setLoading}
-            />
             <View>
               <Title>Editar Informações do cargo</Title>
             </View>
@@ -258,25 +182,20 @@ const CargoRegister = () => {
                 onPress={toggleNameModal}
               />
 
-              <Restrictions>Restrições do cargo *</Restrictions>
-
-              <DialogButton
-                icon="bookmark"
-                value={titration}
-                placeholder="Titulação"
-                onPress={toggleTitrationModal}
-              />
-              <DialogButton
-                icon="award"
-                value={qualification}
-                placeholder="Formação"
-                onPress={toggleQualificationModal}
-              />
-            {/* <Form ref={formRef} onSubmit={() => handleSubmit(name, titration, qualification)}> */}
-              <Button style={{width: '100%'}} onPress={() => handleSubmit(name, titration, qualification)}>
+              <Restrictions>Restrições do cargo</Restrictions>
+              <Form >
+                <Input
+                  icon="message-square"
+                  onChangeText={(value) => setDescription(value)}
+                  value={description}
+                  autoCapitalize="false"
+                  name="description"
+                  placeholder="Descrição do cargo"
+                />
+              </Form>
+              <Button style={{width: '100%'}} onPress={() => handleSaveEdit()}>
                 Salvar
               </Button>
-            {/* </Form> */}
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>

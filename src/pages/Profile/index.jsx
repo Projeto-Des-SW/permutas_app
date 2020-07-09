@@ -44,7 +44,7 @@ const Profile = () => {
         Perfil
       </Title>
       <LineHeader />
-      <Button style={{width: '100%', backgroundColor: '#2d2d39', alignItems: 'flex-start', paddingLeft: 30}} onPress={() => navigate('EditUserData')}>Alterar dados</Button>
+      <Button style={{width: '100%', backgroundColor: '#2d2d39', alignItems: 'flex-start', paddingLeft: 30}} onPress={() => navigate('EditUserData')}>Alterar Dados</Button>
       <Button style={{width: '100%', backgroundColor: '#2d2d39', alignItems: 'flex-start', paddingLeft: 30}} onPress={() => navigate('EditAddress')}>Alterar Endereço</Button>
       <Button style={{width: '100%', backgroundColor: '#2d2d39', alignItems: 'flex-start', paddingLeft: 30}} onPress={() => navigate('EditCargo')}>Alterar Cargo </Button>
       <Exit>

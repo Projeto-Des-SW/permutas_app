@@ -114,7 +114,7 @@ const SignUp = () => {
           keyboardShouldPersistTaps="handled"
         >
           <Container>
-            <Image source={logo} style={{width: 150, height:150}} />
+            <Image source={logo} style={{width: 190, height:150}} />
             <View>
               <Title>Cadastre-se para localizar uma pessoa interessada na permuta.</Title>
             </View>

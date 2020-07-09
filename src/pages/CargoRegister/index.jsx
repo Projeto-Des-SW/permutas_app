@@ -6,7 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
-  Text
+  Image
 } from 'react-native';
 import { Form } from '@unform/mobile';
 import { useNavigation } from '@react-navigation/native';
@@ -19,12 +19,17 @@ import DialogButton from '../../components/dialogButton'
 import Modal from '../../components/modal'
 import Loading from '../../components/loading'
 import Input from '../../components/input'
+import InfoButton from '../../components/infoButton'
+import Keyboard from '../../components/keyboard'
+
+
+import logo from '../../../assets/logo.png'
 
 
 import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErros';
 
-import { Container, Title, Restrictions } from './styles';
+import { Container, Title, Restrictions, Terms } from './styles';
 
 
 
@@ -165,8 +170,9 @@ const CargoRegister = ({ route }) => {
               setLoading={setLoading}
             />
 
+            <Image source={logo} style={{width: 190, height: 150}} />
             <View>
-              <Title>Informações do Cargo</Title>
+              <Title>Informações do cargo</Title>
             </View>
             <DialogButton
                 icon="clipboard"
@@ -189,6 +195,15 @@ const CargoRegister = ({ route }) => {
                 Cadastrar
               </Button>
           </Container>
+          <Keyboard>
+           {!openNameDialog && (
+              <Terms>
+                <InfoButton onPress={() => console.log('aloou')}>
+                  Termos de uso
+                </InfoButton>
+              </Terms>
+            )}
+          </Keyboard>
         </ScrollView>
       </KeyboardAvoidingView>
     </>

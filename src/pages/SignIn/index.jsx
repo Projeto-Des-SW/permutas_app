@@ -101,7 +101,7 @@ const SignIn = () => {
           keyboardShouldPersistTaps="handled"
         >
           <Container>
-            <Image source={logo} style={{width: 150, height: 150, borderRadius: 0 }} />
+            <Image source={logo} style={{width: 190, height: 150, borderRadius: 0 }} />
             <Form ref={formRef} onSubmit={handleSignIn}>
               <Input
                 autoCorrect={false}

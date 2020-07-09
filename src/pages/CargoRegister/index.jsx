@@ -68,63 +68,63 @@ const CargoRegister = ({ route }) => {
   }, [])
 
   const handleSubmit = useCallback(async (nome, description) => {
-      try {
-        setLoading(true)
+    try {
+      setLoading(true)
 
-        const data = {
-          name: nome,
-          description: description,
-        }
-        if(!data.name || !data.description) {
-          Alert.alert('Erro!', 'Preencha todos os campos.');
-          setLoading(false)
-          return;
-        }
-        const token = await AsyncStorage.getItem('@Permutas:token');
-
-        const response = await api.post('/position', data, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        const { id } = response.data;
-
-        const governmentEmployee = {
-          position: id,
-          institution: institutionId,
-          address: address
-        }
-
-        console.log(governmentEmployee)
-
-        const employeeResponse = await api.post('/government-employee', governmentEmployee, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setLoading(false)
-        Alert.alert('Sucesso!', 'Servidor cadastrado com sucesso.');
-        navigation.navigate('Dashboard');
-
-      } catch (error) {
-        setLoading(false)
-        if (error instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(error);
-
-          formRef.current?.setErrors(errors);
-          return;
-        }
-        console.log(error.toString());
-
-        Alert.alert(
-          'Ocorreu um problema',
-          error.response.data.message,
-        );
+      const data = {
+        name: nome,
+        description: description,
       }
-    }, []);
+      if (!data.name || !data.description) {
+        Alert.alert('Erro!', 'Preencha todos os campos.');
+        setLoading(false)
+        return;
+      }
+      const token = await AsyncStorage.getItem('@Permutas:token');
+
+      const response = await api.post('/position', data, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const { id } = response.data;
+
+      const governmentEmployee = {
+        position: id,
+        institution: institutionId,
+        address: address
+      }
+
+      console.log(governmentEmployee)
+
+      const employeeResponse = await api.post('/government-employee', governmentEmployee, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setLoading(false)
+      Alert.alert('Sucesso!', 'Servidor cadastrado com sucesso.');
+      navigation.navigate('Dashboard');
+
+    } catch (error) {
+      setLoading(false)
+      if (error instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(error);
+
+        formRef.current?.setErrors(errors);
+        return;
+      }
+      console.log(error.toString());
+
+      Alert.alert(
+        'Ocorreu um problema',
+        error.response.data.message,
+      );
+    }
+  }, []);
 
 
-  const getNameData = useCallback(async(page, name) => {
+  const getNameData = useCallback(async (page, name) => {
     setLoading(true)
     try {
       const token = await AsyncStorage.getItem('@Permutas:token')
@@ -135,7 +135,7 @@ const CargoRegister = ({ route }) => {
       });
       setLoading(false)
       return response.data
-    } catch (err){
+    } catch (err) {
       setLoading(false)
 
       throw new Error(err)
@@ -150,7 +150,7 @@ const CargoRegister = ({ route }) => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         enabled
       >
-        <Loading isVisible={loading}/>
+        <Loading isVisible={loading} />
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           keyboardShouldPersistTaps="handled"
@@ -170,33 +170,34 @@ const CargoRegister = ({ route }) => {
               setLoading={setLoading}
             />
 
-            <Image source={logo} style={{width: 190, height: 150}} />
+            <Image source={logo} style={{ width: 190, height: 150 }} />
             <View>
               <Title>Informações do cargo</Title>
             </View>
             <DialogButton
-                icon="clipboard"
-                value={name}
-                placeholder="Nome"
-                onPress={toggleNameModal}
-              />
+              icon="clipboard"
+              value={name}
+              placeholder="Nome"
+              onPress={toggleNameModal}
+            />
 
-              <Restrictions>Restrições do cargo *</Restrictions>
-              <Form >
-                <Input
-                  icon="message-square"
-                  onChangeText={(value) => setDescription(value)}
-                  autoCapitalize="words"
-                  name="description"
-                  placeholder="Descrição do cargo"
-                />
-              </Form>
-              <Button style={{width: '100%'}} onPress={() => handleSubmit(name, description)}>
-                Cadastrar
+            <Restrictions>Restrições do cargo *</Restrictions>
+            <Form >
+              <Input
+                icon="message-square"
+                setValue={setDescription}
+                value={description}
+                autoCapitalize="words"
+                name="description"
+                placeholder="Descrição do cargo"
+              />
+            </Form>
+            <Button style={{ width: '100%' }} onPress={() => handleSubmit(name, description)}>
+              Cadastrar
               </Button>
           </Container>
           <Keyboard>
-           {!openNameDialog && (
+            {!openNameDialog && (
               <Terms>
                 <InfoButton onPress={() => console.log('aloou')}>
                   Termos de uso

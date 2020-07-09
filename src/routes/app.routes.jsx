@@ -12,6 +12,9 @@ import AddressRegister from '../pages/AddressRegister';
 import InterestRegister from '../pages/InterestRegister';
 import InterestList from '../pages/InterestList';
 import Profile from '../pages/Profile';
+import EditUserData from '../pages/EditUserData';
+import EditAddress from '../pages/EditAddress';
+import EditCargo from '../pages/EditCargo';
 
 const App = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -85,6 +88,10 @@ const AppRoutes = () => {
         <App.Screen name="AddressRegister" component={AddressRegister} />
         <App.Screen name="CargoRegister" component={CargoRegister} />
         <App.Screen name="InterestRegister" component={InterestRegister} />
+        <App.Screen name="Profile" component={Profile} />
+        <App.Screen name="EditUserData" component={EditUserData}/>
+        <App.Screen name="EditAddress" component={EditAddress}/>
+        <App.Screen name="EditCargo" component={EditCargo}/>
       </App.Navigator>
   );
 };

@@ -1,37 +1,35 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import DropDown from '../../components/dropDown'
 
+import DropDown from '../../components/dropDown'
 import {
   Image,
   ScrollView,
   View,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
   Alert,
 } from 'react-native';
 
-import { Container, Title, Terms } from './styles';
 
+import { Container, Title, BackToProfile, BackToProfileText } from './styles';
 import Button from '../../components/button';
 import Input from '../../components/input';
 import Keyboard from '../../components/keyboard';
-import logo from '../../../assets/logo.png'
 
 import { useNavigation } from '@react-navigation/native';
+import { Feather } from '@expo/vector-icons';
 import * as Yup from 'yup';
 
 import { Form } from '@unform/mobile';
 
-
-import Loading from '../../components/loading'
-import InfoButton from '../../components/infoButton'
+import Loading from '../../components/loading';
 
 import getValidationErrors from '../../utils/getValidationErros';
 import apiIbge from '../../services/apiIBGE';
 
 
-const AddressRegister = ({ route }) => {
-  const { institutionId } = route.params;
+const EditAddress = () => {
 
   const navigation = useNavigation();
 
@@ -109,7 +107,6 @@ const AddressRegister = ({ route }) => {
 
       setLoading(false)
       navigation.navigate('CargoRegister', {
-        institutionId: institutionId,
         address: address
       });
 
@@ -145,9 +142,8 @@ const AddressRegister = ({ route }) => {
           keyboardShouldPersistTaps="handled"
         >
           <Container>
-            <Image source={logo} style={{width: 190, height: 150}} />
             <View>
-              <Title>Endereço da instuição</Title>
+              <Title>Editar o endereço da instuição</Title>
             </View>
             <Form ref={formRef} onSubmit={() => handleSubmit(neighborhood, nomeCidade, uf)}>
               <DropDown
@@ -158,8 +154,7 @@ const AddressRegister = ({ route }) => {
                     value: estado.sigla
                   }
                 })}
-                description="Estado"
-                iconName="city"
+                description="Selecione um estado"
               />
               <DropDown
                 onChange={(value) => { setNomeCidade(value); console.log(value) }}
@@ -170,35 +165,31 @@ const AddressRegister = ({ route }) => {
                   }
                 })}
 
-                description="Cidade"
-                iconName="city-variant"
+                description="Selecione uma cidade"
               />
               <Input
                 onChangeText={(value) => setNeighborhood(value)}
                 autoCapitalize="words"
                 name="neighborhood"
                 placeholder="Bairro"
-                icon="home"
               />
 
               <Button onPress={() => formRef.current?.submitForm()}>
-                Adicionar
-              </Button>
+                Salvar
+            </Button>
             </Form>
           </Container>
-          <Keyboard>
-              <Terms>
-              <InfoButton onPress={() => console.log('alou')}>
-                Termos de uso
-              </InfoButton>
-            </Terms>
-          </Keyboard>
         </ScrollView>
       </KeyboardAvoidingView>
+      <Keyboard>
+        <BackToProfile onPress={() => navigation.goBack()}>
+          <Feather name="arrow-left" size={20} color="#ffffff" />
+          <BackToProfileText> Voltar para o perfil </BackToProfileText>
+        </BackToProfile>
+      </Keyboard>
     </>
   );
 
 };
 
-export default AddressRegister;
-
+export default EditAddress;

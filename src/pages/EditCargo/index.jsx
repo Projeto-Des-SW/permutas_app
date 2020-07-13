@@ -102,7 +102,6 @@ const CargoRegister = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        console.log(response.data);
 
         setLoading(false)
         Alert.alert('Sucesso!', 'Cargo atualizado');

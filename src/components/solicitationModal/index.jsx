@@ -19,6 +19,7 @@ const modal = ({
   item,
   isVisible,
   toggleModal,
+  createSolicitation,
 }) => {
 
   return (
@@ -71,7 +72,7 @@ const modal = ({
               style={{
                 backgroundColor: 'green'
               }}
-              onPress={() => { }}
+              onPress={() => createSolicitation(item.id)}
             >
               <ButtonText>Sim</ButtonText>
           </Button>

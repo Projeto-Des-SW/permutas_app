@@ -99,6 +99,47 @@ const Dashboard = () => {
     toggleModal();
   };
 
+  const createSolicitation = async (interest_id) => {
+    try {
+      setOpenSolicitationModal(false);
+      setLoading(true);
+      const token = await AsyncStorage.getItem('@Permutas:token');
+      await api.post('/solicitations', { interest_id }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setLoading(false);
+
+      Alert.alert(
+        'Sucesso',
+        'A solicitação foi enviada com sucesso!',
+        [
+          {
+            text: 'OK',
+            onPress: () => { return; },
+          },
+        ],
+        { cancelable: false }
+      );
+
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      Alert.alert(
+        'Ops',
+        'Ocorreu um problema ao enviar a solicitação, tente novamente.',
+        [
+          {
+            text: 'OK',
+            onPress: () => { return; },
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  }
+
   return (
     <Container>
       <Loading isVisible={loading} />
@@ -106,6 +147,7 @@ const Dashboard = () => {
         item={itemSelected}
         isVisible={openSolicitationModal}
         toggleModal={toggleModal}
+        createSolicitation={createSolicitation}
       />
       <Title>
         Destaques

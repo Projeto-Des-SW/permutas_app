@@ -27,6 +27,8 @@ import Loading from '../../components/loading';
 
 import getValidationErrors from '../../utils/getValidationErros';
 import apiIbge from '../../services/apiIBGE';
+import AsyncStorage from '@react-native-community/async-storage';
+import api from '../../services/api';
 
 
 const EditAddress = () => {
@@ -40,7 +42,8 @@ const EditAddress = () => {
   const [cities, setCities] = useState([]);
   const [uf, setUf] = useState("");
   const [loading, setLoading] = useState(false);
-  const [neighborhood, setNeighborhood] = useState("")
+  const [neighborhood, setNeighborhood] = useState("");
+  const [idAddress, setIdAddress] = useState("");
 
   useEffect(() => {
     async function getState() {
@@ -61,9 +64,26 @@ const EditAddress = () => {
 
   useEffect(() => {
     setCities([])
-    setNomeCidade("")
     getCities()
   }, [uf]);
+
+  useEffect(() => {
+    async function getAddress() {
+      const token = await AsyncStorage.getItem('@Permutas:token');
+      const response = await api.get('/government-employee/employee', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log(response.data.institutionAddress)
+      setNomeCidade(response.data.institutionAddress.city);
+      setUf(response.data.institutionAddress.state);
+      setNeighborhood(response.data.institutionAddress.neighborhood);
+      setIdAddress(response.data.institutionAddress.id);
+    }
+
+    getAddress();
+  }, [navigation]);
 
   async function getCities() {
     const selectedUf = state.find(estado => estado.sigla === uf);
@@ -93,7 +113,8 @@ const EditAddress = () => {
       const address = {
         neighborhood: bairro,
         city: cidade,
-        state: estado
+        state: estado,
+        id_address: idAddress,
       };
       console.log(address)
 
@@ -105,10 +126,19 @@ const EditAddress = () => {
         abortEarly: false,
       });
 
+      const token = await AsyncStorage.getItem('@Permutas:token');
+
+        const response = await api.put('/address', address, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+
+
       setLoading(false)
-      navigation.navigate('CargoRegister', {
-        address: address
-      });
+      Alert.alert('Sucesso!', 'Endereço atualizado');
+        navigation.navigate('Perfil');
 
     } catch (err) {
       setLoading(false)
@@ -154,7 +184,9 @@ const EditAddress = () => {
                     value: estado.sigla
                   }
                 })}
-                description="Selecione um estado"
+                description="Estado"
+                iconName="city"
+                valueIni={uf}
               />
               <DropDown
                 onChange={(value) => { setNomeCidade(value); console.log(value) }}
@@ -163,15 +195,20 @@ const EditAddress = () => {
                     label: cidade.nome,
                     value: cidade.nome
                   }
-                })}
 
-                description="Selecione uma cidade"
+
+                })}
+                description="Cidade"
+                iconName="city-variant"
+                valueIni={nomeCidade}
               />
               <Input
                 onChangeText={(value) => setNeighborhood(value)}
                 autoCapitalize="words"
                 name="neighborhood"
                 placeholder="Bairro"
+                icon="home"
+                value={neighborhood}
               />
 
               <Button onPress={() => formRef.current?.submitForm()}>

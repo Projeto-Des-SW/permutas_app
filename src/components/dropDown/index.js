@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 
-const Dropdown = ({onChange, valores, description, iconName }) => {
+const Dropdown = ({onChange, valores, description, iconName, valueIni }) => {
   const placeholder = {
     label: !!description ? description : "Escolha um estabelecimento",
     value: null,
@@ -27,6 +27,7 @@ const Dropdown = ({onChange, valores, description, iconName }) => {
       Icon={Icon}
       useNativeAndroidPickerStyle={false}
       textInputProps={pickerText.text}
+      value={valueIni}
     />
   )
 }

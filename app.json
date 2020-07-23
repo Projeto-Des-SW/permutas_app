@@ -1,11 +1,10 @@
 {
   "expo": {
-    "name": "appPermutas",
-    "slug": "appPermutas",
+    "name": "Permutas",
+    "slug": "permutas",
     "platforms": [
       "ios",
-      "android",
-      "web"
+      "android"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
@@ -22,7 +21,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.permuta.servidor"
+
+    },
+    "android": {
+      "package": "com.permuta.servidor"
     }
   }
 }

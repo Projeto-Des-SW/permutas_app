@@ -67,14 +67,15 @@ const CargoRegister = ({ route }) => {
     getPositions()
   }, [])
 
-  const handleSubmit = useCallback(async (nome, description) => {
+  const handleSubmit = useCallback(async (description, name) => {
     try {
       setLoading(true)
 
       const data = {
-        name: nome,
+        name: name,
         description: description,
       }
+      console.log(data)
       if (!data.name || !data.description) {
         Alert.alert('Erro!', 'Preencha todos os campos.');
         setLoading(false)
@@ -94,8 +95,6 @@ const CargoRegister = ({ route }) => {
         institution: institutionId,
         address: address
       }
-
-      console.log(governmentEmployee)
 
       const employeeResponse = await api.post('/government-employee', governmentEmployee, {
         headers: {
@@ -182,19 +181,19 @@ const CargoRegister = ({ route }) => {
             />
 
             <Restrictions>Restrições do cargo *</Restrictions>
-            <Form >
+            <Form onSubmit={() => handleSubmit(description,name)}>
               <Input
                 icon="message-square"
-                setValue={setDescription}
+                onChangeText={(value) => setDescription(value)}
                 value={description}
                 autoCapitalize="words"
                 name="description"
                 placeholder="Descrição do cargo"
               />
             </Form>
-            <Button style={{ width: '100%' }} onPress={() => handleSubmit(name, description)}>
+            <Button style={{ width: '100%' }} onPress={() => handleSubmit(description,name)}>
               Cadastrar
-              </Button>
+            </Button>
           </Container>
           <Keyboard>
             {!openNameDialog && (

@@ -91,3 +91,37 @@ export const ListContainer = styled.View`
   align-items: center;
   justify-content: center;
 `
+
+export const HeaderButtons = styled.View`
+  width: 100%;
+  margin-top: 8px;
+  flex-direction: row;
+  justify-content: space-around;
+`
+
+export const SolicitationCard = styled.TouchableOpacity`
+  height: 120px;
+  flex-direction: row;
+  background-color: #2D2D39;
+  border-radius: 15px;
+  padding: 12px;
+  margin-bottom: 10px;
+  align-items: center;
+`;
+
+export const ContentSolicitation = styled.View`
+  flex: 1;
+  flex-direction: column;
+  margin-left: 15px;
+`;
+
+export const TitleSolicitation = styled.Text`
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+`;
+
+export const TextSolicitation = styled.Text`
+  font-size: 16px;
+  color: #fff;
+`;

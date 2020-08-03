@@ -28,6 +28,7 @@ import {
 import Button from '../../components/button';
 import Loading from '../../components/loading';
 import LineHeader from '../../components/lineHeader';
+import CandidateModal from '../../components/candidateModal';
 
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api.js';
@@ -43,6 +44,9 @@ const InterestList = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const [value, setValue] = useState(1);
+  const [openSolicitationModal, setOpenSolicitationModal] = useState(false);
+  const [itemSelected, setItemSelected] = useState({});
+  const [indexSolicitationSelected, setIndexSolicitationSelected] = useState(-1);
 
   const { navigate } = useNavigation();
 
@@ -165,10 +169,10 @@ const InterestList = () => {
     );
   };
 
-  const renderSolicitations = (solicitation) => {
+  const renderSolicitations = (solicitation, index) => {
     if (solicitation.governmentEmployeeSender.user_id === user.id) {
       return (
-        <SolicitationCard>
+        <SolicitationCard onPress={() => openModal(index)}>
           <FontAwesome
             name={'user-circle'}
             size={70}
@@ -197,7 +201,7 @@ const InterestList = () => {
       );
     } else {
       return (
-        <SolicitationCard>
+        <SolicitationCard onPress={() => openModal(index)}>
           <FontAwesome
             name={'user-circle'}
             size={70}
@@ -227,9 +231,119 @@ const InterestList = () => {
     }
   }
 
+  const toggleModal = () => {
+    setOpenSolicitationModal(!openSolicitationModal);
+  };
+
+  const openModal = (index) => {
+    const item = dataSolicitations[index];
+    if (item.governmentEmployeeSender.user_id === user.id) {
+      setItemSelected(item.governmentEmployeeReceiver);
+    } else {
+      setItemSelected(item.governmentEmployeeSender);
+    }
+    setIndexSolicitationSelected(index);
+    toggleModal();
+  };
+
+  const confirmSolicitation = async () => {
+    try {
+      if (indexSolicitationSelected < 0 || indexSolicitationSelected >= dataSolicitations.length) return;
+
+      setOpenSolicitationModal(false);
+      setLoading(true);
+      const { id } = dataSolicitations[indexSolicitationSelected];
+      const token = await AsyncStorage.getItem('@Permutas:token');
+
+      const response = await api.put(`/solicitations/${id}/accept`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setLoading(false);
+
+      Alert.alert(
+        'Sucesso',
+        'A solicitação foi ACEITA, entre em contato com o servidor!',
+        [
+          {
+            text: 'OK',
+            onPress: () => { return; },
+          },
+        ],
+        { cancelable: false }
+      );
+    } catch (error) {
+      console.log(error.response.data);
+      setLoading(false);
+      Alert.alert(
+        'Ops',
+        'Ocorreu um problema ao enviar a solicitação, tente novamente.',
+        [
+          {
+            text: 'OK',
+            onPress: () => { return; },
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  }
+
+  const declineSolicitation = async () => {
+    try {
+      if (indexSolicitationSelected < 0 || indexSolicitationSelected >= dataSolicitations.length) return;
+
+      setOpenSolicitationModal(false);
+      setLoading(true);
+      const { id } = dataSolicitations[indexSolicitationSelected];
+      const token = await AsyncStorage.getItem('@Permutas:token');
+
+      const response = await api.put(`/solicitations/${id}/decline`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setLoading(false);
+
+      Alert.alert(
+        'Sucesso',
+        'A solicitação foi RECUSADA!',
+        [
+          {
+            text: 'OK',
+            onPress: () => { return; },
+          },
+        ],
+        { cancelable: false }
+      );
+    } catch (error) {
+      console.log(error.response.data);
+      setLoading(false);
+      Alert.alert(
+        'Ops',
+        'Ocorreu um problema ao enviar a solicitação, tente novamente.',
+        [
+          {
+            text: 'OK',
+            onPress: () => { return; },
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  }
+
   return (
     <Container>
       <Loading isVisible={loading} />
+      <CandidateModal
+        item={itemSelected}
+        isVisible={openSolicitationModal}
+        toggleModal={toggleModal}
+        confirmSolicitation={confirmSolicitation}
+        declineSolicitation={declineSolicitation}
+      />
       <Title>
         Interesses
       </Title>
@@ -289,7 +403,7 @@ const InterestList = () => {
               <InterestsList
                 data={dataSolicitations}
                 keyExtractor={item => item.id}
-                renderItem={(item) => renderSolicitations(item.item)}
+                renderItem={({ item, index }) => renderSolicitations(item, index)}
                 onRefresh={onRefresh}
                 refreshing={refreshing}
               />
@@ -309,7 +423,12 @@ const InterestList = () => {
               </MessageView>
         }
       </ListContainer>
-      <Button onPress={handleRegister} style={{ width: '100%' }}>Novo Interesse</Button>
+      {
+        value === 1 &&
+        <Button onPress={handleRegister} style={{ width: '100%' }}>
+          Novo Interesse
+        </Button>
+      }
     </Container>
   );
 };

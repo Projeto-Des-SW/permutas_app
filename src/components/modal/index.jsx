@@ -126,7 +126,7 @@ const modal = ({
     >
       <ModalView>
           <ModalHeader>
-            {!newField && (
+            {(!newField && !!newPlaceHolder) && (
               <AddButton onPress={() => setNewField(true)}>
                 <Feather name="plus" size={35} color="#fff" />
               </AddButton>

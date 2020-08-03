@@ -35,28 +35,31 @@ const Dashboard = () => {
   const [refresh, setRefresh] = useState(new Date());
   const [openSolicitationModal, setOpenSolicitationModal] = useState(false);
   const [itemSelected, setItemSelected] = useState({});
-  const [visibleFilter, setVisibleFilter] = useState(true);
+  const [visibleFilter, setVisibleFilter] = useState(false);
 
 
   useEffect(() => {
-    async function loadData() {
-      try {
-        setLoading(true)
-        const token = await AsyncStorage.getItem('@Permutas:token');
-        const response = await api.get('/highlights', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setData(response.data);
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
-        console.log(error.response.data);
-      }
-    }
+
     loadData();
   }, [refresh]);
+
+  async function loadData(state='',city='', institution='') {
+    try {
+      console.log(state, city, institution)
+      setLoading(true)
+      const token = await AsyncStorage.getItem('@Permutas:token');
+      const response = await api.get(`/highlights?state=${state}&city=${city}&institution=${institution}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setData(response.data);
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      console.log(error.response.data);
+    }
+  }
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -94,8 +97,7 @@ const Dashboard = () => {
   };
 
   const toggleFilterModal = () => {
-    console.log('alo')
-    console.log(visibleFilter)
+
     setVisibleFilter(!visibleFilter);
   }
 
@@ -174,7 +176,7 @@ const Dashboard = () => {
       <FilterModal
         isVisible={visibleFilter}
         toggleModal={toggleFilterModal}
-
+        filterFunction={loadData}
       />
 
       <LineHeader />

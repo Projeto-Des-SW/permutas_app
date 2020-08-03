@@ -25,10 +25,12 @@ import api from '../../services/api';
    FilterBlockTittle,
    FilterBlockBody,
    FilterBlockHeader,
-   ClearFilter
+   ClearFilter,
+   ApplyFilterButton,
+   ApllyFilterText
   } from './styles';
 
-const filterHighlights = ({isVisible, toggleModal}) => {
+const filterHighlights = ({isVisible, toggleModal, filterFunction}) => {
   const [state, setState] = useState([]);
   const [nomeCidade, setNomeCidade] = useState("");
   const [cities, setCities] = useState([]);
@@ -101,8 +103,9 @@ const filterHighlights = ({isVisible, toggleModal}) => {
     setInstitution('');
   }
 
-  const getInstitutionsData = useCallback(async (page, name) => {
+  const getInstitutionsData = async (page, name) => {
     setLoading(true)
+    console.log(page, name, 'alo meu povo')
     try {
       const token = await AsyncStorage.getItem('@Permutas:token')
       const response = await api.get(`/institution?page=${page}&name=${name}`, {
@@ -111,6 +114,7 @@ const filterHighlights = ({isVisible, toggleModal}) => {
         }
       });
       setLoading(false)
+      console.log(response.data)
       return response.data
     } catch (err) {
       setLoading(false)
@@ -118,7 +122,12 @@ const filterHighlights = ({isVisible, toggleModal}) => {
       throw new Error(err)
     }
 
-  }, [])
+  }
+
+  async function handleFilter(){
+    toggleModal();
+    await filterFunction(uf, nomeCidade, institution);
+  }
 
 
   return (
@@ -221,6 +230,11 @@ const filterHighlights = ({isVisible, toggleModal}) => {
             />
           </FilterBlockBody>
         </FilterBlock>
+        <ApplyFilterButton onPress={handleFilter}>
+          <ApllyFilterText>
+            Aplicar
+          </ApllyFilterText>
+        </ApplyFilterButton>
       </ModalView>
     </Modal>
   </>

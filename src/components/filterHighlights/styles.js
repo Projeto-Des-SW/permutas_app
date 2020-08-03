@@ -67,3 +67,19 @@ export const FilterBlockHeader = styled.View`
 `;
 
 export const ClearFilter = styled.Text``;
+
+
+export const ApplyFilterButton = styled.TouchableOpacity`
+  flex: 1;
+  height: 60px;
+  margin: 50px 30px 0 30px;
+  border-radius: 15px;
+  background-color: #30A887;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ApllyFilterText = styled.Text`
+  font-size: 18px;
+  color: #fff;
+`;

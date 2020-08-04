@@ -43,7 +43,7 @@ const Dashboard = () => {
     loadData();
   }, [refresh]);
 
-  async function loadData(state='',city='', institution='') {
+  async function loadData(state='', city='', institution='') {
     try {
       console.log(state, city, institution)
       setLoading(true)

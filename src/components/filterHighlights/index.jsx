@@ -105,7 +105,6 @@ const filterHighlights = ({isVisible, toggleModal, filterFunction}) => {
 
   const getInstitutionsData = async (page, name) => {
     setLoading(true)
-    console.log(page, name, 'alo meu povo')
     try {
       const token = await AsyncStorage.getItem('@Permutas:token')
       const response = await api.get(`/institution?page=${page}&name=${name}`, {
@@ -114,7 +113,6 @@ const filterHighlights = ({isVisible, toggleModal, filterFunction}) => {
         }
       });
       setLoading(false)
-      console.log(response.data)
       return response.data
     } catch (err) {
       setLoading(false)
@@ -126,6 +124,10 @@ const filterHighlights = ({isVisible, toggleModal, filterFunction}) => {
 
   async function handleFilter(){
     toggleModal();
+    if(uf === 'null') {
+      console.log('aqui rapaz')
+      await filterFunction('', '', institution);
+    }
     await filterFunction(uf, nomeCidade, institution);
   }
 

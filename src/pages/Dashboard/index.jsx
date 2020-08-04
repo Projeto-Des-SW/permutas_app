@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, Button, Alert, Text } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Button, Alert, Text, TouchableOpacity } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
 import { FontAwesome } from '@expo/vector-icons';
@@ -14,7 +14,8 @@ import {
   ContentMatch,
   MessageView,
   MessageText,
-  ListContainer
+  ListContainer,
+  Header
 } from './styles.js';
 
 import { useAuth } from '../../hooks/auth';
@@ -23,6 +24,7 @@ import api from '../../services/api.js';
 import Loading from '../../components/loading';
 import LineHeader from '../../components/lineHeader';
 import SolicitationModal from '../../components/solicitationModal';
+import FilterModal from '../../components/filterHighlights';
 
 
 const Dashboard = () => {
@@ -33,26 +35,31 @@ const Dashboard = () => {
   const [refresh, setRefresh] = useState(new Date());
   const [openSolicitationModal, setOpenSolicitationModal] = useState(false);
   const [itemSelected, setItemSelected] = useState({});
+  const [visibleFilter, setVisibleFilter] = useState(false);
+
 
   useEffect(() => {
-    async function loadData() {
-      try {
-        setLoading(true)
-        const token = await AsyncStorage.getItem('@Permutas:token');
-        const response = await api.get('/highlights', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setData(response.data);
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
-        console.log(error.response.data);
-      }
-    }
+
     loadData();
   }, [refresh]);
+
+  async function loadData(state='', city='', institution='') {
+    try {
+      console.log(state, city, institution)
+      setLoading(true)
+      const token = await AsyncStorage.getItem('@Permutas:token');
+      const response = await api.get(`/highlights?state=${state}&city=${city}&institution=${institution}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setData(response.data);
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      console.log(error.response.data);
+    }
+  }
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -88,6 +95,11 @@ const Dashboard = () => {
         null
     );
   };
+
+  const toggleFilterModal = () => {
+
+    setVisibleFilter(!visibleFilter);
+  }
 
   const toggleModal = () => {
     setOpenSolicitationModal(!openSolicitationModal);
@@ -149,9 +161,24 @@ const Dashboard = () => {
         toggleModal={toggleModal}
         createSolicitation={createSolicitation}
       />
-      <Title>
-        Destaques
-      </Title>
+      <Header>
+        <Title>
+          Destaques
+        </Title>
+        <TouchableOpacity onPress={() => toggleFilterModal()}>
+          <FontAwesome
+            name={'filter'}
+            size={20}
+            color='white'
+          />
+        </TouchableOpacity>
+      </Header>
+      <FilterModal
+        isVisible={visibleFilter}
+        toggleModal={toggleFilterModal}
+        filterFunction={loadData}
+      />
+
       <LineHeader />
       <ListContainer>
         {data.length > 0 ?

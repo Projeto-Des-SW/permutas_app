@@ -9,12 +9,17 @@ export const Container = styled.View`
   background-color: #1c1d29;
 `;
 
+export const Header = styled.View`
+  width: 100%;
+  margin: 50px 8px 15px;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
 export const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
   color: #efefef;
-  margin: 50px 8px 15px;
-  align-self: flex-start;
 `;
 
 export const Card = styled.View`

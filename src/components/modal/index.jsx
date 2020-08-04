@@ -78,9 +78,10 @@ const modal = ({
     setLoading(true)
     try {
       const responseData = await getDataFunction(page +1 , name)
-      console.log(responseData)
       console.log(loading, ended)
+      console.log(page)
       setPage(page + 1)
+      console.log(responseData.length);
 
       if (responseData.length === 0) {
         setEnded(true)
@@ -90,6 +91,7 @@ const modal = ({
 
       const newData = data.concat(responseData)
       setData(newData)
+      setEnded(false);
       setLoading(false)
     } catch (err) {
       console.log(err)
@@ -126,7 +128,7 @@ const modal = ({
     >
       <ModalView>
           <ModalHeader>
-            {!newField && (
+            {(!newField && !!newPlaceHolder) && (
               <AddButton onPress={() => setNewField(true)}>
                 <Feather name="plus" size={35} color="#fff" />
               </AddButton>

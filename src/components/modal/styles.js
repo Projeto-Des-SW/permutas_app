@@ -7,7 +7,7 @@ export const ModalView = styled.View`
 `;
 
 export const ModalItens = styled.TouchableOpacity`
-  height: 60px;
+  min-height: 70px;
   align-items: center;
   justify-content: center;
   background-color: #282c36;
@@ -20,6 +20,7 @@ export const ModalItens = styled.TouchableOpacity`
 export const ItemText = styled.Text`
   color: #fff;
   font-size: 16px;
+  text-align: center;
 `
 
 export const SearchInput = styled.View`

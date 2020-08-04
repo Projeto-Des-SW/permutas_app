@@ -39,7 +39,7 @@ export const ButtonText = styled.Text`
 `;
 export const ButtonPlaceholder = styled.Text`
   /* font-family: 'RobotoSlab-Medium'; */
-  color: #9c9a9a;
+  color: #9EA0A4;
   font-size: 16px;
 `;
 

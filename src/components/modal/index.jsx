@@ -58,8 +58,6 @@ const modal = ({
         if(responseData.length === 0) {
           setEnded(true)
         }
-        console.log(responseData)
-
         setData(responseData)
         setLoading(false)
       } catch (err) {
@@ -70,34 +68,26 @@ const modal = ({
     loadData()
   }, [])
 
-  const loadDataPagination = useCallback(async () => {
-    console.log('load data')
+  const loadDataPagination = async (page, ended) => {
     if(loading || ended){
       return;
     }
     setLoading(true)
     try {
-      const responseData = await getDataFunction(page +1 , name)
-      console.log(loading, ended)
-      console.log(page)
+      const responseData = await getDataFunction(page + 1 , name)
       setPage(page + 1)
-      console.log(responseData.length);
-
       if (responseData.length === 0) {
         setEnded(true)
-        setLoading(false)
-        return;
-      }
 
+      }
       const newData = data.concat(responseData)
       setData(newData)
-      setEnded(false);
       setLoading(false)
     } catch (err) {
       console.log(err)
       setLoading(false)
     }
-  } , [])
+  }
 
   async function getData(value) {
     setEnded(false)
@@ -116,9 +106,6 @@ const modal = ({
       setLoading(false)
     }
   }
-
-
-
 
   return (
     <Modal
@@ -159,7 +146,7 @@ const modal = ({
           <FlatList
             data={data}
             keyExtractor={(item, index) => `${item.name}${index}`}
-            onEndReached={loadDataPagination}
+            onEndReached={() => loadDataPagination(page, ended)}
             onEndReachedThreshold={0.3}
             renderItem={({item}) => (
               <ModalItens onPress={() => {

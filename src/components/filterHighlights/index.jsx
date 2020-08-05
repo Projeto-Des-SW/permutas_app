@@ -11,6 +11,7 @@ import DropDown from '../dropDown';
 import ModalInstitution from '../modal'
 import DialogButton from '../dialogButton'
 import Loading from '../loading';
+import Keyboard from '../keyboard'
 
 import api from '../../services/api';
 
@@ -105,6 +106,8 @@ const filterHighlights = ({isVisible, toggleModal, filterFunction}) => {
 
   const getInstitutionsData = async (page, name) => {
     setLoading(true)
+    console.log('alou')
+    console.log(page, name)
     try {
       const token = await AsyncStorage.getItem('@Permutas:token')
       const response = await api.get(`/institution?page=${page}&name=${name}`, {
@@ -167,8 +170,8 @@ const filterHighlights = ({isVisible, toggleModal, filterFunction}) => {
             </ClearAllFilter>
           </TouchableOpacity>
         </ModalHeader>
-
-        <FilterBlock>
+        <Keyboard>
+          <FilterBlock>
           <FilterBlockHeader>
             <FilterBlockTittle>
               Local
@@ -210,7 +213,7 @@ const filterHighlights = ({isVisible, toggleModal, filterFunction}) => {
           </FilterBlockBody>
         </FilterBlock>
 
-        <FilterBlock>
+          <FilterBlock>
           <FilterBlockBody>
             <FilterBlockHeader>
               <FilterBlockTittle>
@@ -232,11 +235,12 @@ const filterHighlights = ({isVisible, toggleModal, filterFunction}) => {
             />
           </FilterBlockBody>
         </FilterBlock>
-        <ApplyFilterButton onPress={handleFilter}>
-          <ApllyFilterText>
-            Aplicar
-          </ApllyFilterText>
-        </ApplyFilterButton>
+          <ApplyFilterButton onPress={handleFilter}>
+            <ApllyFilterText>
+              Aplicar
+            </ApllyFilterText>
+          </ApplyFilterButton>
+        </Keyboard>
       </ModalView>
     </Modal>
   </>

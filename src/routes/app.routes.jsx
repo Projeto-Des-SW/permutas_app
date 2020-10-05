@@ -15,6 +15,9 @@ import Profile from '../pages/Profile';
 import EditUserData from '../pages/EditUserData';
 import EditAddress from '../pages/EditAddress';
 import EditCargo from '../pages/EditCargo';
+import FirstStep from '../pages/CargoRegister/FirstStep';
+import SecondStep from '../pages/CargoRegister/SecondStep';
+import LastStep from '../pages/CargoRegister/LastStep';
 
 const App = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -87,6 +90,9 @@ const AppRoutes = () => {
         <App.Screen name="ListInstitutions" component={ListInstitutions} />
         <App.Screen name="AddressRegister" component={AddressRegister} />
         <App.Screen name="CargoRegister" component={CargoRegister} />
+        <App.Screen name="FirstStep" component={FirstStep} />
+        <App.Screen name="SecondStep" component={SecondStep} />
+        <App.Screen name="LastStep" component={LastStep} />
         <App.Screen name="InterestRegister" component={InterestRegister} />
         <App.Screen name="Profile" component={Profile} />
         <App.Screen name="EditUserData" component={EditUserData}/>

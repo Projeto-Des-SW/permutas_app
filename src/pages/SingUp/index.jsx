@@ -166,7 +166,8 @@ const SignUp = () => {
                 onSubmitEditing={() => formRef.current?.submitForm()}
               />
 
-              <Button onPress={() => formRef.current?.submitForm()}>
+              {/* <Button onPress={() => formRef.current?.submitForm()}> */}
+              <Button onPress={() => navigate('FirstStep')}>
                 Cadastrar
               </Button>
             </Form>

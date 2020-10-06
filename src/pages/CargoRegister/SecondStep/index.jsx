@@ -1,25 +1,37 @@
-import React, { useRef, useCallback, useState } from 'react';
-import { Alert, KeyboardAvoidingView } from 'react-native';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
+import { Alert, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 
-import { Container, Title, HelperText } from './styles';
+import { Container, Title, HelperText, LinkText } from './styles';
 
 import Input from '../../../components/input';
 import Button from '../../../components/button';
 import Loading from '../../../components/loading';
+import DropDown from '../../../components/dropDown';
 
-const SecondStep = () => {
+import apiIbge from '../../../services/apiIBGE';
+
+const SecondStep = ({ route }) => {
+  const {
+    name,
+    position,
+    institution,
+    ocuppation,
+    allocation,
+    state,
+  } = route.params;
   const formRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const { navigate } = useNavigation();
+  const [city, setCity] = useState([]);
+  const [cities, setCities] = useState([]);
 
   const handleConfirm = useCallback(async (data) => {
     try {
       setLoading(true);
       setLoading(false);
-      navigate('LastStep', data);
     } catch (error) {
       console.log(error.toString());
       Alert.alert(
@@ -29,37 +41,97 @@ const SecondStep = () => {
     }
   }, []);
 
+  useEffect(() => {
+    async function getCities() {
+      try {
+        setLoading(true);
+        const response = await apiIbge.get('/localidades/estados');
+        const stateResponse = response.data;
+        const uf = stateResponse.find(uf => uf.nome.toUpperCase() === state.toUpperCase());
+        if (uf) {
+          const response = await apiIbge.get(`/localidades/estados/${uf.id}/municipios`);
+          setCities(response.data);
+        };
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+        Alert.alert('Houve um problema ao obter cidades');
+      }
+    }
+    getCities();
+  }, []);
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }}>
       <Container>
         <Loading isVisible={loading} />
-        <Title>Informe seus dados</Title>
+        <Title>Confirme seus dados</Title>
         <Form
           ref={formRef}
           onSubmit={handleConfirm}
           style={{ marginTop: 20 }}
         >
           <Input
+            autoCapitalize="words"
+            name="name"
+            icon="user"
+            placeholder="Nome"
+            returnKeyType="next"
+            editable={false}
+            value={name}
+          />
+          <Input
             name="position"
             icon="clipboard"
             placeholder="Cargo"
             returnKeyType="next"
+            editable={false}
+            value={position}
           />
           <Input
             name="ocuppation"
             icon="briefcase"
             placeholder="Função"
             returnKeyType="next"
+            editable={false}
+            value={ocuppation}
           />
           <Input
-            name="description"
-            icon="clipboard"
-            placeholder="Descrição (opcional)"
+            name="institution"
+            icon="book-open"
+            placeholder="Instituição"
             returnKeyType="done"
-            onSubmitEditing={() => {
-              formRef.current?.submitForm();
-            }}
+            editable={false}
+            value={institution}
+          />
+          <Input
+            name="allocation"
+            icon="bookmark"
+            placeholder="Alocação"
+            returnKeyType="done"
+            editable={false}
+            value={allocation}
+          />
+          <Input
+            name="state"
+            icon="home"
+            placeholder="Estado"
+            returnKeyType="done"
+            editable={false}
+            value={state}
+          />
+          <HelperText>Informe a cidade:</HelperText>
+          <DropDown
+            onChange={(value) => { setCity(value); console.log(value) }}
+            valores={cities.map(cidade => {
+              return {
+                label: cidade.nome,
+                value: cidade.nome
+              }
+            })}
+            description="Cidade"
+            iconName="city-variant"
           />
           <Button
             onPress={() => formRef.current?.submitForm()}
@@ -68,6 +140,9 @@ const SecondStep = () => {
             Confirmar
         </Button>
         </Form>
+        <TouchableOpacity onPress={() => navigate('FirstStep')}>
+          <LinkText>Voltar</LinkText>
+        </TouchableOpacity>
       </Container>
     </KeyboardAvoidingView>
   );

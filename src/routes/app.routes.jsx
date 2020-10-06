@@ -6,7 +6,6 @@ import { FontAwesome } from '@expo/vector-icons';
 
 import Dashboard from '../pages/Dashboard';
 import ListInstitutions from '../pages/ListInstitutions'
-// import FirstStep from '../pages/ServerRegister/FirstStep';
 import CargoRegister from '../pages/CargoRegister';
 import AddressRegister from '../pages/AddressRegister';
 import InterestRegister from '../pages/InterestRegister';
@@ -17,7 +16,6 @@ import EditAddress from '../pages/EditAddress';
 import EditCargo from '../pages/EditCargo';
 import FirstStep from '../pages/CargoRegister/FirstStep';
 import SecondStep from '../pages/CargoRegister/SecondStep';
-import LastStep from '../pages/CargoRegister/LastStep';
 
 const App = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -92,7 +90,6 @@ const AppRoutes = () => {
         <App.Screen name="CargoRegister" component={CargoRegister} />
         <App.Screen name="FirstStep" component={FirstStep} />
         <App.Screen name="SecondStep" component={SecondStep} />
-        <App.Screen name="LastStep" component={LastStep} />
         <App.Screen name="InterestRegister" component={InterestRegister} />
         <App.Screen name="Profile" component={Profile} />
         <App.Screen name="EditUserData" component={EditUserData}/>

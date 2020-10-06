@@ -18,7 +18,16 @@ export const Title = styled.Text`
 `;
 
 export const HelperText = styled.Text`
-  margin-top: 40px;
+  margin-top: 20px;
+  margin-bottom: 10px;
   color: #f4ede8;
   opacity: 0.5;
+`;
+
+export const LinkText = styled.Text`
+  margin-top: 30px;
+  color: #f4ede8;
+  text-align: center;
+  font-size: 14px;
+  text-decoration: underline;
 `;

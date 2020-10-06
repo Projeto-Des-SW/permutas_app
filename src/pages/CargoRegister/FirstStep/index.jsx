@@ -25,22 +25,26 @@ const FirstStep = () => {
         const response = await api.post('government-employee/cpf', { cpf });
 
         if (!response?.data.error) {
-          alert('encontrou');
           // aqui direcionar para tela de confirmação;
+          const {
+            alocacao: allocation,
+            cargo: position,
+            estado: state,
+            funcao: ocuppation,
+            instituicao: institution,
+            nome: name,
+          } = response.data;
+
+          const data = { name, position, institution, ocuppation, allocation, state };
+
+          goToSecondStep(data);
         } else {
+          console.log('Não encontrou');
           Alert.alert(
-            'Dados não encontrados',
-            'Deseja inserir as informações manualmente?',
-            [
-              {
-                text: 'NÃO',
-                onPress: () => console.log('Cancel Pressed'),
-                style: 'cancel'
-              },
-              { text: 'SIM', onPress: () => goToSecondStep() }
-            ],
-            { cancelable: false }
+            'Ops',
+            'Ocorreu um problema ao tentar consultar os dados, tente novamente!',
           );
+          goToSecondStep(data);
         }
       } else {
         Alert.alert('Atenção', 'Por favor informe o seu CPF');
@@ -56,14 +60,9 @@ const FirstStep = () => {
     }
   }, []);
 
-  const goToSecondStep = useCallback(() => {
-    navigate('SecondStep');
+  const goToSecondStep = useCallback((date) => {
+    navigate('SecondStep', date);
   }, [navigate]);
-
-  // const goToLastStep = useCallback(() => {
-  //   navigate('LastStep');
-  // }, [navigate]);
-
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }}>
@@ -91,9 +90,9 @@ const FirstStep = () => {
           </Button>
           <HelperText>*Seu CPF será usado apenas para obtermos suas informações como servidor publico.</HelperText>
         </Form>
-        <TouchableOpacity onPress={() => goToSecondStep()}>
+        {/* <TouchableOpacity onPress={() => goToSecondStep()}>
           <LinkText>Clique aqui para informar manualmente</LinkText>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </Container>
     </KeyboardAvoidingView>
   );

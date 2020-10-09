@@ -3,6 +3,7 @@ import { Alert, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import { Container, Title, HelperText, LinkText } from './styles';
 
@@ -12,31 +13,54 @@ import Loading from '../../../components/loading';
 import DropDown from '../../../components/dropDown';
 
 import apiIbge from '../../../services/apiIBGE';
+import api from '../../../services/api';
 
 const SecondStep = ({ route }) => {
   const {
     name,
     position,
     institution,
-    ocuppation,
+    role,
     allocation,
     state,
   } = route.params;
+
   const formRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const { navigate } = useNavigation();
-  const [city, setCity] = useState([]);
+  const [city, setCity] = useState('');
   const [cities, setCities] = useState([]);
 
   const handleConfirm = useCallback(async (data) => {
     try {
       setLoading(true);
+      const governmentEmployee = {
+        position,
+        institution,
+        state,
+        city,
+        name,
+        allocation,
+        role,
+      };
+
+      const token = await AsyncStorage.getItem('@Permutas:token');
+
+      const response = await api.post('government-employee', governmentEmployee, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       setLoading(false);
+
+      Alert.alert('Sucesso', 'Seu cadastro foi realizado com sucesso!');
+      navigate('Home');
     } catch (error) {
+      setLoading(false);
       console.log(error.toString());
       Alert.alert(
         'Ops',
-        'Ocorreu um problema ao tentar consultar os dados, tente novamente!',
+        'Ocorreu um problema, tente novamente!',
       );
     }
   }, []);
@@ -90,12 +114,12 @@ const SecondStep = ({ route }) => {
             value={position}
           />
           <Input
-            name="ocuppation"
+            name="role"
             icon="briefcase"
             placeholder="Função"
             returnKeyType="next"
             editable={false}
-            value={ocuppation}
+            value={role}
           />
           <Input
             name="institution"
@@ -123,7 +147,7 @@ const SecondStep = ({ route }) => {
           />
           <HelperText>Informe a cidade:</HelperText>
           <DropDown
-            onChange={(value) => { setCity(value); console.log(value) }}
+            onChange={(value) => setCity(value)}
             valores={cities.map(cidade => {
               return {
                 label: cidade.nome,

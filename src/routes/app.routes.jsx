@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -6,8 +6,8 @@ import { FontAwesome } from '@expo/vector-icons';
 
 import Dashboard from '../pages/Dashboard';
 import ListInstitutions from '../pages/ListInstitutions'
-import CargoRegister from '../pages/CargoRegister';
-import AddressRegister from '../pages/AddressRegister';
+// import CargoRegister from '../pages/CargoRegister';
+// import AddressRegister from '../pages/AddressRegister';
 import InterestRegister from '../pages/InterestRegister';
 import InterestList from '../pages/InterestList';
 import Profile from '../pages/Profile';
@@ -16,6 +16,8 @@ import EditAddress from '../pages/EditAddress';
 import EditCargo from '../pages/EditCargo';
 import FirstStep from '../pages/CargoRegister/FirstStep';
 import SecondStep from '../pages/CargoRegister/SecondStep';
+
+import checkGovernmentEmployee from '../utils/checkGovernmentEmployee';
 
 const App = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -77,6 +79,16 @@ function HomeTabScreen() {
 }
 
 const AppRoutes = () => {
+  const [isGovernment, setIsGovernment] = useState(false);
+
+  useEffect(() => {
+    async function check() {
+      const result = await checkGovernmentEmployee();
+      setIsGovernment(result);
+    }
+    check();
+  }, []);
+
   return (
       <App.Navigator
         screenOptions={{
@@ -84,12 +96,17 @@ const AppRoutes = () => {
           cardStyle: { backgroundColor: '#1c1d29' },
         }}
       >
+        {
+          !isGovernment &&
+          <>
+            <App.Screen name="FirstStep" component={FirstStep} />
+            <App.Screen name="SecondStep" component={SecondStep} />
+          </>
+        }
         <App.Screen name="Home" component={HomeTabScreen} />
         <App.Screen name="ListInstitutions" component={ListInstitutions} />
-        <App.Screen name="AddressRegister" component={AddressRegister} />
-        <App.Screen name="CargoRegister" component={CargoRegister} />
-        <App.Screen name="FirstStep" component={FirstStep} />
-        <App.Screen name="SecondStep" component={SecondStep} />
+        {/* <App.Screen name="AddressRegister" component={AddressRegister} />
+        <App.Screen name="CargoRegister" component={CargoRegister} /> */}
         <App.Screen name="InterestRegister" component={InterestRegister} />
         <App.Screen name="Profile" component={Profile} />
         <App.Screen name="EditUserData" component={EditUserData}/>

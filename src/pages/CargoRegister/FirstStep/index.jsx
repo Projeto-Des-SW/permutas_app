@@ -12,11 +12,13 @@ import Loading from '../../../components/loading';
 
 import api from '../../../services/api';
 
+import { useAuth } from '../../../hooks/auth';
 
 const FirstStep = () => {
   const formRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const { navigate } = useNavigation();
+  const { signOut } = useAuth();
 
   const handleConfirm = useCallback(async ({ cpf }) => {
     try {
@@ -46,7 +48,7 @@ const FirstStep = () => {
     <KeyboardAvoidingView style={{ flex: 1 }}>
       <Container>
         <Loading isVisible={loading} />
-        <Title>Informe seu CPF</Title>
+        <Title onPress={() => signOut()}>Informe seu CPF</Title>
         <Form
           ref={formRef}
           onSubmit={handleConfirm}

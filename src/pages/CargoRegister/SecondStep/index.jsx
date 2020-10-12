@@ -31,9 +31,10 @@ const SecondStep = ({ route }) => {
   const [city, setCity] = useState('');
   const [cities, setCities] = useState([]);
 
-  const handleConfirm = useCallback(async (data) => {
+  const handleConfirm = useCallback(async () => {
     try {
       setLoading(true);
+
       const governmentEmployee = {
         position,
         institution,
@@ -51,9 +52,10 @@ const SecondStep = ({ route }) => {
           Authorization: `Bearer ${token}`
         }
       });
+      
       setLoading(false);
 
-      Alert.alert('Sucesso', 'Seu cadastro foi realizado com sucesso!');
+      Alert.alert('Sucesso', 'Seu cadastro foi realizado!');
       navigate('Home');
     } catch (error) {
       setLoading(false);
@@ -63,7 +65,7 @@ const SecondStep = ({ route }) => {
         'Ocorreu um problema, tente novamente!',
       );
     }
-  }, []);
+  }, [city]);
 
   useEffect(() => {
     async function getCities() {

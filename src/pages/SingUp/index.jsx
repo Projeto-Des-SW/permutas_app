@@ -50,7 +50,6 @@ const SignUp = () => {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          name: Yup.string().required('Nome obrigatório'),
           email: Yup.string()
             .email('Digite um e-mail válido')
             .required('E-mail obrigatório'),
@@ -73,9 +72,7 @@ const SignUp = () => {
 
         await signUp(response.data.session);
         setLoading(false)
-
-        navigate('ListInstitutions');
-
+        // navigate('FirstStep');
       } catch (err) {
         setLoading(false)
         if (err instanceof Yup.ValidationError) {
@@ -119,17 +116,6 @@ const SignUp = () => {
               <Title>Cadastre-se para localizar uma pessoa interessada na permuta.</Title>
             </View>
             <Form ref={formRef} onSubmit={handleSignUp}>
-              <Input
-                autoCapitalize="words"
-                name="name"
-                icon="user"
-                placeholder="Nome"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  emailInputRef.current?.focus();
-                }}
-              />
-
               <Input
                 ref={emailInputRef}
                 keyboardType="email-address"

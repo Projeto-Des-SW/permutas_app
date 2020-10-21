@@ -24,9 +24,10 @@ export const HelperText = styled.Text`
 `;
 
 export const LinkText = styled.Text`
-  margin-top: 30px;
+  margin-top: 20px;
   color: #f4ede8;
   text-align: center;
   font-size: 14px;
   text-decoration: underline;
+  opacity: 0.8;
 `;

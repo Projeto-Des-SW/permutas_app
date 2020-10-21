@@ -1,10 +1,10 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react';
-import { Alert, KeyboardAvoidingView } from 'react-native';
+import React, { useRef, useCallback, useState } from 'react';
+import { Alert, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 
-import { Container, Title, HelperText } from './styles';
+import { Container, Title, HelperText, LinkText } from './styles';
 
 import Input from '../../../components/input';
 import Button from '../../../components/button';
@@ -48,7 +48,7 @@ const FirstStep = () => {
     <KeyboardAvoidingView style={{ flex: 1 }}>
       <Container>
         <Loading isVisible={loading} />
-        <Title onPress={() => signOut()}>Informe seu CPF</Title>
+        <Title>Informe seu CPF</Title>
         <Form
           ref={formRef}
           onSubmit={handleConfirm}
@@ -70,6 +70,9 @@ const FirstStep = () => {
           </Button>
           <HelperText>*Seu CPF será usado apenas para obtermos suas informações como servidor publico.</HelperText>
         </Form>
+        <TouchableOpacity onPress={() => signOut()}>
+          <LinkText>Logout</LinkText>
+        </TouchableOpacity>
       </Container>
     </KeyboardAvoidingView>
   );

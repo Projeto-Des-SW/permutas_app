@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import * as Yup from 'yup';
 
-import { Form } from '@unform/mobile';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Feather } from '@expo/vector-icons';

@@ -1,43 +1,34 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import {
-  Image,
   ScrollView,
   View,
   KeyboardAvoidingView,
   Platform,
-  TextInput,
   Alert,
 } from 'react-native';
+import * as Yup from 'yup';
 
 import { useNavigation } from '@react-navigation/native';
-
-import { useAuth } from '../../hooks/auth';
+import { Form } from '@unform/mobile';
+import { Feather } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import getValidationErrors from '../../utils/getValidationErros';
 import api from '../../services/api';
-import { Form } from '@unform/mobile';
-import { Feather } from '@expo/vector-icons';
 
 import Input from '../../components/input';
 import Button from '../../components/button';
 import Keyboard from '../../components/keyboard';
 import Loading from '../../components/loading';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import { Container, Title, BackToProfile, BackToProfileText } from './styles';
 
-import * as Yup from 'yup';
 
 const EditUserData = () => {
   const formRef = useRef(null);
   const nomeInputRef = useRef(null);
   const emailInputRef = useRef(null);
-  const oldPasswordInputRef = useRef(null);
-  const newPasswordInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
-
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
 
   const { navigate, goBack } = useNavigation();
 
@@ -68,12 +59,6 @@ const EditUserData = () => {
           email: Yup.string()
             .email('Digite um e-mail válido')
             .required('E-mail obrigatório'),
-          oldPassword: Yup.string()
-            .required('Senha obrigatória')
-            .min(6, 'Digite pelo menos 6 caracteres'),
-          password: Yup.string()
-            .required('Senha obrigatória')
-            .min(6, 'Digite pelo menos 6 caracteres'),
         });
 
         await schema.validate(data, {
@@ -81,7 +66,7 @@ const EditUserData = () => {
         });
 
         const token = await AsyncStorage.getItem('@Permutas:token');
-        const response = await api.put('/users', data, {
+        await api.put('/users', data, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -154,29 +139,6 @@ const EditUserData = () => {
                   oldPasswordInputRef.current?.focus();
                 }}
               />
-              <Input
-                ref={oldPasswordInputRef}
-                secureTextEntry
-                name="oldPassword"
-                icon="lock"
-                placeholder="Senha antiga"
-                textContentType="newPassword"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  newPasswordInputRef.current?.focus();
-                }}
-              />
-              <Input
-                ref={newPasswordInputRef}
-                secureTextEntry
-                name="password"
-                icon="lock"
-                placeholder="Nova Senha"
-                textContentType="newPassword"
-                returnKeyType="send"
-                onSubmitEditing={() => formRef.current?.submitForm()}
-              />
-
               <Button onPress={() => formRef.current?.submitForm()}>
                 Salvar
               </Button>

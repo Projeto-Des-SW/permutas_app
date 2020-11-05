@@ -111,7 +111,7 @@ const EditUserData = () => {
         >
           <Container>
             <View>
-              <Title>Editar seus dados</Title>
+              <Title>Alterar Dados</Title>
             </View>
             <Form ref={formRef} onSubmit={handleSaveEdit}>
               <Input

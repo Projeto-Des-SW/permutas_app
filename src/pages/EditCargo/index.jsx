@@ -34,8 +34,6 @@ const CargoRegister = () => {
   const [name, setName] = useState('');
 
   const toggleNameModal = () => {
-    setOpenQualificationDialog(false);
-    setOpenTitrationDialog(false);
     setOpenNameDialog(!openNameDialog);
   };
 

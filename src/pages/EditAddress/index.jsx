@@ -161,7 +161,7 @@ const EditAddress = () => {
         >
           <Container>
             <View>
-              <Title>Editar o endereço da instuição</Title>
+              <Title>Alterar Endereço da Instuição</Title>
             </View>
             <Form ref={formRef} onSubmit={() => handleSubmit(neighborhood, nomeCidade, uf)}>
               <DropDown

@@ -7,60 +7,37 @@ import {
   Platform,
   Alert,
 } from 'react-native';
+import * as Yup from 'yup';
+
 import { Form } from '@unform/mobile';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
-import * as Yup from 'yup';
-import Keyboard from '../../components/keyboard';
 import { Feather } from '@expo/vector-icons';
 
-
 import Button from '../../components/button';
-import DialogButton from '../../components/dialogButton'
-import Modal from '../../components/modal'
-import Loading from '../../components/loading'
-import Input from '../../components/input'
-
+import DialogButton from '../../components/dialogButton';
+import Modal from '../../components/modal';
+import Loading from '../../components/loading';
+import Keyboard from '../../components/keyboard';
 
 import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErros';
 
-import { Container, Title, Restrictions, BackToProfile, BackToProfileText } from './styles';
-
-import logo from '../../../assets/logo.png'
-
+import { Container, Title, BackToProfile, BackToProfileText } from './styles';
 
 
 const CargoRegister = () => {
   const navigation = useNavigation();
   const [positions, setPositions] = useState([]);
-  const [employee, setEmployee] = useState(null);
   const [openNameDialog, setOpenNameDialog] = useState(false);
-  const [openTitrationDialog, setOpenTitrationDialog] = useState(false);
-  const [openQualificationDialog, setOpenQualificationDialog] = useState(false);
   const [loading, setLoading] = useState(false)
-
-
-
   const formRef = useRef(null);
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-
 
   const toggleNameModal = () => {
     setOpenQualificationDialog(false);
     setOpenTitrationDialog(false);
     setOpenNameDialog(!openNameDialog);
-  };
-  const toggleTitrationModal = () => {
-    setOpenQualificationDialog(false);
-    setOpenNameDialog(false);
-    setOpenTitrationDialog(!openTitrationDialog);
-  };
-  const toggleQualificationModal = () => {
-    setOpenTitrationDialog(false);
-    setOpenNameDialog(false);
-    setOpenQualificationDialog(!openQualificationDialog);
   };
 
   useEffect(() => {
@@ -72,10 +49,8 @@ const CargoRegister = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      setEmployee(response.data);
       setPositions(response.data.position);
       setName(response.data.position.name);
-      setDescription(response.data.position.description);
     }
 
     getPositions()
@@ -83,27 +58,27 @@ const CargoRegister = () => {
 
   const handleSaveEdit = async () => {
       try {
-        setLoading(true)
-
+        setLoading(true);
         const data = {
           name: name,
-          description: description,
           id_position: positions.id,
-        }
-        if(!data.name || !data.description || !data.id_position) {
+        };
+
+        if(!data.name || !data.id_position) {
           Alert.alert('Erro!', 'Preencha todos os campos.');
-          setLoading(false)
+          setLoading(false);
           return;
         }
+
         const token = await AsyncStorage.getItem('@Permutas:token');
 
-        const response = await api.put('/position', data, {
+        await api.put('/position', data, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
 
-        setLoading(false)
+        setLoading(false);
         Alert.alert('Sucesso!', 'Cargo atualizado');
         navigation.navigate('Perfil');
 
@@ -129,21 +104,19 @@ const CargoRegister = () => {
   const getNameData = useCallback(async(page, name) => {
     setLoading(true)
     try {
-      const token = await AsyncStorage.getItem('@Permutas:token')
+      const token = await AsyncStorage.getItem('@Permutas:token');
       const response = await api.get(`/position/name/?page=${page}&name=${name}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      setLoading(false)
-      return response.data
+      setLoading(false);
+      return response.data;
     } catch (err){
-      setLoading(false)
-
+      setLoading(false);
       throw new Error(err)
     }
-
-  }, [])  
+  }, []);
 
   return (
     <>
@@ -172,7 +145,7 @@ const CargoRegister = () => {
               setLoading={setLoading}
             />
             <View>
-              <Title>Editar Informações do cargo</Title>
+              <Title>Alterar Cargo</Title>
             </View>
             <DialogButton
                 icon="clipboard"
@@ -180,18 +153,6 @@ const CargoRegister = () => {
                 placeholder="Nome"
                 onPress={toggleNameModal}
               />
-
-              <Restrictions>Restrições do cargo</Restrictions>
-              <Form >
-                <Input
-                  icon="message-square"
-                  onChangeText={(value) => setDescription(value)}
-                  value={description}
-                  autoCapitalize="false"
-                  name="description"
-                  placeholder="Descrição do cargo"
-                />
-              </Form>
               <Button style={{width: '100%'}} onPress={() => handleSaveEdit()}>
                 Salvar
               </Button>

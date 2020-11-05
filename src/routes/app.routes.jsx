@@ -14,6 +14,7 @@ import Profile from '../pages/Profile';
 import EditUserData from '../pages/EditUserData';
 import EditAddress from '../pages/EditAddress';
 import EditCargo from '../pages/EditCargo';
+import EditPassword from '../pages/EditPassword';
 import FirstStep from '../pages/CargoRegister/FirstStep';
 import SecondStep from '../pages/CargoRegister/SecondStep';
 
@@ -112,6 +113,7 @@ const AppRoutes = () => {
         <App.Screen name="EditUserData" component={EditUserData}/>
         <App.Screen name="EditAddress" component={EditAddress}/>
         <App.Screen name="EditCargo" component={EditCargo}/>
+        <App.Screen name="EditPassword" component={EditPassword}/>
       </App.Navigator>
   );
 };

@@ -12,8 +12,8 @@ export const Container = styled.View`
 export const Title = styled.Text`
   font-size: 24px;
   color: #f4ede8;
-  /* font-family: 'RobotoSlab-Medium'; */
   margin: 64px 0 24px;
+  text-align: center;
 `;
 
 export const BackToSign = styled.TouchableOpacity`
@@ -34,7 +34,6 @@ export const BackToSign = styled.TouchableOpacity`
 export const BackToSignText = styled.Text`
   color: #1c1d29;
   font-size: 18px;
-  /* font-family: 'RobotoSlab-Regular'; */
   margin-left: 16px;
 `;
 
@@ -56,7 +55,6 @@ export const BackToProfile = styled.TouchableOpacity`
 export const BackToProfileText = styled.Text`
   color: #ffffff;
   font-size: 18px;
-  /* font-family: 'RobotoSlab-Regular'; */
   margin-left: 16px;
 `;
 

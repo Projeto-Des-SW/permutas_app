@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import {
   ScrollView,
   View,
@@ -24,30 +24,13 @@ import Loading from '../../components/loading';
 import { Container, Title, BackToProfile, BackToProfileText } from './styles';
 
 
-const EditUserData = () => {
+const EditPassword = () => {
   const formRef = useRef(null);
-  const nomeInputRef = useRef(null);
-  const emailInputRef = useRef(null);
+  const oldPasswordInputRef = useRef(null);
+  const newPasswordInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
 
   const { navigate, goBack } = useNavigation();
-
-  useEffect(() => {
-    async function getUserData() {
-      const token = await AsyncStorage.getItem('@Permutas:token');
-
-      const response = await api.get('/users/profile', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-      });
-
-      const { name, email} = response.data;
-
-      formRef.current.setData({name, email});
-    }
-    getUserData();
-  }, [])
 
   const handleSaveEdit = useCallback(
     async (data) => {
@@ -55,10 +38,12 @@ const EditUserData = () => {
         setLoading(true)
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
-          name: Yup.string().required('Nome obrigatório'),
-          email: Yup.string()
-            .email('Digite um e-mail válido')
-            .required('E-mail obrigatório'),
+          oldPassword: Yup.string()
+            .required('Senha obrigatória')
+            .min(6, 'Digite pelo menos 6 caracteres'),
+          password: Yup.string()
+            .required('Senha obrigatória')
+            .min(6, 'Digite pelo menos 6 caracteres'),
         });
 
         await schema.validate(data, {
@@ -66,12 +51,12 @@ const EditUserData = () => {
         });
 
         const token = await AsyncStorage.getItem('@Permutas:token');
-        await api.put('/users', data, {
+        await api.put('/users/password', data, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
-        setLoading(false)
+        setLoading(false);
 
         Alert.alert('Dados atualizados com sucesso!');
 
@@ -93,7 +78,6 @@ const EditUserData = () => {
       }
     },
     [navigate],
-
   );
 
 
@@ -111,34 +95,32 @@ const EditUserData = () => {
         >
           <Container>
             <View>
-              <Title>Alterar Dados</Title>
+              <Title>Alterar senha</Title>
             </View>
             <Form ref={formRef} onSubmit={handleSaveEdit}>
               <Input
-                ref={nomeInputRef}
-                autoCapitalize="words"
-                name="name"
-                icon="user"
-                placeholder="Nome"
+                ref={oldPasswordInputRef}
+                secureTextEntry
+                name="oldPassword"
+                icon="lock"
+                placeholder="Senha antiga"
+                textContentType="newPassword"
                 returnKeyType="next"
                 onSubmitEditing={() => {
-                  emailInputRef.current?.focus();
+                  newPasswordInputRef.current?.focus();
                 }}
+              />
+              <Input
+                ref={newPasswordInputRef}
+                secureTextEntry
+                name="password"
+                icon="lock"
+                placeholder="Nova Senha"
+                textContentType="newPassword"
+                returnKeyType="send"
+                onSubmitEditing={() => formRef.current?.submitForm()}
               />
 
-              <Input
-                ref={emailInputRef}
-                keyboardType="email-address"
-                autoCorrect={false}
-                autoCapitalize="none"
-                name="email"
-                icon="mail"
-                placeholder="E-mail"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  oldPasswordInputRef.current?.focus();
-                }}
-              />
               <Button onPress={() => formRef.current?.submitForm()}>
                 Salvar
               </Button>
@@ -156,4 +138,4 @@ const EditUserData = () => {
   );
 };
 
-export default EditUserData;
+export default EditPassword;

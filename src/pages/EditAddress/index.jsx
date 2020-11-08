@@ -46,66 +46,62 @@ const EditAddress = () => {
   const [idAddress, setIdAddress] = useState("");
 
   useEffect(() => {
-    async function getState() {
-      try {
-        setLoading(true)
-        const response = await apiIbge.get('/localidades/estados');
-        const stateResponse = response.data
-        stateResponse.sort((a, b) => (a.sigla > b.sigla));
-        setState(stateResponse);
-        setLoading(false)
-      } catch (err) {
-        setLoading(false)
-        console.log(err);
-      }
-    }
     getState();
   }, []);
 
   useEffect(() => {
     setCities([])
-    getCities()
+    getCities();
   }, [uf]);
 
-  useEffect(() => {
-    async function getAddress() {
-      const token = await AsyncStorage.getItem('@Permutas:token');
-      const response = await api.get('/government-employee/employee', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      console.log(response.data.institutionAddress)
-      setNomeCidade(response.data.institutionAddress.city);
-      setUf(response.data.institutionAddress.state);
-      setNeighborhood(response.data.institutionAddress.neighborhood);
-      setIdAddress(response.data.institutionAddress.id);
-    }
 
-    getAddress();
-  }, [navigation]);
-
-  async function getCities() {
-    const selectedUf = state.find(estado => estado.sigla === uf);
-
-    if (!selectedUf) {
-      return;
-    }
+  async function getState() {
     try {
-      setLoading(true)
-
-      const response = await apiIbge.get(`/localidades/estados/${selectedUf.id}/municipios`);
-      const cidades = response.data;
-      setLoading(false)
-
-      setCities(cidades);
+      setLoading(true);
+      const response = await apiIbge.get('/localidades/estados');
+      const stateResponse = response.data;
+      stateResponse.sort((a, b) => (a.sigla > b.sigla));
+      stateResponse.map(state => state.nome = state.nome.toUpperCase());
+      setState(stateResponse);
+      setLoading(false);
+      await getAddress();
     } catch (err) {
       setLoading(false)
       console.log(err);
     }
   }
 
-  const handleSubmit = useCallback(async (bairro, cidade, estado) => {
+  async function getCities() {
+    const selectedUf = state.find(estado => estado.nome === uf);
+
+    if (!selectedUf) return;
+
+    try {
+      setLoading(true);
+      const response = await apiIbge.get(`/localidades/estados/${selectedUf.id}/municipios`);
+      const cidades = response.data;
+      setCities(cidades);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false)
+      console.log(err);
+    }
+  }
+
+  async function getAddress() {
+    const token = await AsyncStorage.getItem('@Permutas:token');
+    const response = await api.get('/government-employee/employee', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    setUf(response.data.institutionAddress.state);
+    setNomeCidade(response.data.institutionAddress.city);
+    setNeighborhood(response.data.institutionAddress.neighborhood);
+    setIdAddress(response.data.institutionAddress.id);
+  }
+
+  const handleSubmit = async (bairro, cidade, estado) => {
     try {
       setLoading(true)
 
@@ -116,11 +112,8 @@ const EditAddress = () => {
         state: estado,
         id_address: idAddress,
       };
-      console.log(address)
 
-      const schema = Yup.object().shape({
-        neighborhood: Yup.string().required('Bairro obrigatório'),
-      });
+      const schema = Yup.object().shape({});
 
       await schema.validate(address, {
         abortEarly: false,
@@ -128,18 +121,15 @@ const EditAddress = () => {
 
       const token = await AsyncStorage.getItem('@Permutas:token');
 
-        const response = await api.put('/address', address, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+      await api.put('/address', address, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setLoading(false);
 
-
-
-      setLoading(false)
       Alert.alert('Sucesso!', 'Endereço atualizado');
-        navigation.navigate('Perfil');
-
+      navigation.navigate('Perfil');
     } catch (err) {
       setLoading(false)
 
@@ -155,9 +145,7 @@ const EditAddress = () => {
         ' Ocorreu um erro ao fazer cadastro, tente novamente.',
       );
     }
-  },
-    [navigation],
-  );
+  };
 
   return (
     <>
@@ -173,15 +161,15 @@ const EditAddress = () => {
         >
           <Container>
             <View>
-              <Title>Editar o endereço da instuição</Title>
+              <Title>Alterar Endereço da Instuição</Title>
             </View>
             <Form ref={formRef} onSubmit={() => handleSubmit(neighborhood, nomeCidade, uf)}>
               <DropDown
                 onChange={(value) => setUf(value)}
                 valores={state.map(estado => {
                   return {
-                    label: estado.sigla,
-                    value: estado.sigla
+                    label: estado.nome,
+                    value: estado.nome
                   }
                 })}
                 description="Estado"
@@ -189,14 +177,12 @@ const EditAddress = () => {
                 valueIni={uf}
               />
               <DropDown
-                onChange={(value) => { setNomeCidade(value); console.log(value) }}
+                onChange={(value) => setNomeCidade(value)}
                 valores={cities.map(cidade => {
                   return {
                     label: cidade.nome,
                     value: cidade.nome
                   }
-
-
                 })}
                 description="Cidade"
                 iconName="city-variant"

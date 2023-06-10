@@ -47,7 +47,7 @@ const SecondStep = ({ route }) => {
 
       const token = await AsyncStorage.getItem('@Permutas:token');
 
-      const response = await api.post('government-employee', governmentEmployee, {
+      await api.post('government-employee', governmentEmployee, {
         headers: {
           Authorization: `Bearer ${token}`
         }

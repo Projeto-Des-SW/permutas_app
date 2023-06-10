@@ -28,6 +28,14 @@ function HomeTabScreen() {
   return (
     <Tab.Navigator
         screenOptions={({ route }) => ({
+          tabBarActiveTintColor: "#e32245",
+          abBarInactiveTintColor: "gray",
+          tabBarStyle: [
+            {
+              "display": "flex"
+            },
+            null
+          ],
           tabBarIcon: ({ focused, color, size }) => {
             if (route.name === 'Dashboard') {
               return (

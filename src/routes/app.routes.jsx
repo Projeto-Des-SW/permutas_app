@@ -53,7 +53,7 @@ function HomeTabScreen() {
             else if (route.name === 'Interesses') {
               return (
                 <Ionicons
-                  name={focused ? 'ios-list-box' : 'ios-list'}
+                  name={focused ? 'list' : 'ios-list'}
                   size={size}
                   color={color}
                 />

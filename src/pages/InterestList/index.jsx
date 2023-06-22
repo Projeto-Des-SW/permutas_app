@@ -194,7 +194,7 @@ const InterestList = () => {
               style={{ alignSelf: 'flex-end' }}
             />
             <TextSolicitation style={{ fontSize: 12 }}>
-              {solicitation.statusMatch.description}
+              {solicitation.status}
             </TextSolicitation>
           </View>
         </SolicitationCard>
@@ -223,7 +223,7 @@ const InterestList = () => {
               style={{ alignSelf: 'flex-end' }}
             />
             <TextSolicitation style={{ fontSize: 12 }}>
-              {solicitation.statusMatch.description}
+              {solicitation.status}
             </TextSolicitation>
           </View>
         </SolicitationCard>

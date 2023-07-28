@@ -163,7 +163,7 @@ const InterestRegister = () => {
                   value: item.id
                 }
               })}
-              name="institution"
+              iconName="office-building-marker-outline"
               description="Selecione uma instituição"
             />
             <Subtitle>Informações do destino:</Subtitle>
@@ -175,7 +175,7 @@ const InterestRegister = () => {
                   value: estado.sigla
                 }
               })}
-              name="state"
+              iconName="map-marker-account"
               description="Selecione um estado"
             />
             <DropDown
@@ -186,13 +186,13 @@ const InterestRegister = () => {
                   value: cidade.nome
                 }
               })}
-              name="city"
-
+              iconName="city"
               description="Selecione uma cidade"
             />
             <Input
               autoCapitalize="words"
               name="neighborhood"
+              icon="home"
               placeholder="Bairro"
             />
 

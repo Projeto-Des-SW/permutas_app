@@ -51,7 +51,6 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const signUp = useCallback(async (session) => {
-    console.log('chegou aquii')
     const { token, user } = session;
     await AsyncStorage.multiSet([
       ['@Permutas:token', token],

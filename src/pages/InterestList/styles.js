@@ -12,7 +12,7 @@ export const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
   color: #efefef;
-  margin: 50px 8px 15px;
+  margin: 30px 8px 15px;
   align-self: flex-start;
 `;
 
@@ -116,12 +116,12 @@ export const ContentSolicitation = styled.View`
 `;
 
 export const TitleSolicitation = styled.Text`
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
   color: #fff;
 `;
 
 export const TextSolicitation = styled.Text`
-  font-size: 16px;
+  font-size: 13px;
   color: #fff;
 `;

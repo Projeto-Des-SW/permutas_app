@@ -53,7 +53,7 @@ const modal = ({
             borderBottomColor: '#acacac',
             borderBottomWidth: 1
           }} />
-          <TextCenter>Você deseja permutar com essa pessoa?</TextCenter>
+          <TextCenter>Você deseja enviar uma solicitação de permuta para essa pessoa?</TextCenter>
           <View style={{
             flexDirection: 'row',
             width: '100%',

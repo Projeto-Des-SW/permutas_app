@@ -19,6 +19,8 @@ import FirstStep from '../pages/CargoRegister/FirstStep';
 import SecondStep from '../pages/CargoRegister/SecondStep';
 
 import checkGovernmentEmployee from '../utils/checkGovernmentEmployee';
+import { Chats } from '../pages/Chats';
+import { ChatDetails } from '../pages/Chats/ChatDetails';
 
 const App = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,12 +32,6 @@ function HomeTabScreen() {
         screenOptions={({ route }) => ({
           tabBarActiveTintColor: "#e32245",
           abBarInactiveTintColor: "gray",
-          tabBarStyle: [
-            {
-              "display": "flex"
-            },
-            null
-          ],
           tabBarIcon: ({ focused, color, size }) => {
             if (route.name === 'Dashboard') {
               return (
@@ -68,27 +64,28 @@ function HomeTabScreen() {
                 />
               );
             }
+            else if (route.name === 'Chats') {
+              return (
+                <FontAwesome
+                  name={'comments'}
+                  size={size}
+                  color={color}
+                />
+              );
+            }
           },
         })}
-        tabBarOptions={{
-          activeTintColor: '#e32245',
-          inactiveTintColor: 'gray',
-          style: {
-            backgroundColor: '#1c1d29',
-            //borderTopWidth:2,
-            //borderColor: '#000',
-          },
-        }}
       >
       <Tab.Screen name="Dashboard" component={Dashboard} />
       <Tab.Screen name="Interesses" component={InterestList} />
+      <Tab.Screen name="Chats" component={Chats} />
       <Tab.Screen name="Perfil" component={Profile} />
     </Tab.Navigator>
   )
 }
 
 const AppRoutes = () => {
-  const [isGovernment, setIsGovernment] = useState(false);
+  const [isGovernment, setIsGovernment] = useState();
 
   useEffect(() => {
     async function check() {
@@ -98,6 +95,26 @@ const AppRoutes = () => {
     check();
   }, []);
 
+  if(isGovernment === undefined){
+    return(
+      <></>
+    )
+  }
+
+  if(!isGovernment){
+    return(
+      <App.Navigator
+        screenOptions={{
+          headerShown: true,
+          cardStyle: { backgroundColor: '#1c1d29' },
+        }}
+      >
+        <App.Screen name="FirstStep" component={FirstStep} />
+        <App.Screen name="SecondStep" component={SecondStep} />
+      </App.Navigator>
+    )
+  }
+
   return (
       <App.Navigator
         screenOptions={{
@@ -105,13 +122,6 @@ const AppRoutes = () => {
           cardStyle: { backgroundColor: '#1c1d29' },
         }}
       >
-        {
-          !isGovernment &&
-          <>
-            <App.Screen name="FirstStep" component={FirstStep} />
-            <App.Screen name="SecondStep" component={SecondStep} />
-          </>
-        }
         <App.Screen name="Home" component={HomeTabScreen} />
         <App.Screen name="ListInstitutions" component={ListInstitutions} />
         {/* <App.Screen name="AddressRegister" component={AddressRegister} />
@@ -122,6 +132,10 @@ const AppRoutes = () => {
         <App.Screen name="EditAddress" component={EditAddress}/>
         <App.Screen name="EditCargo" component={EditCargo}/>
         <App.Screen name="EditPassword" component={EditPassword}/>
+        <App.Screen options={() => ({
+          headerShown: true,
+          headerTitle: 'Chat'
+        })} name="ChatDetails" component={ChatDetails}/>
       </App.Navigator>
   );
 };

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1003769572126",
+    "project_id": "permutas-4a9ad",
+    "storage_bucket": "permutas-4a9ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003769572126:android:a9ae3b17944a914b6c770f",
+        "android_client_info": {
+          "package_name": "com.permuta.servidor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1003769572126-m8f8glnh4ig36dt7476gpeo2e44tk7sk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABwo89aifh3-Rl2SCYeUoNpbyZf_GrkcE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1003769572126-m8f8glnh4ig36dt7476gpeo2e44tk7sk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

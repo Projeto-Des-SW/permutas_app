@@ -23,10 +23,16 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.permuta.servidor"
-
     },
     "android": {
-      "package": "com.permuta.servidor"
-    }
+      "package": "com.permuta.servidor",
+      "googleServicesFile": "./google-services.json"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "29dc4a31-ab18-4de7-b6f3-9b9d82451ac1"
+      }
+    },
+    "owner": "jromulo"
   }
 }

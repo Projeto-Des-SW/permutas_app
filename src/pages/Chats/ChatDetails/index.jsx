@@ -1,0 +1,182 @@
+import { useState, useEffect, useRef } from 'react';
+import * as S from './styles'
+import Loading from '../../../components/loading';
+import AsyncStorage from '@react-native-community/async-storage';
+import api from '../../../services/api.js';
+import io from 'socket.io-client';
+import { FontAwesome, Feather } from '@expo/vector-icons';
+import Input from '../../../components/input';
+import { Form } from '@unform/mobile';
+
+import { Alert } from 'react-native';
+import { useAuth } from '../../../hooks/auth';
+import moment from 'moment';
+
+export function ChatDetails({route}){
+    const { chat_id } = route.params;
+
+    const { user } = useAuth()
+
+    const [chat, setChat] = useState()
+    const [messages, setMessages] = useState()
+
+    const [refresh, setRefresh] = useState(new Date());
+    const [loading, setLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+
+    const [message, setMessage] = useState("");
+    const formRef = useRef(null);
+    const flatListRef = useRef(null);
+
+    const socket = io('http://192.168.0.119:3001');
+
+    function onRefresh() {
+        setRefreshing(true);
+        setRefresh(new Date());
+        setRefreshing(false);
+    }
+
+    useEffect(() => {
+        socket.on('connect', () => {
+          console.log('Connected to the socket server!');
+
+          socket.emit('join_chat', { chat_id })
+        });
+    
+        socket.on('receive_message', (data) => {
+            setMessages((state) => [
+              ...state,
+              data,
+            ]);
+        });
+
+        socket.on('disconnect', () => {
+          console.log('Disconnected from the socket server!');
+        });
+
+        return () => {
+          socket.disconnect();
+          socket.off('receive_message');
+        };
+    }, []);
+
+    useEffect(() => {
+        async function loadChat() {
+            try{
+                setLoading(true)
+                const token = await AsyncStorage.getItem('@Permutas:token');
+    
+                const response = await api.get(`/chats/${chat_id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                
+                setChat(response.data)
+                setMessages(response.data.messages)
+                setLoading(false)
+            }catch(err){
+                console.log(err)
+            }
+        }
+
+        loadChat()
+    }, [refresh])
+
+    function renderListItem(item){
+        if(item){
+            const sender = item.sender_relation.user.id === user.id
+
+            return(
+                <S.MessageContainer sender={sender}>
+                    <FontAwesome
+                        name={'user-circle'}
+                        size={35}
+                        color='white'
+                    />
+                    <S.MessageTextContainer sender={sender}>
+                        <S.MessageText>{item.text}</S.MessageText>
+                        <S.MessageDate><S.DateText>{moment(item.created_at).format("DD/MM/YYYY HH:MM")}</S.DateText></S.MessageDate>
+                    </S.MessageTextContainer>
+                </S.MessageContainer>
+            )
+        }else {
+            return null
+        }
+    }
+
+    async function handleSubmit(message) {
+        try {
+            if (message !== '') {
+                const __createdtime__ = Date.now();
+                // Send message to server. We can't specify who we send the message to from the frontend. We can only send to server. Server can then send message to rest of users in room
+                socket.emit('send_message', { user_id: user.id, chat: chat_id, message });
+                setMessage('');
+            }
+
+        } catch (err) {
+            console.log(err)
+            Alert.alert('Erro ao enviar mensagem', 'Ocorreu um erro ao tentar enviar mensagem, tente novamente.')
+        }
+    };
+
+    return(
+        <S.Container>
+            <Loading isVisible={loading} />
+            <S.Header>
+                <S.Title>{user.name}</S.Title>
+            </S.Header>
+            <S.ChatContainer>
+                {
+                    messages?.length > 0 ?
+                        <S.MessageList
+                            data={messages}
+                            keyExtractor={message => message.id}
+                            renderItem={(message) => renderListItem(message.item)}
+                            onRefresh={onRefresh}
+                            refreshing={refreshing}
+                            ref={flatListRef}
+                            onContentSizeChange={() => {
+                                if (flatListRef.current && messages && messages.length > 0) {
+                                    flatListRef.current.scrollToEnd();
+                                }}
+                            }
+                        />
+                    :
+                    <S.EmptyContentView>
+                        <S.EmptyContentText>Nenhuma mensagem encontrada!</S.EmptyContentText>
+                        <S.EmptyContentText
+                            style={{
+                                fontSize: 14,
+                                textDecorationLine: 'underline',
+                                color: '#e32245',
+                            }}
+                            onPress={() => setRefresh(new Date())}
+                        >
+                        Clique aqui para recarregar
+                        </S.EmptyContentText>
+                    </S.EmptyContentView>
+                }
+                <S.InputBtnContainer>
+                    <S.InputContainer>
+                        <Form ref={formRef} onSubmit={() => handleSubmit(message)}>
+                            <Input
+                                onChangeText={(value) => setMessage(value)}
+                                name="message"
+                                placeholder="Escreva sua mensagem..."
+                                value={message}
+                            />
+                        </Form>
+                    </S.InputContainer>
+                    <S.SendBtn onPress={() => formRef.current?.submitForm()}>
+                        <Feather
+                            name="send"
+                            size={40}
+                            color="#2D2D39"
+                        />
+                    </S.SendBtn>
+                </S.InputBtnContainer>
+            </S.ChatContainer>
+        </S.Container>
+    )
+}

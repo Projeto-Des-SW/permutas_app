@@ -11,7 +11,7 @@ export const Container = styled.View`
 
 export const Header = styled.View`
   width: 100%;
-  margin: 50px 8px 15px;
+  margin: 30px 8px 15px;
   flex-direction: row;
   justify-content: space-between;
 `;

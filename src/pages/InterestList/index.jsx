@@ -32,18 +32,20 @@ import CandidateModal from '../../components/candidateModal';
 
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api.js';
+import { parseSolicitationStatus } from '../../utils/parseSolicitationsStatus.js';
 
 
 const InterestList = () => {
   const { signOut, user } = useAuth();
   const [data, setData] = useState([]);
-  const [dataSolicitations, setDataSolicitations] = useState([]);
+  const [solicitations, setSolicitations] = useState([]);
+  const [candidates, setCandidates] = useState([]);
 
   const [refresh, setRefresh] = useState(new Date());
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState('interests');
   const [openSolicitationModal, setOpenSolicitationModal] = useState(false);
   const [itemSelected, setItemSelected] = useState({});
   const [indexSolicitationSelected, setIndexSolicitationSelected] = useState(-1);
@@ -67,6 +69,22 @@ const InterestList = () => {
       setLoading(false);
     }
 
+    async function loadCandidates() {
+      try {
+        setLoading(true);
+        const token = await AsyncStorage.getItem('@Permutas:token');
+        const response = await api.get('/solicitations/candidates', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setCandidates(response.data);
+      } catch (error) {
+        console.log(error.response.data);
+      }
+      setLoading(false);
+    }
+
     async function loadSolicitations() {
       try {
         setLoading(true);
@@ -76,15 +94,17 @@ const InterestList = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        setDataSolicitations(response.data);
+        setSolicitations(response.data);
       } catch (error) {
         console.log(error.response.data);
       }
       setLoading(false);
     }
 
-    if (value === 1) loadInterests();
-    if (value === 2) loadSolicitations();
+
+    if (value === 'interests') loadInterests();
+    if (value === 'candidates') loadCandidates();
+    if (value === 'solicitations') loadSolicitations();
 
   }, [refresh, value]);
 
@@ -172,7 +192,7 @@ const InterestList = () => {
   const renderSolicitations = (solicitation, index) => {
     if (solicitation.governmentEmployeeSender.user_id === user.id) {
       return (
-        <SolicitationCard onPress={() => openModal(index)}>
+        <SolicitationCard onPress={() => openModal(index, true)} disabled={true}>
           <FontAwesome
             name={'user-circle'}
             size={70}
@@ -187,21 +207,15 @@ const InterestList = () => {
             </TextSolicitation>
           </ContentSolicitation>
           <View style={{ height: '100%', justifyContent: 'space-between' }}>
-            <Feather
-              name="arrow-right"
-              size={28}
-              color="#12B500"
-              style={{ alignSelf: 'flex-end' }}
-            />
             <TextSolicitation style={{ fontSize: 12 }}>
-              {solicitation.status}
+              {parseSolicitationStatus(solicitation.status)}
             </TextSolicitation>
           </View>
         </SolicitationCard>
       );
     } else {
       return (
-        <SolicitationCard onPress={() => openModal(index)}>
+        <SolicitationCard onPress={() => openModal(index, false)} disabled={solicitation.status !== 'pending'}>
           <FontAwesome
             name={'user-circle'}
             size={70}
@@ -216,14 +230,17 @@ const InterestList = () => {
             </TextSolicitation>
           </ContentSolicitation>
           <View style={{ height: '100%', justifyContent: 'space-between' }}>
-            <Feather
-              name="arrow-left"
-              size={28}
-              color="#E32245"
-              style={{ alignSelf: 'flex-end' }}
-            />
+            {
+              solicitation.status === 'pending' && 
+              <Feather
+                name="arrow-right"
+                size={28}
+                color="#12B500"
+                style={{ alignSelf: 'flex-end' }}
+              />
+            }
             <TextSolicitation style={{ fontSize: 12 }}>
-              {solicitation.status}
+              {parseSolicitationStatus(solicitation.status)}
             </TextSolicitation>
           </View>
         </SolicitationCard>
@@ -235,11 +252,12 @@ const InterestList = () => {
     setOpenSolicitationModal(!openSolicitationModal);
   };
 
-  const openModal = (index) => {
-    const item = dataSolicitations[index];
-    if (item.governmentEmployeeSender.user_id === user.id) {
+  function openModal(index, solicitation) {
+    if (solicitation) {
+      const item = solicitations[index];
       setItemSelected(item.governmentEmployeeReceiver);
     } else {
+      const item = candidates[index];
       setItemSelected(item.governmentEmployeeSender);
     }
     setIndexSolicitationSelected(index);
@@ -248,11 +266,11 @@ const InterestList = () => {
 
   const confirmSolicitation = async () => {
     try {
-      if (indexSolicitationSelected < 0 || indexSolicitationSelected >= dataSolicitations.length) return;
+      if (indexSolicitationSelected < 0 || indexSolicitationSelected >= candidates.length) return;
 
       setOpenSolicitationModal(false);
       setLoading(true);
-      const { id } = dataSolicitations[indexSolicitationSelected];
+      const { id } = candidates[indexSolicitationSelected];
       const token = await AsyncStorage.getItem('@Permutas:token');
 
       const response = await api.put(`/solicitations/${id}/accept`, {}, {
@@ -268,7 +286,7 @@ const InterestList = () => {
         [
           {
             text: 'OK',
-            onPress: () => { return; },
+            onPress: () => { navigate('ChatDetails', {chat_id: response.data.id}) },
           },
         ],
         { cancelable: false }
@@ -292,11 +310,11 @@ const InterestList = () => {
 
   const declineSolicitation = async () => {
     try {
-      if (indexSolicitationSelected < 0 || indexSolicitationSelected >= dataSolicitations.length) return;
+      if (indexSolicitationSelected < 0 || indexSolicitationSelected >= solicitations.length) return;
 
       setOpenSolicitationModal(false);
       setLoading(true);
-      const { id } = dataSolicitations[indexSolicitationSelected];
+      const { id } = solicitations[indexSolicitationSelected];
       const token = await AsyncStorage.getItem('@Permutas:token');
 
       const response = await api.put(`/solicitations/${id}/decline`, {}, {
@@ -334,6 +352,93 @@ const InterestList = () => {
     }
   }
 
+  function renderPageContent(){
+    if(value === 'interests'){
+      if(data.length > 0){
+        return(
+            <InterestsList
+              data={data}
+              keyExtractor={item => item.id}
+              renderItem={(item) => renderItem(item.item)}
+              onRefresh={onRefresh}
+              refreshing={refreshing}
+            />
+        )        
+      }else{
+        return(
+          <MessageView>
+            <MessageText>Nenhum interesse encontrado!</MessageText>
+            <MessageText
+                style={{
+                  fontSize: 14,
+                  textDecorationLine: 'underline',
+                  color: '#e32245',
+                }}
+                onPress={() => setRefresh(new Date())}
+              >
+                Clique aqui para recarregar
+            </MessageText>
+          </MessageView>
+        )           
+      }
+    }else if(value === 'candidates'){
+      if(candidates.length > 0){
+        return(
+          <InterestsList
+            data={candidates}
+            keyExtractor={item => item.id}
+            renderItem={({ item, index }) => renderSolicitations(item, index)}
+            onRefresh={onRefresh}
+            refreshing={refreshing}
+          />
+        )
+      }else{
+        return(
+          <MessageView>
+            <MessageText>Nenhum candidato encontrado!</MessageText>
+            <MessageText
+              style={{
+                fontSize: 14,
+                textDecorationLine: 'underline',
+                color: '#e32245',
+              }}
+              onPress={() => setRefresh(new Date())}
+            >
+              Clique aqui para recarregar
+            </MessageText>
+          </MessageView>
+        )
+      }
+    }else if(value === 'solicitations'){
+      if(solicitations.length > 0){
+        return(
+          <InterestsList
+            data={solicitations}
+            keyExtractor={item => item.id}
+            renderItem={({ item, index }) => renderSolicitations(item, index)}
+            onRefresh={onRefresh}
+            refreshing={refreshing}
+          />
+        )
+      }else{
+        return(
+          <MessageView>
+            <MessageText>Nenhuma solicitação de permuta sua encontrada!</MessageText>
+            <MessageText
+              style={{
+                fontSize: 14,
+                textDecorationLine: 'underline',
+                color: '#e32245',
+              }}
+              onPress={() => setRefresh(new Date())}
+            >
+              Clique aqui para recarregar
+            </MessageText>
+          </MessageView>
+        )
+      }
+    }
+  }
   return (
     <Container>
       <Loading isVisible={loading} />
@@ -350,81 +455,41 @@ const InterestList = () => {
       <LineHeader />
       <HeaderButtons>
         <Button
-          onPress={() => setValue(1)}
+          onPress={() => setValue('interests')}
           style={{
             height: 42,
-            width: '48%',
-            backgroundColor: value === 1 ? '#464A81' : '#2D2D39',
+            width: '30%',
+            backgroundColor: value === 'interests' ? '#464A81' : '#2D2D39',
           }}
         >
           Interesses
         </Button>
         <Button
-          onPress={() => setValue(2)}
+          onPress={() => setValue('candidates')}
           style={{
             height: 42,
-            width: '48%',
-            backgroundColor: value === 2 ? '#464A81' : '#2D2D39',
+            width: '30%',
+            backgroundColor: value === 'candidates' ? '#464A81' : '#2D2D39',
           }}
         >
           Candidatos
         </Button>
+        <Button
+          onPress={() => setValue('solicitations')}
+          style={{
+            height: 42,
+            width: '30%',
+            backgroundColor: value === 'solicitations' ? '#464A81' : '#2D2D39',
+          }}
+        >
+          Solicitações
+        </Button>
       </HeaderButtons>
       <ListContainer>
-        {
-          value === 1
-            ?
-            data.length > 0
-              ?
-              <InterestsList
-                data={data}
-                keyExtractor={item => item.id}
-                renderItem={(item) => renderItem(item.item)}
-                onRefresh={onRefresh}
-                refreshing={refreshing}
-              />
-              :
-              <MessageView>
-                <MessageText>Nenhum interesse encontrado!</MessageText>
-                <MessageText
-                  style={{
-                    fontSize: 14,
-                    textDecorationLine: 'underline',
-                    color: '#e32245',
-                  }}
-                  onPress={() => setRefresh(new Date())}
-                >
-                  Clique aqui para recarregar
-              </MessageText>
-              </MessageView>
-            :
-            dataSolicitations.length > 0
-              ?
-              <InterestsList
-                data={dataSolicitations}
-                keyExtractor={item => item.id}
-                renderItem={({ item, index }) => renderSolicitations(item, index)}
-                onRefresh={onRefresh}
-                refreshing={refreshing}
-              />
-              :
-              <MessageView>
-                <MessageText>Nenhuma solicitação encontrada!</MessageText>
-                <MessageText
-                  style={{
-                    fontSize: 14,
-                    textDecorationLine: 'underline',
-                    color: '#e32245',
-                  }}
-                  onPress={() => setRefresh(new Date())}
-                >
-                  Clique aqui para recarregar
-                </MessageText>
-              </MessageView>
-        }
+        { renderPageContent() }
       </ListContainer>
       {
-        value === 1 &&
+        value === 'interests' &&
         <Button onPress={handleRegister} style={{ width: '100%' }}>
           Novo Interesse
         </Button>

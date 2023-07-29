@@ -10,7 +10,6 @@ import { Form } from '@unform/mobile';
 
 import { Alert } from 'react-native';
 import { useAuth } from '../../../hooks/auth';
-import moment from 'moment';
 
 export function ChatDetails({route}){
     const { chat_id } = route.params;
@@ -96,7 +95,7 @@ export function ChatDetails({route}){
                     />
                     <S.MessageTextContainer sender={sender}>
                         <S.MessageText>{item.text}</S.MessageText>
-                        <S.MessageDate><S.DateText>{moment(item.created_at).format("DD/MM/YYYY HH:MM")}</S.DateText></S.MessageDate>
+                        <S.MessageDate><S.DateText>{new Date(item.createdAt).toLocaleString()}</S.DateText></S.MessageDate>
                     </S.MessageTextContainer>
                 </S.MessageContainer>
             )

@@ -14,6 +14,7 @@ import DropDown from '../../../components/dropDown';
 
 import apiIbge from '../../../services/apiIBGE';
 import api from '../../../services/api';
+import { useAuth } from '../../../hooks/auth';
 
 const SecondStep = ({ route }) => {
   const {
@@ -30,6 +31,8 @@ const SecondStep = ({ route }) => {
   const { navigate } = useNavigation();
   const [city, setCity] = useState('');
   const [cities, setCities] = useState([]);
+
+  const { user, updateUser } = useAuth()
 
   const handleConfirm = useCallback(async () => {
     try {
@@ -53,10 +56,11 @@ const SecondStep = ({ route }) => {
         }
       });
       
+      user.isGovernmentEmployee = true
+      await updateUser(user)
       setLoading(false);
 
       Alert.alert('Sucesso', 'Seu cadastro foi realizado!');
-      navigate('Home');
     } catch (error) {
       setLoading(false);
       console.log(error.toString());

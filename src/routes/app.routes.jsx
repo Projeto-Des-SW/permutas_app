@@ -21,6 +21,7 @@ import SecondStep from '../pages/CargoRegister/SecondStep';
 import checkGovernmentEmployee from '../utils/checkGovernmentEmployee';
 import { Chats } from '../pages/Chats';
 import { ChatDetails } from '../pages/Chats/ChatDetails';
+import { useAuth } from '../hooks/auth';
 
 const App = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -85,6 +86,7 @@ function HomeTabScreen() {
 }
 
 const AppRoutes = () => {
+  const { data } = useAuth()
   const [isGovernment, setIsGovernment] = useState();
 
   useEffect(() => {
@@ -93,7 +95,7 @@ const AppRoutes = () => {
       setIsGovernment(result);
     }
     check();
-  }, []);
+  }, [data]);
 
   if(isGovernment === undefined){
     return(
@@ -109,8 +111,12 @@ const AppRoutes = () => {
           cardStyle: { backgroundColor: '#1c1d29' },
         }}
       >
-        <App.Screen name="FirstStep" component={FirstStep} />
-        <App.Screen name="SecondStep" component={SecondStep} />
+        <App.Screen options={() => ({
+          headerShown: false,
+        })} name="FirstStep" component={FirstStep} />
+        <App.Screen options={() => ({
+          headerShown: false,
+        })} name="SecondStep" component={SecondStep} />
       </App.Navigator>
     )
   }

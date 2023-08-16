@@ -11,6 +11,8 @@ import { Form } from '@unform/mobile';
 import { Alert } from 'react-native';
 import { useAuth } from '../../../hooks/auth';
 
+import { REACT_APP_API_URL, REACT_APP_AVATAR_URL } from '@env';
+
 export function ChatDetails({route}){
     const { chat_id } = route.params;
 
@@ -27,7 +29,7 @@ export function ChatDetails({route}){
     const formRef = useRef(null);
     const flatListRef = useRef(null);
 
-    const socket = io('http://192.168.0.119:3001');
+    const socket = io(REACT_APP_API_URL);
 
     function onRefresh() {
         setRefreshing(true);
@@ -88,11 +90,18 @@ export function ChatDetails({route}){
 
             return(
                 <S.MessageContainer sender={sender}>
-                    <FontAwesome
-                        name={'user-circle'}
-                        size={35}
-                        color='white'
-                    />
+                    {
+                        item.sender_relation.user.avatar ? 
+                            <S.AvatarImg source={{
+                                uri: `${REACT_APP_API_URL}/${REACT_APP_AVATAR_URL}/${item.sender_relation.user.avatar}`,
+                            }}/>
+                        :
+                            <FontAwesome
+                                name={'user-circle'}
+                                size={35}
+                                color='white'
+                            />
+                    }
                     <S.MessageTextContainer sender={sender}>
                         <S.MessageText>{item.text}</S.MessageText>
                         <S.MessageDate><S.DateText>{new Date(item.createdAt).toLocaleString()}</S.DateText></S.MessageDate>
@@ -107,8 +116,6 @@ export function ChatDetails({route}){
     async function handleSubmit(message) {
         try {
             if (message !== '') {
-                const __createdtime__ = Date.now();
-                // Send message to server. We can't specify who we send the message to from the frontend. We can only send to server. Server can then send message to rest of users in room
                 socket.emit('send_message', { user_id: user.id, chat: chat_id, message });
                 setMessage('');
             }

@@ -90,3 +90,9 @@ export const ListContainer = styled.View`
   align-items: center;
   justify-content: center;
 `
+
+export const AvatarImg = styled.Image`
+  width: 70px;
+  height: 72px;
+  border-radius: 100px;
+`

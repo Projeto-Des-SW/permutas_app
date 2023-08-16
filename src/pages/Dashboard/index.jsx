@@ -25,7 +25,9 @@ import Loading from '../../components/loading';
 import LineHeader from '../../components/lineHeader';
 import SolicitationModal from '../../components/solicitationModal';
 import FilterModal from '../../components/filterHighlights';
+import * as S from './styles'
 
+import { REACT_APP_API_URL, REACT_APP_AVATAR_URL } from '@env';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -39,13 +41,11 @@ const Dashboard = () => {
 
 
   useEffect(() => {
-
     loadData();
   }, [refresh]);
 
   async function loadData(state='', city='', institution='') {
     try {
-      console.log(state, city, institution)
       setLoading(true)
       const token = await AsyncStorage.getItem('@Permutas:token');
       const response = await api.get(`/highlights?state=${state}&city=${city}&institution=${institution}`, {
@@ -71,11 +71,18 @@ const Dashboard = () => {
     return (
       item && item.governmentEmployee && item.institution ?
         <MatchCard onPress={() => openModal(index, item.id)}>
-          <FontAwesome
-            name={'user-circle'}
-            size={70}
-            color='white'
-          />
+            {
+              item.governmentEmployee.user.avatar ? 
+                  <S.AvatarImg source={{
+                      uri: `${REACT_APP_API_URL}/${REACT_APP_AVATAR_URL}/${item.governmentEmployee.user.avatar}`,
+                  }}/>
+              :
+                  <FontAwesome
+                      name={'user-circle'}
+                      size={70}
+                      color='white'
+                  />
+            }
           <ContentMatch>
             <TitleMatch>
               {item.governmentEmployee.user.name}
@@ -208,5 +215,4 @@ const Dashboard = () => {
     </Container>
   );
 };
-
 export default Dashboard;

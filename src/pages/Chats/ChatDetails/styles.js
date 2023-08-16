@@ -110,4 +110,10 @@ export const EmptyContentText = styled.Text`
   text-align: center;
 `;
 
+export const AvatarImg = styled.Image`
+  width: 35px;
+  height: 36px;
+  border-radius: 100px;
+`
+
 

@@ -36,3 +36,37 @@ export const BackToSignText = styled.Text`
   /* font-family: 'RobotoSlab-Regular'; */
   margin-left: 16px;
 `;
+
+export const HeaderContainer = styled.View`
+  display: flex;
+  align-items: center;
+`
+
+export const Text = styled.Text``
+
+export const AvatarImg = styled.Image`
+  width: 100px;
+  height: 100px;
+  border-radius: 100px;
+`
+
+export const AvatarContainer = styled.View`
+  border: 8px solid #63617a;
+  border-radius: 150px;
+  margin-bottom: 25px;
+`
+
+export const OpenCameraButton = styled.TouchableHighlight`
+  position: absolute;
+  height: 40px;
+  width: 15%;
+  border-radius: 10px;
+  margin-top: 8px;
+
+  bottom: 0;
+  right: 0;
+  justify-content: center;
+  align-items: center;
+  background-color: #63617a;
+  border: solid 2px #1c1d29;
+`;

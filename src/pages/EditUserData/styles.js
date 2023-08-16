@@ -16,6 +16,10 @@ export const Title = styled.Text`
   margin: 64px 0 24px;
 `;
 
+export const HeaderContainer = styled.View`
+  display: flex;
+  align-items: center;
+`
 export const BackToProfile = styled.TouchableOpacity`
   position: absolute;
   left: 0;
@@ -36,4 +40,33 @@ export const BackToProfileText = styled.Text`
   font-size: 18px;
   /* font-family: 'RobotoSlab-Regular'; */
   margin-left: 16px;
+`;
+
+export const Text = styled.Text``
+
+export const AvatarImg = styled.Image`
+  width: 200px;
+  height: 200px;
+  border-radius: 100px;
+`
+
+export const AvatarContainer = styled.View`
+  border: 8px solid #63617a;
+  border-radius: 150px;
+  margin-bottom: 50px;
+`
+
+export const OpenCameraButton = styled.TouchableHighlight`
+  position: absolute;
+  height: 50px;
+  width: 20%;
+  border-radius: 10px;
+  margin-top: 8px;
+
+  bottom: 0;
+  right: 0;
+  justify-content: center;
+  align-items: center;
+  background-color: #63617a;
+  border: solid 2px #1c1d29;
 `;

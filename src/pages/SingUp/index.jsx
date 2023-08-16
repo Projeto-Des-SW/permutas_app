@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
-import { Feather } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import * as Yup from 'yup';
 
 import { Form } from '@unform/mobile';
@@ -30,6 +30,8 @@ import logo from '../../../assets/logo.png';
 
 import { Container, Title } from './styles';
 
+import * as S from './styles'
+import ChangeAvatarModal from '../../components/changeAvatarModal';
 
 const SignUp = () => {
   const { navigate } = useNavigation();
@@ -43,8 +45,11 @@ const SignUp = () => {
 
   const { signUp } = useAuth();
 
-  const handleSignUp = useCallback(
-    async (data) => {
+  const [avatarFile, setAvatarFile] = useState(null);
+
+  const [isOpen, setIsOpen] = useState(false)
+
+  const handleSignUp = async (data) => {
       setLoading(true)
       try {
         formRef.current?.setErrors({});
@@ -66,13 +71,33 @@ const SignUp = () => {
           abortEarly: false,
         });
 
-        const response = await api.post('/users', data);
+        const signUpFormData = new FormData();
+
+        if(avatarFile){
+          const fileName = avatarFile.split('/').pop();
+          const fileType = fileName.split('.').pop();
+    
+          signUpFormData.append('avatar', { 
+            uri: avatarFile, 
+            name: fileName, 
+            type: `image/${fileType}`
+          });
+        }
+  
+        signUpFormData.append('email', data.email)
+        signUpFormData.append('password', data.password)
+        signUpFormData.append('confirmPassword', data.confirmPassword)
+
+        const response = await api.post('/users', signUpFormData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
 
         Alert.alert('Cadastro realizado com sucesso!');
 
         await signUp(response.data.session);
         setLoading(false)
-        // navigate('FirstStep');
       } catch (err) {
         setLoading(false)
         if (err instanceof Yup.ValidationError) {
@@ -94,9 +119,7 @@ const SignUp = () => {
           ' Ocorreu um erro ao fazer cadastro, tente novamente.',
         );
       }
-    },
-    [navigate],
-  );
+    }
 
   return (
     <>
@@ -105,6 +128,11 @@ const SignUp = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         enabled
       >
+        <ChangeAvatarModal 
+          setAvatarFile={setAvatarFile}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
         <Loading isVisible={loading}/>
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
@@ -116,6 +144,46 @@ const SignUp = () => {
               <Title>Cadastre-se para localizar uma pessoa interessada na permuta.</Title>
             </View>
             <Form ref={formRef} onSubmit={handleSignUp}>
+            <S.HeaderContainer>
+              {avatarFile ? 
+                (
+                  <S.AvatarContainer>
+                    <S.AvatarImg source={{
+                      uri: `${avatarFile}`,
+                    }}/>
+                    <S.OpenCameraButton
+                        underlayColor="#283040"
+                        onPress={() => setIsOpen(true)}>
+                        <FontAwesome
+                          name={'camera'}
+                          size={30}
+                          color='white'
+                        />
+                    </S.OpenCameraButton>
+                  </S.AvatarContainer>
+                ) 
+              :
+                (
+                  <S.AvatarContainer>
+                      <FontAwesome
+                        name={'user-circle'}
+                        size={100}
+                        color='white'
+                      />
+                      <S.OpenCameraButton
+                        underlayColor="#283040"
+                        onPress={() => setIsOpen(true)}>
+                        <FontAwesome
+                          name={'camera'}
+                          size={20}
+                          color='white'
+                        />
+                    </S.OpenCameraButton>
+                </S.AvatarContainer>
+                )
+              }
+            </S.HeaderContainer>
+
               <Input
                 ref={emailInputRef}
                 keyboardType="email-address"

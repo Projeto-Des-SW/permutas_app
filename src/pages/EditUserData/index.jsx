@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   ScrollView,
   View,
@@ -7,10 +7,10 @@ import {
   Alert,
 } from 'react-native';
 import * as Yup from 'yup';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
-import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import getValidationErrors from '../../utils/getValidationErros';
@@ -20,9 +20,11 @@ import Input from '../../components/input';
 import Button from '../../components/button';
 import Keyboard from '../../components/keyboard';
 import Loading from '../../components/loading';
-
+import { FontAwesome, Feather } from '@expo/vector-icons';
 import { Container, Title, BackToProfile, BackToProfileText } from './styles';
 
+import * as S from './styles'
+import ChangeAvatarModal from '../../components/changeAvatarModal';
 
 const EditUserData = () => {
   const formRef = useRef(null);
@@ -30,7 +32,10 @@ const EditUserData = () => {
   const emailInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
 
-  const { navigate, goBack } = useNavigation();
+  const { goBack } = useNavigation();
+  const [avatarFile, setAvatarFile] = useState(null);
+
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     async function getUserData() {
@@ -42,61 +47,77 @@ const EditUserData = () => {
         },
       });
 
-      const { name, email} = response.data;
+      const { name, email, avatar } = response.data;
 
       formRef.current.setData({name, email});
+
+      if(!String(avatar).includes('null')){
+        setAvatarFile(avatar)
+      }
     }
     getUserData();
   }, [])
 
-  const handleSaveEdit = useCallback(
-    async (data) => {
-      try {
-        setLoading(true)
-        formRef.current?.setErrors({});
-        const schema = Yup.object().shape({
-          name: Yup.string().required('Nome obrigatório'),
-          email: Yup.string()
-            .email('Digite um e-mail válido')
-            .required('E-mail obrigatório'),
+  async function handleSaveEdit(data){
+    try {
+      setLoading(true)
+      formRef.current?.setErrors({});
+      const schema = Yup.object().shape({
+        name: Yup.string().required('Nome obrigatório'),
+        email: Yup.string()
+          .email('Digite um e-mail válido')
+          .required('E-mail obrigatório'),
+      });
+
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+
+      const editFormData = new FormData();
+
+      if(avatarFile){
+        const fileName = avatarFile.split('/').pop();
+        const fileType = fileName.split('.').pop();
+  
+        editFormData.append('avatar', { 
+          uri: avatarFile, 
+          name: fileName, 
+          type: `image/${fileType}`
         });
-
-        await schema.validate(data, {
-          abortEarly: false,
-        });
-
-        const token = await AsyncStorage.getItem('@Permutas:token');
-        await api.put('/users', data, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setLoading(false)
-
-        Alert.alert('Dados atualizados com sucesso!');
-
-        goBack();
-
-      } catch (err) {
-        setLoading(false)
-        if (err instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(err);
-
-          formRef.current?.setErrors(errors);
-          return;
-        }
-        console.log(err.toString());
-        Alert.alert(
-          'Erro no cadastro',
-          ' Ocorreu um erro ao fazer cadastro, tente novamente.',
-        );
       }
-    },
-    [navigate],
 
-  );
+      editFormData.append('name', data.name)
+      editFormData.append('email', data.email)
 
+      const token = await AsyncStorage.getItem('@Permutas:token');
+      await api.put('/users', editFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setLoading(false)
 
+      Alert.alert('Dados atualizados com sucesso!');
+
+      goBack();
+
+    } catch (err) {
+      setLoading(false)
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
+
+        formRef.current?.setErrors(errors);
+        return;
+      }
+      console.log(err.toString());
+      Alert.alert(
+        'Erro no cadastro',
+        ' Ocorreu um erro ao fazer cadastro, tente novamente.',
+      );
+    }
+  }
+    
   return (
     <>
       <KeyboardAvoidingView
@@ -105,14 +126,56 @@ const EditUserData = () => {
         enabled
       >
         <Loading isVisible={loading} />
+        <ChangeAvatarModal 
+          setAvatarFile={setAvatarFile}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           keyboardShouldPersistTaps="handled"
         >
           <Container>
-            <View>
+            <S.HeaderContainer>
               <Title>Alterar Dados</Title>
-            </View>
+              {avatarFile ? 
+                (
+                  <S.AvatarContainer>
+                    <S.AvatarImg source={{
+                      uri: `${avatarFile}`,
+                    }}/>
+                    <S.OpenCameraButton
+                        underlayColor="#283040"
+                        onPress={() => setIsOpen(true)}>
+                        <FontAwesome
+                          name={'camera'}
+                          size={30}
+                          color='white'
+                        />
+                    </S.OpenCameraButton>
+                  </S.AvatarContainer>
+                ) 
+              :
+                (
+                  <S.AvatarContainer>
+                      <FontAwesome
+                        name={'user-circle'}
+                        size={200}
+                        color='white'
+                      />
+                      <S.OpenCameraButton
+                          underlayColor="#283040"
+                          onPress={() => setIsOpen(true)}>
+                          <FontAwesome
+                            name={'camera'}
+                            size={30}
+                            color='white'
+                          />
+                      </S.OpenCameraButton>
+                </S.AvatarContainer>
+                )
+              }
+            </S.HeaderContainer>
             <Form ref={formRef} onSubmit={handleSaveEdit}>
               <Input
                 ref={nomeInputRef}

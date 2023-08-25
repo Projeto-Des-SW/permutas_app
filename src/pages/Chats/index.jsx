@@ -49,12 +49,7 @@ export function Chats() {
     if (item) {
       return (
         <S.ChatCard
-          onPress={() =>
-            navigate('ChatDetails', {
-              chat_id: item.id,
-              sender: item.sender_employee.user.name,
-            })
-          }
+          onPress={() => navigate('ChatDetails', { chat_id: item.id })}
         >
           <S.ContentCard>
             <S.TitleCard>{item.opener_employee.user.name}</S.TitleCard>

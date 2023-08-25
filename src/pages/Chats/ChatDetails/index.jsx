@@ -15,9 +15,6 @@ import { REACT_APP_API_URL, REACT_APP_AVATAR_URL } from '@env';
 
 export function ChatDetails({ route }) {
   const { chat_id } = route.params;
-  //const { teste } = sender;
-
-  console.log(route);
 
   const { user } = useAuth();
 
@@ -137,7 +134,7 @@ export function ChatDetails({ route }) {
     <S.Container>
       <Loading isVisible={loading} />
       <S.Header>
-        <S.Title>Chat com {user.name}</S.Title>
+        <S.Title>{user.name}</S.Title>
       </S.Header>
       <S.ChatContainer>
         {messages?.length > 0 ? (

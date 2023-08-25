@@ -6,7 +6,7 @@ export const Container = styled.View`
   align-items: center;
   padding: 0 30px;
   padding: 0 30px ${Platform.OS === 'android' ? 60 : 40}px;
-  background-color: #1c1d29;
+  background-color: #31303d;
 `;
 
 export const Header = styled.View`
@@ -45,7 +45,7 @@ export const MatchsList = styled(FlatList)`
 export const MatchCard = styled.TouchableOpacity`
   height: 120px;
   flex-direction: row;
-  background-color: #2D2D39;
+  background-color: #25242e;
   border-radius: 15px;
   padding: 12px;
   margin-bottom: 10px;
@@ -72,7 +72,7 @@ export const TextMatch = styled.Text`
 export const MessageView = styled.View`
   height: 100px;
   width: 100%;
-  background-color: #2D2D39;
+  background-color: #2d2d39;
   border-radius: 8px;
   padding: 20px;
   justify-content: center;
@@ -89,10 +89,10 @@ export const ListContainer = styled.View`
   width: 100%;
   align-items: center;
   justify-content: center;
-`
+`;
 
 export const AvatarImg = styled.Image`
   width: 70px;
   height: 72px;
   border-radius: 100px;
-`
+`;

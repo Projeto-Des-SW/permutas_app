@@ -6,13 +6,13 @@ export const Container = styled.View`
   align-items: center;
   padding: 0 30px;
   padding: 0 30px 20px;
-  background-color: #1c1d29;
+  background-color: #31303d;
 `;
 
 export const Exit = styled.View`
   flex: 1;
   width: 100%;
-  justify-content: flex-end
+  justify-content: flex-end;
 `;
 
 export const Title = styled.Text`
@@ -27,5 +27,4 @@ export const Restrictions = styled.Text`
   font-size: 20px;
   padding: 16px 0px;
   color: #f4ede8;
-
 `;

@@ -6,6 +6,7 @@ export const Container = styled.View`
   align-items: center;
   justify-content: center;
   padding: 0 30px;
+  background-color: #31303d;
 `;
 
 export const Title = styled.Text`
@@ -40,21 +41,21 @@ export const BackToSignText = styled.Text`
 export const HeaderContainer = styled.View`
   display: flex;
   align-items: center;
-`
+`;
 
-export const Text = styled.Text``
+export const Text = styled.Text``;
 
 export const AvatarImg = styled.Image`
   width: 100px;
   height: 100px;
   border-radius: 100px;
-`
+`;
 
 export const AvatarContainer = styled.View`
   border: 8px solid #63617a;
   border-radius: 150px;
   margin-bottom: 25px;
-`
+`;
 
 export const OpenCameraButton = styled.TouchableHighlight`
   position: absolute;

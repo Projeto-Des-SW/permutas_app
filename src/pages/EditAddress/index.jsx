@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 
-import DropDown from '../../components/dropDown'
+import DropDown from '../../components/dropDown';
 import {
   Image,
   ScrollView,
@@ -10,7 +10,6 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-
 
 import { Container, Title, BackToProfile, BackToProfileText } from './styles';
 import Button from '../../components/button';
@@ -30,60 +29,59 @@ import apiIbge from '../../services/apiIBGE';
 import AsyncStorage from '@react-native-community/async-storage';
 import api from '../../services/api';
 
-
 const EditAddress = () => {
-
   const navigation = useNavigation();
 
   const formRef = useRef(null);
 
   const [state, setState] = useState([]);
-  const [nomeCidade, setNomeCidade] = useState("");
+  const [nomeCidade, setNomeCidade] = useState('');
   const [cities, setCities] = useState([]);
-  const [uf, setUf] = useState("");
+  const [uf, setUf] = useState('');
   const [loading, setLoading] = useState(false);
-  const [neighborhood, setNeighborhood] = useState("");
-  const [idAddress, setIdAddress] = useState("");
+  const [neighborhood, setNeighborhood] = useState('');
+  const [idAddress, setIdAddress] = useState('');
 
   useEffect(() => {
     getState();
   }, []);
 
   useEffect(() => {
-    setCities([])
+    setCities([]);
     getCities();
   }, [uf]);
-
 
   async function getState() {
     try {
       setLoading(true);
       const response = await apiIbge.get('/localidades/estados');
       const stateResponse = response.data;
-      stateResponse.sort((a, b) => (a.sigla > b.sigla));
-      stateResponse.map(state => state.nome = state.nome.toUpperCase());
+      stateResponse.sort((a, b) => a.sigla > b.sigla);
+      stateResponse.map((state) => (state.nome = state.nome.toUpperCase()));
       setState(stateResponse);
       setLoading(false);
       await getAddress();
     } catch (err) {
-      setLoading(false)
+      setLoading(false);
       console.log(err);
     }
   }
 
   async function getCities() {
-    const selectedUf = state.find(estado => estado.nome === uf);
+    const selectedUf = state.find((estado) => estado.nome === uf);
 
     if (!selectedUf) return;
 
     try {
       setLoading(true);
-      const response = await apiIbge.get(`/localidades/estados/${selectedUf.id}/municipios`);
+      const response = await apiIbge.get(
+        `/localidades/estados/${selectedUf.id}/municipios`,
+      );
       const cidades = response.data;
       setCities(cidades);
       setLoading(false);
     } catch (err) {
-      setLoading(false)
+      setLoading(false);
       console.log(err);
     }
   }
@@ -92,8 +90,8 @@ const EditAddress = () => {
     const token = await AsyncStorage.getItem('@Permutas:token');
     const response = await api.get('/government-employee/employee', {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
     setUf(response.data.institutionAddress.state);
     setNomeCidade(response.data.institutionAddress.city);
@@ -103,7 +101,7 @@ const EditAddress = () => {
 
   const handleSubmit = async (bairro, cidade, estado) => {
     try {
-      setLoading(true)
+      setLoading(true);
 
       formRef.current?.setErrors({});
       const address = {
@@ -123,15 +121,15 @@ const EditAddress = () => {
 
       await api.put('/address', address, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       setLoading(false);
 
       Alert.alert('Sucesso!', 'Endereço atualizado');
       navigation.navigate('Perfil');
     } catch (err) {
-      setLoading(false)
+      setLoading(false);
 
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
@@ -163,14 +161,17 @@ const EditAddress = () => {
             <View>
               <Title>Alterar Endereço da Instuição</Title>
             </View>
-            <Form ref={formRef} onSubmit={() => handleSubmit(neighborhood, nomeCidade, uf)}>
+            <Form
+              ref={formRef}
+              onSubmit={() => handleSubmit(neighborhood, nomeCidade, uf)}
+            >
               <DropDown
                 onChange={(value) => setUf(value)}
-                valores={state.map(estado => {
+                valores={state.map((estado) => {
                   return {
                     label: estado.nome,
-                    value: estado.nome
-                  }
+                    value: estado.nome,
+                  };
                 })}
                 description="Estado"
                 iconName="city"
@@ -178,11 +179,11 @@ const EditAddress = () => {
               />
               <DropDown
                 onChange={(value) => setNomeCidade(value)}
-                valores={cities.map(cidade => {
+                valores={cities.map((cidade) => {
                   return {
                     label: cidade.nome,
-                    value: cidade.nome
-                  }
+                    value: cidade.nome,
+                  };
                 })}
                 description="Cidade"
                 iconName="city-variant"
@@ -199,7 +200,7 @@ const EditAddress = () => {
 
               <Button onPress={() => formRef.current?.submitForm()}>
                 Salvar
-            </Button>
+              </Button>
             </Form>
           </Container>
         </ScrollView>
@@ -212,7 +213,6 @@ const EditAddress = () => {
       </Keyboard>
     </>
   );
-
 };
 
 export default EditAddress;

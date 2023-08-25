@@ -34,7 +34,6 @@ import { useAuth } from '../../hooks/auth';
 import api from '../../services/api.js';
 import { parseSolicitationStatus } from '../../utils/parseSolicitationsStatus.js';
 
-
 const InterestList = () => {
   const { signOut, user } = useAuth();
   const [data, setData] = useState([]);
@@ -48,7 +47,8 @@ const InterestList = () => {
   const [value, setValue] = useState('interests');
   const [openSolicitationModal, setOpenSolicitationModal] = useState(false);
   const [itemSelected, setItemSelected] = useState({});
-  const [indexSolicitationSelected, setIndexSolicitationSelected] = useState(-1);
+  const [indexSolicitationSelected, setIndexSolicitationSelected] =
+    useState(-1);
 
   const { navigate } = useNavigation();
 
@@ -59,8 +59,8 @@ const InterestList = () => {
         const token = await AsyncStorage.getItem('@Permutas:token');
         const response = await api.get('/interest', {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         setData(response.data);
       } catch (error) {
@@ -75,8 +75,8 @@ const InterestList = () => {
         const token = await AsyncStorage.getItem('@Permutas:token');
         const response = await api.get('/solicitations/candidates', {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         setCandidates(response.data);
       } catch (error) {
@@ -91,8 +91,8 @@ const InterestList = () => {
         const token = await AsyncStorage.getItem('@Permutas:token');
         const response = await api.get('/solicitations', {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         setSolicitations(response.data);
       } catch (error) {
@@ -101,16 +101,14 @@ const InterestList = () => {
       setLoading(false);
     }
 
-
     if (value === 'interests') loadInterests();
     if (value === 'candidates') loadCandidates();
     if (value === 'solicitations') loadSolicitations();
-
   }, [refresh, value]);
 
   const handleRegister = () => {
     navigate('InterestRegister');
-  }
+  };
 
   const handleRemove = (item) => {
     try {
@@ -120,21 +118,23 @@ const InterestList = () => {
         [
           {
             text: 'Cancelar',
-            onPress: () => { return; },
+            onPress: () => {
+              return;
+            },
             style: 'cancel',
           },
           {
             text: 'Remover',
             onPress: () => removeInterest(item.id),
-            style: 'destructive'
+            style: 'destructive',
           },
         ],
-        { cancelable: false }
+        { cancelable: false },
       );
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const removeInterest = async (id) => {
     try {
@@ -142,8 +142,8 @@ const InterestList = () => {
 
       const response = await api.delete(`interest/${id}`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       setRefresh(new Date());
       Alert.alert('Sucesso', 'O interesse foi removido!');
@@ -151,59 +151,57 @@ const InterestList = () => {
       Alert.alert('Ops', 'Ocorreu um problema ao tentar remover o interesse');
       console.log(error.response.data);
     }
-  }
+  };
 
   const onRefresh = () => {
     setRefreshing(true);
     setRefresh(new Date());
     setRefreshing(false);
-  }
+  };
 
   const renderItem = (item) => {
-    return (
-      item ?
-        <InterestCard>
-          <ContentInterest>
-            <TitleInterest>
-              {item.institution.name}
-            </TitleInterest>
-            <TextInterest>
-              {item.destinationAddress && item.destinationAddress.city + ' - ' + item.destinationAddress.state}
-            </TextInterest>
-          </ContentInterest>
-          <View style={{ height: '100%', justifyContent: 'space-between' }}>
-            <Feather
-              name={'x'}
-              size={30}
-              style={{ alignSelf: 'flex-end' }}
-              color='red'
-              onPress={() => handleRemove(item)}
-            />
-            <DateInterest>
-              {moment(item.created_at.get).format("DD/MM/YYYY")}
-            </DateInterest>
-          </View>
-        </InterestCard>
-        :
-        null
-    );
+    return item ? (
+      <InterestCard>
+        <ContentInterest>
+          <TitleInterest>{item.institution.name}</TitleInterest>
+          <TextInterest>
+            {item.destinationAddress &&
+              item.destinationAddress.city +
+                ' - ' +
+                item.destinationAddress.state}
+          </TextInterest>
+        </ContentInterest>
+        <View style={{ height: '100%', justifyContent: 'space-between' }}>
+          <Feather
+            name={'x'}
+            size={30}
+            style={{ alignSelf: 'flex-end' }}
+            color="red"
+            onPress={() => handleRemove(item)}
+          />
+          <DateInterest>
+            {moment(item.created_at.get).format('DD/MM/YYYY')}
+          </DateInterest>
+        </View>
+      </InterestCard>
+    ) : null;
   };
 
   const renderSolicitations = (solicitation, index) => {
     if (solicitation.governmentEmployeeSender.user_id === user.id) {
       return (
-        <SolicitationCard onPress={() => openModal(index, true)} disabled={true}>
-          <FontAwesome
-            name={'user-circle'}
-            size={70}
-            color='white'
-          />
+        <SolicitationCard
+          onPress={() => openModal(index, true)}
+          disabled={true}
+        >
+          <FontAwesome name={'user-circle'} size={70} color="white" />
           <ContentSolicitation>
             <TitleSolicitation>
               {solicitation.governmentEmployeeReceiver.user.name}
             </TitleSolicitation>
             <TextSolicitation>
-              De: {`${solicitation.governmentEmployeeReceiver.institutionAddress.city} - ${solicitation.governmentEmployeeReceiver.institutionAddress.state}`}
+              De:{' '}
+              {`${solicitation.governmentEmployeeReceiver.institutionAddress.city} - ${solicitation.governmentEmployeeReceiver.institutionAddress.state}`}
             </TextSolicitation>
           </ContentSolicitation>
           <View style={{ height: '100%', justifyContent: 'space-between' }}>
@@ -215,30 +213,29 @@ const InterestList = () => {
       );
     } else {
       return (
-        <SolicitationCard onPress={() => openModal(index, false)} disabled={solicitation.status !== 'pending'}>
-          <FontAwesome
-            name={'user-circle'}
-            size={70}
-            color='white'
-          />
+        <SolicitationCard
+          onPress={() => openModal(index, false)}
+          disabled={solicitation.status !== 'pending'}
+        >
+          <FontAwesome name={'user-circle'} size={70} color="white" />
           <ContentSolicitation>
             <TitleSolicitation>
               {solicitation.governmentEmployeeSender.user.name}
             </TitleSolicitation>
             <TextSolicitation>
-              De: {`${solicitation.governmentEmployeeSender.institutionAddress.city} - ${solicitation.governmentEmployeeSender.institutionAddress.state}`}
+              De:{' '}
+              {`${solicitation.governmentEmployeeSender.institutionAddress.city} - ${solicitation.governmentEmployeeSender.institutionAddress.state}`}
             </TextSolicitation>
           </ContentSolicitation>
           <View style={{ height: '100%', justifyContent: 'space-between' }}>
-            {
-              solicitation.status === 'pending' && 
+            {solicitation.status === 'pending' && (
               <Feather
                 name="arrow-right"
                 size={28}
                 color="#12B500"
                 style={{ alignSelf: 'flex-end' }}
               />
-            }
+            )}
             <TextSolicitation style={{ fontSize: 12 }}>
               {parseSolicitationStatus(solicitation.status)}
             </TextSolicitation>
@@ -246,7 +243,7 @@ const InterestList = () => {
         </SolicitationCard>
       );
     }
-  }
+  };
 
   const toggleModal = () => {
     setOpenSolicitationModal(!openSolicitationModal);
@@ -262,22 +259,30 @@ const InterestList = () => {
     }
     setIndexSolicitationSelected(index);
     toggleModal();
-  };
+  }
 
   const confirmSolicitation = async () => {
     try {
-      if (indexSolicitationSelected < 0 || indexSolicitationSelected >= candidates.length) return;
+      if (
+        indexSolicitationSelected < 0 ||
+        indexSolicitationSelected >= candidates.length
+      )
+        return;
 
       setOpenSolicitationModal(false);
       setLoading(true);
       const { id } = candidates[indexSolicitationSelected];
       const token = await AsyncStorage.getItem('@Permutas:token');
 
-      const response = await api.put(`/solicitations/${id}/accept`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const response = await api.put(
+        `/solicitations/${id}/accept`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
       setLoading(false);
 
       Alert.alert(
@@ -286,10 +291,12 @@ const InterestList = () => {
         [
           {
             text: 'OK',
-            onPress: () => { navigate('ChatDetails', {chat_id: response.data.id}) },
+            onPress: () => {
+              navigate('ChatDetails', { chat_id: response.data.id });
+            },
           },
         ],
-        { cancelable: false }
+        { cancelable: false },
       );
     } catch (error) {
       console.log(error.response.data);
@@ -300,28 +307,38 @@ const InterestList = () => {
         [
           {
             text: 'OK',
-            onPress: () => { return; },
+            onPress: () => {
+              return;
+            },
           },
         ],
-        { cancelable: false }
+        { cancelable: false },
       );
     }
-  }
+  };
 
   const declineSolicitation = async () => {
     try {
-      if (indexSolicitationSelected < 0 || indexSolicitationSelected >= solicitations.length) return;
+      if (
+        indexSolicitationSelected < 0 ||
+        indexSolicitationSelected >= solicitations.length
+      )
+        return;
 
       setOpenSolicitationModal(false);
       setLoading(true);
       const { id } = solicitations[indexSolicitationSelected];
       const token = await AsyncStorage.getItem('@Permutas:token');
 
-      const response = await api.put(`/solicitations/${id}/decline`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const response = await api.put(
+        `/solicitations/${id}/decline`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
       setLoading(false);
 
       Alert.alert(
@@ -330,10 +347,12 @@ const InterestList = () => {
         [
           {
             text: 'OK',
-            onPress: () => { return; },
+            onPress: () => {
+              return;
+            },
           },
         ],
-        { cancelable: false }
+        { cancelable: false },
       );
     } catch (error) {
       console.log(error.response.data);
@@ -344,56 +363,58 @@ const InterestList = () => {
         [
           {
             text: 'OK',
-            onPress: () => { return; },
+            onPress: () => {
+              return;
+            },
           },
         ],
-        { cancelable: false }
+        { cancelable: false },
       );
     }
-  }
+  };
 
-  function renderPageContent(){
-    if(value === 'interests'){
-      if(data.length > 0){
-        return(
-            <InterestsList
-              data={data}
-              keyExtractor={item => item.id}
-              renderItem={(item) => renderItem(item.item)}
-              onRefresh={onRefresh}
-              refreshing={refreshing}
-            />
-        )        
-      }else{
-        return(
+  function renderPageContent() {
+    if (value === 'interests') {
+      if (data.length > 0) {
+        return (
+          <InterestsList
+            data={data}
+            keyExtractor={(item) => item.id}
+            renderItem={(item) => renderItem(item.item)}
+            onRefresh={onRefresh}
+            refreshing={refreshing}
+          />
+        );
+      } else {
+        return (
           <MessageView>
             <MessageText>Nenhum interesse encontrado!</MessageText>
             <MessageText
-                style={{
-                  fontSize: 14,
-                  textDecorationLine: 'underline',
-                  color: '#e32245',
-                }}
-                onPress={() => setRefresh(new Date())}
-              >
-                Clique aqui para recarregar
+              style={{
+                fontSize: 14,
+                textDecorationLine: 'underline',
+                color: '#e32245',
+              }}
+              onPress={() => setRefresh(new Date())}
+            >
+              Clique aqui para recarregar
             </MessageText>
           </MessageView>
-        )           
+        );
       }
-    }else if(value === 'candidates'){
-      if(candidates.length > 0){
-        return(
+    } else if (value === 'candidates') {
+      if (candidates.length > 0) {
+        return (
           <InterestsList
             data={candidates}
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id}
             renderItem={({ item, index }) => renderSolicitations(item, index)}
             onRefresh={onRefresh}
             refreshing={refreshing}
           />
-        )
-      }else{
-        return(
+        );
+      } else {
+        return (
           <MessageView>
             <MessageText>Nenhum candidato encontrado!</MessageText>
             <MessageText
@@ -407,23 +428,25 @@ const InterestList = () => {
               Clique aqui para recarregar
             </MessageText>
           </MessageView>
-        )
+        );
       }
-    }else if(value === 'solicitations'){
-      if(solicitations.length > 0){
-        return(
+    } else if (value === 'solicitations') {
+      if (solicitations.length > 0) {
+        return (
           <InterestsList
             data={solicitations}
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id}
             renderItem={({ item, index }) => renderSolicitations(item, index)}
             onRefresh={onRefresh}
             refreshing={refreshing}
           />
-        )
-      }else{
-        return(
+        );
+      } else {
+        return (
           <MessageView>
-            <MessageText>Nenhuma solicitação de permuta sua encontrada!</MessageText>
+            <MessageText>
+              Nenhuma solicitação de permuta sua encontrada!
+            </MessageText>
             <MessageText
               style={{
                 fontSize: 14,
@@ -435,7 +458,7 @@ const InterestList = () => {
               Clique aqui para recarregar
             </MessageText>
           </MessageView>
-        )
+        );
       }
     }
   }
@@ -449,9 +472,7 @@ const InterestList = () => {
         confirmSolicitation={confirmSolicitation}
         declineSolicitation={declineSolicitation}
       />
-      <Title>
-        Interesses
-      </Title>
+      <Title>Seus interesses</Title>
       <LineHeader />
       <HeaderButtons>
         <Button
@@ -485,15 +506,12 @@ const InterestList = () => {
           Solicitações
         </Button>
       </HeaderButtons>
-      <ListContainer>
-        { renderPageContent() }
-      </ListContainer>
-      {
-        value === 'interests' &&
+      <ListContainer>{renderPageContent()}</ListContainer>
+      {value === 'interests' && (
         <Button onPress={handleRegister} style={{ width: '100%' }}>
           Novo Interesse
         </Button>
-      }
+      )}
     </Container>
   );
 };

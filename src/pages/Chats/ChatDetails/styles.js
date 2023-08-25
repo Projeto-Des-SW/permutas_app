@@ -69,7 +69,7 @@ export const DateText= styled.Text`
 `
 
 export const MessageText = styled.Text`
-  font-size: 18px;
+  font-size: 15px;
   color: #C4BFF2;
 `
 
@@ -116,4 +116,24 @@ export const AvatarImg = styled.Image`
   border-radius: 100px;
 `
 
+export const BackToChat = styled.TouchableOpacity`
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #1c1d29;
+  border-top-width: 1px;
+  border-color: #000;
+  padding: 16px 0;
+
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+`;
+
+export const BackToChatText = styled.Text`
+  color: #ffffff;
+  font-size: 18px;
+  margin-left: 16px;
+`;
 

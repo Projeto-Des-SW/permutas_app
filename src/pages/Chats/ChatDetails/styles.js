@@ -5,7 +5,7 @@ export const Container = styled.View`
   flex: 1;
   align-items: center;
   padding: 0 20px;
-  background-color: #1c1d29;
+  background-color: #25242e;
 `;
 
 export const Text = styled.Text`
@@ -31,11 +31,11 @@ export const ChatContainer = styled.View`
   height: 83%;
   border-radius: 10px;
   padding: 10px;
-  background-color: #2D2D39;
+  background-color: #31303d;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-`
+`;
 export const MessageList = styled(FlatList)`
   width: 100%;
 `;
@@ -43,40 +43,40 @@ export const MessageList = styled(FlatList)`
 export const MessageContainer = styled.View`
   width: 100%;
   display: flex;
-  flex-direction: ${({ sender }) => (sender ? 'row-reverse' : 'row')};;
+  flex-direction: ${({ sender }) => (sender ? 'row-reverse' : 'row')};
   column-gap: 10px;
   align-items: flex-start;
-`
+`;
 export const MessageTextContainer = styled.View`
   width: 80%;
   border-radius: 10px;
-  background-color: #63617A;
+  background-color: #63617a;
   padding: 10px;
   margin-bottom: 20px;
   border-radius: ${({ sender }) =>
-			sender ? '10px 0 10px 10px' : '0px 10px 10px 10px'};
-`
+    sender ? '10px 0 10px 10px' : '0px 10px 10px 10px'};
+`;
 
 export const MessageDate = styled.View`
   width: 100%;
   display: flex;
   align-items: flex-end;
-`
+`;
 
-export const DateText= styled.Text`
+export const DateText = styled.Text`
   font-size: 12px;
-  color: #C4BFF2;
-`
+  color: #c4bff2;
+`;
 
 export const MessageText = styled.Text`
   font-size: 18px;
-  color: #C4BFF2;
-`
+  color: #fff;
+`;
 
 export const InputContainer = styled.View`
   width: 80%;
   margin-bottom: -8px;
-`
+`;
 
 export const InputBtnContainer = styled.View`
   width: 100%;
@@ -85,20 +85,20 @@ export const InputBtnContainer = styled.View`
   align-items: center;
   justify-content: space-around;
   padding-top: 10px;
-`
+`;
 
 export const SendBtn = styled.TouchableOpacity`
-  background-color: #63617A;
+  background-color: #63617a;
   border-radius: 50px;
   padding: 10px;
   margin-left: 10px;
   align-items: center;
-`
+`;
 
 export const EmptyContentView = styled.View`
   height: 100px;
   width: 100%;
-  background-color: #2D2D39;
+  background-color: #2d2d39;
   border-radius: 8px;
   padding: 20px;
   justify-content: center;
@@ -114,6 +114,4 @@ export const AvatarImg = styled.Image`
   width: 35px;
   height: 36px;
   border-radius: 100px;
-`
-
-
+`;

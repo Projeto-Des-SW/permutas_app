@@ -7,7 +7,7 @@ import {
   Platform,
   TextInput,
   Alert,
-  Text
+  Text,
 } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
@@ -23,10 +23,10 @@ import getValidationErrors from '../../utils/getValidationErros';
 import Input from '../../components/input';
 import Button from '../../components/button';
 import Keyboard from '../../components/keyboard';
-import Loading from '../../components/loading'
-import InfoButton from '../../components/infoButton'
+import Loading from '../../components/loading';
+import InfoButton from '../../components/infoButton';
 
-import logo from '../../../assets/logo.png'
+import logo from '../../../assets/logo.png';
 
 import {
   Container,
@@ -35,9 +35,8 @@ import {
   ForgotPasswordText,
   CreateAccountView,
   CreateAccountButton,
-  CreateAccountButtonText
+  CreateAccountButtonText,
 } from './styles';
-
 
 const SignIn = () => {
   const formRef = useRef(null);
@@ -51,7 +50,7 @@ const SignIn = () => {
   const handleSignIn = useCallback(
     async (data) => {
       try {
-        setLoading(true)
+        setLoading(true);
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
@@ -69,10 +68,10 @@ const SignIn = () => {
           email: data.email,
           password: data.password,
         });
-        setLoading(false)
+        setLoading(false);
         // navigation.navigate('Dashboard');
       } catch (err) {
-        setLoading(false)
+        setLoading(false);
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
@@ -95,13 +94,16 @@ const SignIn = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         enabled
       >
-        <Loading isVisible={loading}/>
+        <Loading isVisible={loading} />
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           keyboardShouldPersistTaps="handled"
         >
           <Container>
-            <Image source={logo} style={{width: 190, height: 150, borderRadius: 0 }} />
+            <Image
+              source={logo}
+              style={{ width: 190, height: 150, borderRadius: 0 }}
+            />
             <Form ref={formRef} onSubmit={handleSignIn}>
               <Input
                 autoCorrect={false}
@@ -127,7 +129,8 @@ const SignIn = () => {
                 }}
               />
 
-              <Button style={{ borderRadius: 20 }}
+              <Button
+                style={{ borderRadius: 20, backgroundColor: '#484287' }}
                 onPress={() => {
                   formRef.current?.submitForm();
                 }}
@@ -150,12 +153,9 @@ const SignIn = () => {
             </Keyboard>
           </Container>
         </ScrollView>
-
       </KeyboardAvoidingView>
-
     </>
   );
 };
 
 export default SignIn;
-

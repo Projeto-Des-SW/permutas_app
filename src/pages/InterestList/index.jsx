@@ -480,7 +480,7 @@ const InterestList = () => {
           style={{
             height: 42,
             width: '30%',
-            backgroundColor: value === 'interests' ? '#464A81' : '#2D2D39',
+            backgroundColor: value === 'interests' ? '#262347' : '#25242e',
           }}
         >
           Interesses
@@ -490,7 +490,7 @@ const InterestList = () => {
           style={{
             height: 42,
             width: '30%',
-            backgroundColor: value === 'candidates' ? '#464A81' : '#2D2D39',
+            backgroundColor: value === 'candidates' ? '#262347' : '#25242e',
           }}
         >
           Candidatos
@@ -500,7 +500,7 @@ const InterestList = () => {
           style={{
             height: 42,
             width: '30%',
-            backgroundColor: value === 'solicitations' ? '#464A81' : '#2D2D39',
+            backgroundColor: value === 'solicitations' ? '#262347' : '#25242e',
           }}
         >
           Solicitações

@@ -6,6 +6,7 @@ export const Container = styled.View`
   align-items: center;
   justify-content: center;
   padding: 0 30px;
+  background-color: #31303d;
 `;
 
 export const Title = styled.Text`
@@ -24,5 +25,3 @@ export const ForgotPasswordText = styled.Text`
   font-size: 16px;
   /* font-family: 'RobotoSlab-Regular'; */
 `;
-
-

@@ -16,6 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 
 export function ChatDetails({ route }) {
   const { chat_id } = route.params;
+
   const { user } = useAuth();
   const { sender_name } = route.params;
   const [chat, setChat] = useState();

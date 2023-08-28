@@ -24,13 +24,13 @@ import Input from '../../components/input';
 import Button from '../../components/button';
 import Keyboard from '../../components/keyboard';
 import Loading from '../../components/loading';
-import InfoButton from '../../components/infoButton'
+import InfoButton from '../../components/infoButton';
 
 import logo from '../../../assets/logo.png';
 
 import { Container, Title } from './styles';
 
-import * as S from './styles'
+import * as S from './styles';
 import ChangeAvatarModal from '../../components/changeAvatarModal';
 
 const SignUp = () => {
@@ -47,79 +47,79 @@ const SignUp = () => {
 
   const [avatarFile, setAvatarFile] = useState(null);
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSignUp = async (data) => {
-      setLoading(true)
-      try {
-        formRef.current?.setErrors({});
+    setLoading(true);
+    try {
+      formRef.current?.setErrors({});
 
-        const schema = Yup.object().shape({
-          email: Yup.string()
-            .email('Digite um e-mail válido')
-            .required('E-mail obrigatório'),
-          password: Yup.string()
-            .required('Senha obrigatória')
-            .min(6, 'Digite pelo menos 6 caracteres'),
-          confirmPassword: Yup.string().oneOf([Yup.ref('password')])
-            .required('Confirmação de senha obrigatoria')
-            .min(6, 'Digite pelo menos 6 caracteres'),
+      const schema = Yup.object().shape({
+        email: Yup.string()
+          .email('Digite um e-mail válido')
+          .required('E-mail obrigatório'),
+        password: Yup.string()
+          .required('Senha obrigatória')
+          .min(6, 'Digite pelo menos 6 caracteres'),
+        confirmPassword: Yup.string()
+          .oneOf([Yup.ref('password')])
+          .required('Confirmação de senha obrigatoria')
+          .min(6, 'Digite pelo menos 6 caracteres'),
+      });
 
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+
+      const signUpFormData = new FormData();
+
+      if (avatarFile) {
+        const fileName = avatarFile.split('/').pop();
+        const fileType = fileName.split('.').pop();
+
+        signUpFormData.append('avatar', {
+          uri: avatarFile,
+          name: fileName,
+          type: `image/${fileType}`,
         });
-
-        await schema.validate(data, {
-          abortEarly: false,
-        });
-
-        const signUpFormData = new FormData();
-
-        if(avatarFile){
-          const fileName = avatarFile.split('/').pop();
-          const fileType = fileName.split('.').pop();
-    
-          signUpFormData.append('avatar', { 
-            uri: avatarFile, 
-            name: fileName, 
-            type: `image/${fileType}`
-          });
-        }
-  
-        signUpFormData.append('email', data.email)
-        signUpFormData.append('password', data.password)
-        signUpFormData.append('confirmPassword', data.confirmPassword)
-
-        const response = await api.post('/users', signUpFormData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-
-        Alert.alert('Cadastro realizado com sucesso!');
-
-        await signUp(response.data.session);
-        setLoading(false)
-      } catch (err) {
-        setLoading(false)
-        if (err instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(err);
-          console.log(errors)
-
-          if(errors['confirmPassword']) {
-            Alert.alert(
-              'Falha ao confirmar senha.',
-              'As senhas devem ser iguais, confira se digitou corretamente.',
-            );
-          }
-
-          formRef.current?.setErrors(errors);
-          return;
-        }
-        Alert.alert(
-          'Erro no cadastro',
-          ' Ocorreu um erro ao fazer cadastro, tente novamente.',
-        );
       }
+
+      signUpFormData.append('email', data.email);
+      signUpFormData.append('password', data.password);
+      signUpFormData.append('confirmPassword', data.confirmPassword);
+
+      const response = await api.post('/users', signUpFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      Alert.alert('Cadastro realizado com sucesso!');
+
+      await signUp(response.data.session);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
+        console.log(errors);
+
+        if (errors['confirmPassword']) {
+          Alert.alert(
+            'Falha ao confirmar senha.',
+            'As senhas devem ser iguais, confira se digitou corretamente.',
+          );
+        }
+
+        formRef.current?.setErrors(errors);
+        return;
+      }
+      Alert.alert(
+        'Erro no cadastro',
+        ' Ocorreu um erro ao fazer cadastro, tente novamente.',
+      );
     }
+  };
 
   return (
     <>
@@ -128,61 +128,55 @@ const SignUp = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         enabled
       >
-        <ChangeAvatarModal 
+        <ChangeAvatarModal
           setAvatarFile={setAvatarFile}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
         />
-        <Loading isVisible={loading}/>
+        <Loading isVisible={loading} />
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           keyboardShouldPersistTaps="handled"
         >
           <Container>
-            <Image source={logo} style={{width: 190, height:150}} />
+            <Image source={logo} style={{ width: 190, height: 150 }} />
             <View>
-              <Title>Cadastre-se para localizar uma pessoa interessada na permuta.</Title>
+              <Title>
+                Cadastre-se para localizar uma pessoa interessada na permuta.
+              </Title>
             </View>
             <Form ref={formRef} onSubmit={handleSignUp}>
-            <S.HeaderContainer>
-              {avatarFile ? 
-                (
+              <S.HeaderContainer>
+                {avatarFile ? (
                   <S.AvatarContainer>
-                    <S.AvatarImg source={{
-                      uri: `${avatarFile}`,
-                    }}/>
+                    <S.AvatarImg
+                      source={{
+                        uri: `${avatarFile}`,
+                      }}
+                    />
                     <S.OpenCameraButton
-                        underlayColor="#283040"
-                        onPress={() => setIsOpen(true)}>
-                        <FontAwesome
-                          name={'camera'}
-                          size={30}
-                          color='white'
-                        />
+                      underlayColor="#283040"
+                      onPress={() => setIsOpen(true)}
+                    >
+                      <FontAwesome name={'camera'} size={30} color="white" />
                     </S.OpenCameraButton>
                   </S.AvatarContainer>
-                ) 
-              :
-                (
+                ) : (
                   <S.AvatarContainer>
-                      <FontAwesome
-                        name={'user-circle'}
-                        size={100}
-                        color='white'
-                      />
-                      <S.OpenCameraButton
-                        underlayColor="#283040"
-                        onPress={() => setIsOpen(true)}>
-                        <FontAwesome
-                          name={'camera'}
-                          size={20}
-                          color='white'
-                        />
+                    <FontAwesome
+                      name={'user-circle'}
+                      size={100}
+                      color="white"
+                    />
+                    <S.OpenCameraButton
+                      underlayColor="#283040"
+                      onPress={() => setIsOpen(true)}
+                    >
+                      <FontAwesome name={'camera'} size={20} color="white" />
                     </S.OpenCameraButton>
-                </S.AvatarContainer>
-                )
-              }
-            </S.HeaderContainer>
+                  </S.AvatarContainer>
+                )}
+              </S.HeaderContainer>
 
               <Input
                 ref={emailInputRef}
@@ -220,7 +214,10 @@ const SignUp = () => {
                 onSubmitEditing={() => formRef.current?.submitForm()}
               />
 
-              <Button onPress={() => formRef.current?.submitForm()}>
+              <Button
+                style={{ borderRadius: 20, backgroundColor: '#484287' }}
+                onPress={() => formRef.current?.submitForm()}
+              >
                 Cadastrar
               </Button>
             </Form>
@@ -233,7 +230,6 @@ const SignUp = () => {
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
-
     </>
   );
 };

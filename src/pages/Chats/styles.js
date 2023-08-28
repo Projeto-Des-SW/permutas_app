@@ -5,7 +5,7 @@ export const Container = styled.View`
   flex: 1;
   align-items: center;
   padding: 0 30px;
-  background-color: #1c1d29;
+  background-color: #31303d;
 `;
 
 export const Header = styled.View`
@@ -24,7 +24,7 @@ export const Title = styled.Text`
 export const ChatCard = styled.TouchableOpacity`
   height: 90px;
   flex-direction: row;
-  background-color: #2D2D39;
+  background-color: #25242e;
   border-radius: 8px;
   padding: 10px;
   margin-bottom: 10px;
@@ -62,7 +62,7 @@ export const ChatList = styled(FlatList)`
 export const EmptyContentView = styled.View`
   height: 100px;
   width: 100%;
-  background-color: #2D2D39;
+  background-color: #2d2d39;
   border-radius: 8px;
   padding: 20px;
   justify-content: center;

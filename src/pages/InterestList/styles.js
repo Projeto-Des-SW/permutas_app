@@ -5,13 +5,13 @@ export const Container = styled.View`
   flex: 1;
   align-items: center;
   padding: 0 30px ${Platform.OS === 'android' ? 60 : 40}px;
-  background-color: #1c1d29;
+  background-color: #31303d;
 `;
 
 export const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
-  color: #efefef;
+  color: #fff;
   margin: 30px 8px 15px;
   align-self: flex-start;
 `;
@@ -40,7 +40,7 @@ export const InterestsList = styled(FlatList)`
 export const InterestCard = styled.View`
   height: 90px;
   flex-direction: row;
-  background-color: #2D2D39;
+  background-color: #25242e;
   border-radius: 8px;
   padding: 10px;
   margin-bottom: 10px;
@@ -73,14 +73,14 @@ export const DateInterest = styled.Text`
 export const MessageView = styled.View`
   height: 100px;
   width: 100%;
-  background-color: #2D2D39;
+  background-color: #25242e;
   border-radius: 8px;
   padding: 20px;
   justify-content: center;
 `;
 
 export const MessageText = styled.Text`
-  color: #efefef;
+  color: #fff;
   font-size: 18px;
   text-align: center;
 `;
@@ -90,19 +90,19 @@ export const ListContainer = styled.View`
   width: 100%;
   align-items: center;
   justify-content: center;
-`
+`;
 
 export const HeaderButtons = styled.View`
   width: 100%;
   margin-top: 8px;
   flex-direction: row;
   justify-content: space-around;
-`
+`;
 
 export const SolicitationCard = styled.TouchableOpacity`
   height: 120px;
   flex-direction: row;
-  background-color: #2D2D39;
+  background-color: #25242e;
   border-radius: 15px;
   padding: 12px;
   margin-bottom: 10px;

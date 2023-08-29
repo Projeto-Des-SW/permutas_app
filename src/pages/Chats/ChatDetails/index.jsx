@@ -8,16 +8,17 @@ import { FontAwesome, Feather } from '@expo/vector-icons';
 import Input from '../../../components/input';
 import { Form } from '@unform/mobile';
 
-import { Alert } from 'react-native';
+import { Alert, Keyboard } from 'react-native';
 import { useAuth } from '../../../hooks/auth';
 
 import { REACT_APP_API_URL, REACT_APP_AVATAR_URL } from '@env';
+import { useNavigation } from '@react-navigation/native';
 
 export function ChatDetails({ route }) {
   const { chat_id } = route.params;
 
   const { user } = useAuth();
-
+  const { sender_name } = route.params;
   const [chat, setChat] = useState();
   const [messages, setMessages] = useState();
 
@@ -30,6 +31,7 @@ export function ChatDetails({ route }) {
   const flatListRef = useRef(null);
 
   const socket = io(REACT_APP_API_URL);
+  const navigation = useNavigation();
 
   function onRefresh() {
     setRefreshing(true);
@@ -134,7 +136,7 @@ export function ChatDetails({ route }) {
     <S.Container>
       <Loading isVisible={loading} />
       <S.Header>
-        <S.Title>{user.name}</S.Title>
+        <S.Title>{`Chat com ${sender_name}`}</S.Title>
       </S.Header>
       <S.ChatContainer>
         {messages?.length > 0 ? (
@@ -184,6 +186,10 @@ export function ChatDetails({ route }) {
           </S.SendBtn>
         </S.InputBtnContainer>
       </S.ChatContainer>
+      <S.BackToChat onPress={() => navigation.goBack()}>
+        <Feather name="arrow-left" size={20} color="#ffffff" />
+        <S.BackToChatText> Voltar para todas as conversas </S.BackToChatText>
+      </S.BackToChat>
     </S.Container>
   );
 }

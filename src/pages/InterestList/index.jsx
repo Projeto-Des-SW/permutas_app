@@ -472,7 +472,7 @@ const InterestList = () => {
         confirmSolicitation={confirmSolicitation}
         declineSolicitation={declineSolicitation}
       />
-      <Title>Interesses</Title>
+      <Title>Seus interesses</Title>
       <LineHeader />
       <HeaderButtons>
         <Button

@@ -15,7 +15,7 @@ import {
   MessageView,
   MessageText,
   ListContainer,
-  Header
+  Header,
 } from './styles.js';
 
 import { useAuth } from '../../hooks/auth';
@@ -25,7 +25,7 @@ import Loading from '../../components/loading';
 import LineHeader from '../../components/lineHeader';
 import SolicitationModal from '../../components/solicitationModal';
 import FilterModal from '../../components/filterHighlights';
-import * as S from './styles'
+import * as S from './styles';
 
 import { REACT_APP_API_URL, REACT_APP_AVATAR_URL } from '@env';
 
@@ -39,74 +39,64 @@ const Dashboard = () => {
   const [itemSelected, setItemSelected] = useState({});
   const [visibleFilter, setVisibleFilter] = useState(false);
 
-
   useEffect(() => {
     loadData();
   }, [refresh]);
 
-  async function loadData(state='', city='', institution='') {
+  async function loadData(state = '', city = '', institution = '') {
     try {
-      setLoading(true)
+      setLoading(true);
       const token = await AsyncStorage.getItem('@Permutas:token');
-      const response = await api.get(`/highlights?state=${state}&city=${city}&institution=${institution}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const response = await api.get(
+        `/highlights?state=${state}&city=${city}&institution=${institution}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
       setData(response.data);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       console.log(error.response.data);
     }
   }
 
   const onRefresh = () => {
     setRefreshing(true);
-    setRefresh(new Date);
+    setRefresh(new Date());
     setRefreshing(false);
-  }
+  };
 
   const renderMatch = (item, index) => {
-    return (
-      item && item.governmentEmployee && item.institution ?
-        <MatchCard onPress={() => openModal(index, item.id)}>
-            {
-              item.governmentEmployee.user.avatar ? 
-                  <S.AvatarImg source={{
-                      uri: `${REACT_APP_API_URL}/${REACT_APP_AVATAR_URL}/${item.governmentEmployee.user.avatar}`,
-                  }}/>
-              :
-                  <FontAwesome
-                      name={'user-circle'}
-                      size={70}
-                      color='white'
-                  />
-            }
-          <ContentMatch>
-            <TitleMatch>
-              {item.governmentEmployee.user.name}
-            </TitleMatch>
-            <TextMatch>
-              {item.institution.name}
-            </TextMatch>
-            <TextMatch>
-              {
-                item.governmentEmployee.institutionAddress &&
-                item.destinationAddress &&
-                `De: ${item.governmentEmployee.institutionAddress.city}/${item.governmentEmployee.institutionAddress.state} - Para: ${item.destinationAddress.city}/${item.destinationAddress.state}`}
-            </TextMatch>
-          </ContentMatch>
-        </MatchCard>
-        :
-        null
-    );
+    return item && item.governmentEmployee && item.institution ? (
+      <MatchCard onPress={() => openModal(index, item.id)}>
+        {item.governmentEmployee.user.avatar ? (
+          <S.AvatarImg
+            source={{
+              uri: `${REACT_APP_API_URL}/${REACT_APP_AVATAR_URL}/${item.governmentEmployee.user.avatar}`,
+            }}
+          />
+        ) : (
+          <FontAwesome name={'user-circle'} size={70} color="white" />
+        )}
+        <ContentMatch>
+          <TitleMatch>{item.governmentEmployee.user.name}</TitleMatch>
+          <TextMatch>{item.institution.name}</TextMatch>
+          <TextMatch>
+            {item.governmentEmployee.institutionAddress &&
+              item.destinationAddress &&
+              `De: ${item.governmentEmployee.institutionAddress.city}/${item.governmentEmployee.institutionAddress.state}\nPara: ${item.destinationAddress.city}/${item.destinationAddress.state}`}
+          </TextMatch>
+        </ContentMatch>
+      </MatchCard>
+    ) : null;
   };
 
   const toggleFilterModal = () => {
-
     setVisibleFilter(!visibleFilter);
-  }
+  };
 
   const toggleModal = () => {
     setOpenSolicitationModal(!openSolicitationModal);
@@ -123,11 +113,15 @@ const Dashboard = () => {
       setOpenSolicitationModal(false);
       setLoading(true);
       const token = await AsyncStorage.getItem('@Permutas:token');
-      await api.post('/solicitations', { interest_id }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      await api.post(
+        '/solicitations',
+        { interest_id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
       setLoading(false);
 
       Alert.alert(
@@ -136,12 +130,13 @@ const Dashboard = () => {
         [
           {
             text: 'OK',
-            onPress: () => { return; },
+            onPress: () => {
+              return;
+            },
           },
         ],
-        { cancelable: false }
+        { cancelable: false },
       );
-
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -151,13 +146,15 @@ const Dashboard = () => {
         [
           {
             text: 'OK',
-            onPress: () => { return; },
+            onPress: () => {
+              return;
+            },
           },
         ],
-        { cancelable: false }
+        { cancelable: false },
       );
     }
-  }
+  };
 
   return (
     <Container>
@@ -169,15 +166,9 @@ const Dashboard = () => {
         createSolicitation={createSolicitation}
       />
       <Header>
-        <Title>
-          Destaques
-        </Title>
+        <Title>Destaques</Title>
         <TouchableOpacity onPress={() => toggleFilterModal()}>
-          <FontAwesome
-            name={'filter'}
-            size={20}
-            color='white'
-          />
+          <FontAwesome name={'filter'} size={20} color="white" />
         </TouchableOpacity>
       </Header>
       <FilterModal
@@ -188,15 +179,15 @@ const Dashboard = () => {
 
       <LineHeader />
       <ListContainer>
-        {data.length > 0 ?
+        {data.length > 0 ? (
           <MatchsList
             data={data}
-            keyExtractor={match => match.id}
+            keyExtractor={(match) => match.id}
             renderItem={({ item, index }) => renderMatch(item, index)}
             onRefresh={onRefresh}
             refreshing={refreshing}
           />
-          :
+        ) : (
           <MessageView>
             <MessageText>Nenhum destaque encontrado!</MessageText>
             <MessageText
@@ -208,9 +199,9 @@ const Dashboard = () => {
               onPress={() => setRefresh(new Date())}
             >
               Clique aqui para recarregar
-              </MessageText>
+            </MessageText>
           </MessageView>
-        }
+        )}
       </ListContainer>
     </Container>
   );

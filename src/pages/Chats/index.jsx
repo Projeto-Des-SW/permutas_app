@@ -49,12 +49,19 @@ export function Chats() {
     if (item) {
       return (
         <S.ChatCard
-          onPress={() => navigate('ChatDetails', { chat_id: item.id })}
+          onPress={() =>
+            navigate('ChatDetails', {
+              chat_id: item.id,
+              sender_name: item.sender_employee.user.name,
+            })
+          }
         >
           <S.ContentCard>
-            <S.TitleCard>{item.opener_employee.user.name}</S.TitleCard>
+            <S.TitleCard>{item.sender_employee.user.name}</S.TitleCard>
             <S.TextCard>
               De:{' '}
+              {`${item.sender_employee.institutionAddress.city} - ${item.sender_employee.institutionAddress.state}\n`}
+              Para:{' '}
               {`${item.opener_employee.institutionAddress.city} - ${item.opener_employee.institutionAddress.state}`}
             </S.TextCard>
           </S.ContentCard>
@@ -80,7 +87,7 @@ export function Chats() {
     <S.Container>
       <Loading isVisible={loading} />
       <S.Header>
-        <S.Title>Suas conversas</S.Title>
+        <S.Title>Todas as conversas</S.Title>
       </S.Header>
       {chats?.length > 0 ? (
         <S.ChatList

@@ -28,7 +28,7 @@ export const Title = styled.Text`
 
 export const ChatContainer = styled.View`
   width: 100%;
-  height: 83%;
+  height: 80%;
   border-radius: 10px;
   padding: 10px;
   background-color: #31303d;

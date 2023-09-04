@@ -26,12 +26,12 @@ import Keyboard from '../../components/keyboard';
 import Loading from '../../components/loading';
 import InfoButton from '../../components/infoButton';
 
-import logo from '../../../assets/logo.png';
+import logo from '../../../assets/logo-2.png';
 
 import {
   Container,
   Title,
-  ForgotPassword,
+  ForgotPassword as ForgotPasswordComponent,
   ForgotPasswordText,
   CreateAccountView,
   CreateAccountButton,
@@ -102,7 +102,13 @@ const SignIn = () => {
           <Container>
             <Image
               source={logo}
-              style={{ width: 190, height: 150, borderRadius: 0 }}
+              style={{
+                width: 400,
+                height: 400,
+                borderRadius: 0,
+                opacity: 0.5,
+                position: 'absolute',
+              }}
             />
             <Form ref={formRef} onSubmit={handleSignIn}>
               <Input
@@ -139,13 +145,21 @@ const SignIn = () => {
               </Button>
             </Form>
 
-            <ForgotPassword
+            <ForgotPasswordComponent
               onPress={() => {
-                console.log('alo');
+                navigation.navigate('ForgotPassword');
               }}
             >
               <ForgotPasswordText>Esqueceu a senha?</ForgotPasswordText>
-            </ForgotPassword>
+            </ForgotPasswordComponent>
+
+            <ForgotPasswordComponent
+              onPress={() => {
+                navigation.navigate('RedefinePassword');
+              }}
+            >
+              <ForgotPasswordText>Teste de senha</ForgotPasswordText>
+            </ForgotPasswordComponent>
             <Keyboard>
               <InfoButton onPress={() => navigation.navigate('SignUp')}>
                 Não tem uma conta? Cadastre-se

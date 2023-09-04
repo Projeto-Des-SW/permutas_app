@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Image,
 } from 'react-native';
 import * as Yup from 'yup';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -22,8 +23,9 @@ import Keyboard from '../../components/keyboard';
 import Loading from '../../components/loading';
 import { FontAwesome, Feather } from '@expo/vector-icons';
 import { Container, Title, BackToProfile, BackToProfileText } from './styles';
+import logo from '../../../assets/logo-2.png';
 
-import * as S from './styles'
+import * as S from './styles';
 import ChangeAvatarModal from '../../components/changeAvatarModal';
 
 const EditUserData = () => {
@@ -35,7 +37,7 @@ const EditUserData = () => {
   const { goBack } = useNavigation();
   const [avatarFile, setAvatarFile] = useState(null);
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     async function getUserData() {
@@ -43,24 +45,24 @@ const EditUserData = () => {
 
       const response = await api.get('/users/profile', {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
       });
 
       const { name, email, avatar } = response.data;
 
-      formRef.current.setData({name, email});
+      formRef.current.setData({ name, email });
 
-      if(!String(avatar).includes('null')){
-        setAvatarFile(avatar)
+      if (!String(avatar).includes('null')) {
+        setAvatarFile(avatar);
       }
     }
     getUserData();
-  }, [])
+  }, []);
 
-  async function handleSaveEdit(data){
+  async function handleSaveEdit(data) {
     try {
-      setLoading(true)
+      setLoading(true);
       formRef.current?.setErrors({});
       const schema = Yup.object().shape({
         name: Yup.string().required('Nome obrigatório'),
@@ -75,35 +77,34 @@ const EditUserData = () => {
 
       const editFormData = new FormData();
 
-      if(avatarFile){
+      if (avatarFile) {
         const fileName = avatarFile.split('/').pop();
         const fileType = fileName.split('.').pop();
-  
-        editFormData.append('avatar', { 
-          uri: avatarFile, 
-          name: fileName, 
-          type: `image/${fileType}`
+
+        editFormData.append('avatar', {
+          uri: avatarFile,
+          name: fileName,
+          type: `image/${fileType}`,
         });
       }
 
-      editFormData.append('name', data.name)
-      editFormData.append('email', data.email)
+      editFormData.append('name', data.name);
+      editFormData.append('email', data.email);
 
       const token = await AsyncStorage.getItem('@Permutas:token');
       await api.put('/users', editFormData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      setLoading(false)
+      setLoading(false);
 
       Alert.alert('Dados atualizados com sucesso!');
 
       goBack();
-
     } catch (err) {
-      setLoading(false)
+      setLoading(false);
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
 
@@ -117,7 +118,7 @@ const EditUserData = () => {
       );
     }
   }
-    
+
   return (
     <>
       <KeyboardAvoidingView
@@ -126,7 +127,7 @@ const EditUserData = () => {
         enabled
       >
         <Loading isVisible={loading} />
-        <ChangeAvatarModal 
+        <ChangeAvatarModal
           setAvatarFile={setAvatarFile}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
@@ -137,44 +138,43 @@ const EditUserData = () => {
         >
           <Container>
             <S.HeaderContainer>
+              <Image
+                source={logo}
+                style={{
+                  width: 400,
+                  height: 400,
+                  borderRadius: 0,
+                  opacity: 0.5,
+                  position: 'absolute',
+                  marginTop: 100,
+                }}
+              />
               <Title>Alterar Dados</Title>
-              {avatarFile ? 
-                (
-                  <S.AvatarContainer>
-                    <S.AvatarImg source={{
+              {avatarFile ? (
+                <S.AvatarContainer>
+                  <S.AvatarImg
+                    source={{
                       uri: `${avatarFile}`,
-                    }}/>
-                    <S.OpenCameraButton
-                        underlayColor="#283040"
-                        onPress={() => setIsOpen(true)}>
-                        <FontAwesome
-                          name={'camera'}
-                          size={30}
-                          color='white'
-                        />
-                    </S.OpenCameraButton>
-                  </S.AvatarContainer>
-                ) 
-              :
-                (
-                  <S.AvatarContainer>
-                      <FontAwesome
-                        name={'user-circle'}
-                        size={200}
-                        color='white'
-                      />
-                      <S.OpenCameraButton
-                          underlayColor="#283040"
-                          onPress={() => setIsOpen(true)}>
-                          <FontAwesome
-                            name={'camera'}
-                            size={30}
-                            color='white'
-                          />
-                      </S.OpenCameraButton>
+                    }}
+                  />
+                  <S.OpenCameraButton
+                    underlayColor="#283040"
+                    onPress={() => setIsOpen(true)}
+                  >
+                    <FontAwesome name={'camera'} size={30} color="white" />
+                  </S.OpenCameraButton>
                 </S.AvatarContainer>
-                )
-              }
+              ) : (
+                <S.AvatarContainer>
+                  <FontAwesome name={'user-circle'} size={200} color="white" />
+                  <S.OpenCameraButton
+                    underlayColor="#283040"
+                    onPress={() => setIsOpen(true)}
+                  >
+                    <FontAwesome name={'camera'} size={30} color="white" />
+                  </S.OpenCameraButton>
+                </S.AvatarContainer>
+              )}
             </S.HeaderContainer>
             <Form ref={formRef} onSubmit={handleSaveEdit}>
               <Input

@@ -28,6 +28,7 @@ export function Chats() {
       try {
         setLoading(true);
         const token = await AsyncStorage.getItem('@Permutas:token');
+        console.log(token);
 
         const response = await api.get(`/chats`, {
           headers: {

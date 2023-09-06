@@ -28,6 +28,7 @@ import getValidationErrors from '../../utils/getValidationErros';
 import apiIbge from '../../services/apiIBGE';
 import AsyncStorage from '@react-native-community/async-storage';
 import api from '../../services/api';
+import logo from '../../../assets/logo-2.png';
 
 const EditAddress = () => {
   const navigation = useNavigation();
@@ -158,6 +159,17 @@ const EditAddress = () => {
           keyboardShouldPersistTaps="handled"
         >
           <Container>
+            <Image
+              source={logo}
+              style={{
+                width: 400,
+                height: 400,
+                borderRadius: 0,
+                opacity: 0.5,
+                position: 'absolute',
+                marginTop: 100,
+              }}
+            />
             <View>
               <Title>Alterar Endereço da Instuição</Title>
             </View>

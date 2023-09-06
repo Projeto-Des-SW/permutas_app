@@ -26,7 +26,7 @@ import Keyboard from '../../components/keyboard';
 import Loading from '../../components/loading';
 import InfoButton from '../../components/infoButton';
 
-import logo from '../../../assets/logo.png';
+import logo from '../../../assets/logo-2.png';
 
 import { Container, Title } from './styles';
 
@@ -139,12 +139,21 @@ const SignUp = () => {
           keyboardShouldPersistTaps="handled"
         >
           <Container>
-            <Image source={logo} style={{ width: 190, height: 150 }} />
-            <View>
+            <Image
+              source={logo}
+              style={{
+                width: 400,
+                height: 400,
+                borderRadius: 0,
+                opacity: 0.5,
+                position: 'absolute',
+              }}
+            />
+            {/* <View>
               <Title>
                 Cadastre-se para localizar uma pessoa interessada na permuta.
               </Title>
-            </View>
+            </View> */}
             <Form ref={formRef} onSubmit={handleSignUp}>
               <S.HeaderContainer>
                 {avatarFile ? (
@@ -221,7 +230,6 @@ const SignUp = () => {
                 Cadastrar
               </Button>
             </Form>
-
             <Keyboard>
               <InfoButton onPress={() => navigate('SignIn')}>
                 Tem uma conta? Conecte-se

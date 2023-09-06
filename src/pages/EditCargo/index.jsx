@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Image,
 } from 'react-native';
 import * as Yup from 'yup';
 
@@ -21,15 +22,15 @@ import Keyboard from '../../components/keyboard';
 
 import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErros';
+import logo from '../../../assets/logo-2.png';
 
 import { Container, Title, BackToProfile, BackToProfileText } from './styles';
-
 
 const CargoRegister = () => {
   const navigation = useNavigation();
   const [positions, setPositions] = useState([]);
   const [openNameDialog, setOpenNameDialog] = useState(false);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const formRef = useRef(null);
   const [name, setName] = useState('');
 
@@ -43,75 +44,72 @@ const CargoRegister = () => {
 
       const response = await api.get('/government-employee/employee', {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       setPositions(response.data.position);
       setName(response.data.position.name);
     }
 
-    getPositions()
-  }, [navigation])
+    getPositions();
+  }, [navigation]);
 
   const handleSaveEdit = async () => {
-      try {
-        setLoading(true);
-        const data = {
-          name: name,
-          id_position: positions.id,
-        };
+    try {
+      setLoading(true);
+      const data = {
+        name: name,
+        id_position: positions.id,
+      };
 
-        if(!data.name || !data.id_position) {
-          Alert.alert('Erro!', 'Preencha todos os campos.');
-          setLoading(false);
-          return;
-        }
-
-        const token = await AsyncStorage.getItem('@Permutas:token');
-
-        await api.put('/position', data, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-
+      if (!data.name || !data.id_position) {
+        Alert.alert('Erro!', 'Preencha todos os campos.');
         setLoading(false);
-        Alert.alert('Sucesso!', 'Cargo atualizado');
-        navigation.navigate('Perfil');
-
-      } catch (error) {
-        
-        setLoading(false)
-        if (error instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(error);
-
-          formRef.current?.setErrors(errors);
-          return;
-        }
-        console.log(error.response.data);
-
-        Alert.alert(
-          'Ocorreu um problema',
-          error.response.data.message,
-        );
+        return;
       }
-    };
 
+      const token = await AsyncStorage.getItem('@Permutas:token');
 
-  const getNameData = useCallback(async(page, name) => {
-    setLoading(true)
+      await api.put('/position', data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setLoading(false);
+      Alert.alert('Sucesso!', 'Cargo atualizado');
+      navigation.navigate('Perfil');
+    } catch (error) {
+      setLoading(false);
+      if (error instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(error);
+
+        formRef.current?.setErrors(errors);
+        return;
+      }
+      console.log(error.response.data);
+
+      Alert.alert('Ocorreu um problema', error.response.data.message);
+    }
+  };
+
+  const getNameData = useCallback(async (page, name) => {
+    setLoading(true);
     try {
       const token = await AsyncStorage.getItem('@Permutas:token');
-      const response = await api.get(`/position/name/?page=${page}&name=${name}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const response = await api.get(
+        `/position/name/?page=${page}&name=${name}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
       setLoading(false);
       return response.data;
-    } catch (err){
+    } catch (err) {
       setLoading(false);
-      throw new Error(err)
+      throw new Error(err);
     }
   }, []);
 
@@ -122,7 +120,7 @@ const CargoRegister = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         enabled
       >
-        <Loading isVisible={loading}/>
+        <Loading isVisible={loading} />
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           keyboardShouldPersistTaps="handled"
@@ -141,18 +139,29 @@ const CargoRegister = () => {
               loading={loading}
               setLoading={setLoading}
             />
+            <Image
+              source={logo}
+              style={{
+                width: 400,
+                height: 400,
+                borderRadius: 0,
+                opacity: 0.5,
+                position: 'absolute',
+                marginTop: 100,
+              }}
+            />
             <View>
               <Title>Alterar Cargo</Title>
             </View>
             <DialogButton
-                icon="clipboard"
-                value={name}
-                placeholder="Nome"
-                onPress={toggleNameModal}
-              />
-              <Button style={{width: '100%'}} onPress={() => handleSaveEdit()}>
-                Salvar
-              </Button>
+              icon="clipboard"
+              value={name}
+              placeholder="Nome"
+              onPress={toggleNameModal}
+            />
+            <Button style={{ width: '100%' }} onPress={() => handleSaveEdit()}>
+              Salvar
+            </Button>
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>

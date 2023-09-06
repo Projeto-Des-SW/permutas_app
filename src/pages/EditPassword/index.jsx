@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Image,
 } from 'react-native';
 import * as Yup from 'yup';
 
@@ -20,9 +21,9 @@ import Input from '../../components/input';
 import Button from '../../components/button';
 import Keyboard from '../../components/keyboard';
 import Loading from '../../components/loading';
+import logo from '../../../assets/logo-2.png';
 
 import { Container, Title, BackToProfile, BackToProfileText } from './styles';
-
 
 const EditPassword = () => {
   const formRef = useRef(null);
@@ -35,7 +36,7 @@ const EditPassword = () => {
   const handleSaveEdit = useCallback(
     async (data) => {
       try {
-        setLoading(true)
+        setLoading(true);
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
           oldPassword: Yup.string()
@@ -53,17 +54,16 @@ const EditPassword = () => {
         const token = await AsyncStorage.getItem('@Permutas:token');
         await api.put('/users/password', data, {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         setLoading(false);
 
         Alert.alert('Dados atualizados com sucesso!');
 
         goBack();
-
       } catch (err) {
-        setLoading(false)
+        setLoading(false);
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
@@ -80,7 +80,6 @@ const EditPassword = () => {
     [navigate],
   );
 
-
   return (
     <>
       <KeyboardAvoidingView
@@ -94,6 +93,17 @@ const EditPassword = () => {
           keyboardShouldPersistTaps="handled"
         >
           <Container>
+            <Image
+              source={logo}
+              style={{
+                width: 400,
+                height: 400,
+                borderRadius: 0,
+                opacity: 0.5,
+                position: 'absolute',
+                marginTop: 100,
+              }}
+            />
             <View>
               <Title>Alterar senha</Title>
             </View>

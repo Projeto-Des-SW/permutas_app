@@ -26,11 +26,14 @@ import LineHeader from '../../components/lineHeader';
 import SolicitationModal from '../../components/solicitationModal';
 import FilterModal from '../../components/filterHighlights';
 import * as S from './styles';
+import { useNavigation } from '@react-navigation/native';
 
 import { REACT_APP_API_URL, REACT_APP_AVATAR_URL } from '@env';
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const navigation = useNavigation();
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -42,6 +45,13 @@ const Dashboard = () => {
   useEffect(() => {
     loadData();
   }, [refresh]);
+
+  console.log('pokemon');
+  console.log(user);
+
+  if (user.password_flag == true) {
+    navigation.navigate('EditPassword');
+  }
 
   async function loadData(state = '', city = '', institution = '') {
     try {

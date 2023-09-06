@@ -158,7 +158,7 @@ const SignIn = () => {
                 navigation.navigate('RedefinePassword');
               }}
             >
-              <ForgotPasswordText>Teste de senha</ForgotPasswordText>
+              {/* <ForgotPasswordText>Teste de senha</ForgotPasswordText> */}
             </ForgotPasswordComponent>
             <Keyboard>
               <InfoButton onPress={() => navigation.navigate('SignUp')}>

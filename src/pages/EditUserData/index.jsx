@@ -54,7 +54,7 @@ const EditUserData = () => {
       formRef.current.setData({ name, email });
 
       if (!String(avatar).includes('null')) {
-        setAvatarFile(avatar);
+        setAvatarFile(avatar.replaceAll("'", ''));
       }
     }
     getUserData();

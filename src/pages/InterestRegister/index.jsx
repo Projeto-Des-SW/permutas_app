@@ -122,7 +122,7 @@ const InterestRegister = () => {
         }
       })
       Alert.alert('Sucesso!', 'O interesse foi cadastrado!');
-      navigate('Interesses');
+      navigate('INTERESSES');
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);

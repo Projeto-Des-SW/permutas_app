@@ -25,6 +25,8 @@ import {
   TextSolicitation,
 } from './styles.js';
 
+import * as S from './styles';
+
 import Button from '../../components/button';
 import Loading from '../../components/loading';
 import LineHeader from '../../components/lineHeader';
@@ -33,6 +35,7 @@ import CandidateModal from '../../components/candidateModal';
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api.js';
 import { parseSolicitationStatus } from '../../utils/parseSolicitationsStatus.js';
+import { REACT_APP_API_URL, REACT_APP_AVATAR_URL } from '@env';
 
 const InterestList = () => {
   const { signOut, user } = useAuth();
@@ -194,7 +197,15 @@ const InterestList = () => {
           onPress={() => openModal(index, true)}
           disabled={true}
         >
-          <FontAwesome name={'user-circle'} size={70} color="white" />
+          {solicitation.governmentEmployeeReceiver.user.avatar ? (
+          <S.AvatarImg
+            source={{
+              uri: `${REACT_APP_API_URL}/${REACT_APP_AVATAR_URL}/${solicitation.governmentEmployeeReceiver.user.avatar}`,
+            }}
+          />
+          ) : (
+            <FontAwesome name={'user-circle'} size={70} color="white" />
+          )}
           <ContentSolicitation>
             <TitleSolicitation>
               {solicitation.governmentEmployeeReceiver.user.name}
@@ -217,7 +228,15 @@ const InterestList = () => {
           onPress={() => openModal(index, false)}
           disabled={solicitation.status !== 'pending'}
         >
-          <FontAwesome name={'user-circle'} size={70} color="white" />
+          {solicitation.governmentEmployeeSender.user.avatar ? (
+          <S.AvatarImg
+            source={{
+              uri: `${REACT_APP_API_URL}/${REACT_APP_AVATAR_URL}/${solicitation.governmentEmployeeSender.user.avatar}`,
+            }}
+          />
+          ) : (
+            <FontAwesome name={'user-circle'} size={70} color="white" />
+          )}
           <ContentSolicitation>
             <TitleSolicitation>
               {solicitation.governmentEmployeeSender.user.name}

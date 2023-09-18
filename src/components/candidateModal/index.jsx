@@ -14,6 +14,8 @@ import {
   ButtonText
 } from './styles';
 
+import * as S from './styles';
+import { REACT_APP_API_URL, REACT_APP_AVATAR_URL } from '@env';
 
 const modal = ({
   item,
@@ -41,11 +43,15 @@ const modal = ({
             />
           </View>
           <ModalHeader>
-            <FontAwesome
-              name={'user-circle'}
-              size={130}
-              color='white'
+            {item.user.avatar ? (
+            <S.AvatarImg
+              source={{
+                uri: `${REACT_APP_API_URL}/${REACT_APP_AVATAR_URL}/${item.governmentEmployee.user.avatar}`,
+              }}
             />
+            ) : (
+              <FontAwesome name={'user-circle'} size={130} color="white" />
+            )}
             <HeaderContent>
               <ItemTitle>{item.user.name}</ItemTitle>
               <ItemText>{item.institution.name}</ItemText>

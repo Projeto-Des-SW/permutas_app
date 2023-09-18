@@ -55,3 +55,9 @@ export const ButtonText = styled.Text`
   font-size: 18px;
   font-weight:bold;
 `;
+
+export const AvatarImg = styled.Image`
+  width: 70px;
+  height: 72px;
+  border-radius: 100px;
+`;

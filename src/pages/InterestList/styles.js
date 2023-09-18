@@ -125,3 +125,10 @@ export const TextSolicitation = styled.Text`
   font-size: 13px;
   color: #fff;
 `;
+
+export const AvatarImg = styled.Image`
+  width: 70px;
+  height: 72px;
+  border-radius: 100px;
+`;
+

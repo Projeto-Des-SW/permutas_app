@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 import { FontAwesome } from '@expo/vector-icons';
-
+import * as S from './styles';
 import {
   ModalView,
   ModalHeader,
@@ -14,6 +14,7 @@ import {
   ButtonText
 } from './styles';
 
+import { REACT_APP_API_URL, REACT_APP_AVATAR_URL } from '@env';
 
 const modal = ({
   item,
@@ -32,11 +33,15 @@ const modal = ({
       {item && item.governmentEmployee && item.institution ?
         <ModalView>
           <ModalHeader>
-            <FontAwesome
-              name={'user-circle'}
-              size={130}
-              color='white'
-            />
+          {item.governmentEmployee.user.avatar ? (
+          <S.AvatarImg
+            source={{
+              uri: `${REACT_APP_API_URL}/${REACT_APP_AVATAR_URL}/${item.governmentEmployee.user.avatar}`,
+            }}
+          />
+          ) : (
+            <FontAwesome name={'user-circle'} size={130} color="white" />
+          )}
             <HeaderContent>
               <ItemTitle>{item.governmentEmployee.user.name}</ItemTitle>
               <ItemText>{item.institution.name}</ItemText>

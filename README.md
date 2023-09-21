@@ -11,3 +11,5 @@ Permutas é um aplicativo com o objetivo de facilitar a identificação de poss�
 - [Roteiro Pitch](https://docs.google.com/document/d/1r6tw8oKUnOCV2wO2U0zmKdbzawbf_kiLj2bMF0V6WDo/edit?usp=sharing)
 - [Projeto Figma - White Mode ](https://www.figma.com/file/AcjWl608gmt31PHnEAMYbu/Permutas---White-Mode?type=design&node-id=0%3A1&mode=design&t=79rUMoebjwzzRx1F-1)
 - [Projeto Figma - Dark Mode](https://www.figma.com/file/XoQChmQG1AQJb3KnQhBw0B/Permutas---Dark-Mode?type=design&node-id=0%3A1&mode=design&t=GMdd5KAUZCnL6tfY-1)
+- [Pitch - Permutas Video](https://youtu.be/DwI90LcS96s)
+- [Aplicação - Permutas Video](https://youtu.be/vdugptzjCBQ)

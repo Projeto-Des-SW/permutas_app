@@ -109,6 +109,11 @@ const SignUp = () => {
             'Falha ao confirmar senha.',
             'As senhas devem ser iguais, confira se digitou corretamente.',
           );
+        } else if (errors['email']) {
+          Alert.alert(
+            'Falha ao confirmar email.',
+            'O email deve ser válido, confira se digitou corretamente.',
+          );
         }
 
         formRef.current?.setErrors(errors);

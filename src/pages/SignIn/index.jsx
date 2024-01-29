@@ -75,6 +75,13 @@ const SignIn = () => {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
+          if (errors['email']) {
+            Alert.alert(
+              'Email inválido',
+              'O email deve ser válido, confira se digitou corretamente.',
+            );
+          }
+
           formRef.current?.setErrors(errors);
           return;
         }

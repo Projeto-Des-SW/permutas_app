@@ -112,7 +112,11 @@ const EditAddress = () => {
         id_address: idAddress,
       };
 
-      const schema = Yup.object().shape({});
+      const schema = Yup.object().shape({
+        neighborhood: Yup.string().required('Bairro obrigatório'),
+        city: Yup.string().required('Cidade obrigatória'),
+        state: Yup.string().required('Estado obrigatório'),
+      });
 
       await schema.validate(address, {
         abortEarly: false,
@@ -128,7 +132,7 @@ const EditAddress = () => {
       setLoading(false);
 
       Alert.alert('Sucesso!', 'Endereço atualizado');
-      navigation.navigate('Perfil');
+      navigation.navigate('Profile');
     } catch (err) {
       setLoading(false);
 
@@ -136,12 +140,18 @@ const EditAddress = () => {
         const errors = getValidationErrors(err);
 
         formRef.current?.setErrors(errors);
+        if (errors.neighborhood || errors.city || errors.state) {
+          Alert.alert(
+            'Erro ao alterar endereço',
+            'Ocorreu um erro ao alterar o endereço. Verifique os campos e tente novamente.',
+          );
+        }
         return;
       }
       console.log(err.toString());
       Alert.alert(
-        'Erro no cadastro',
-        ' Ocorreu um erro ao fazer cadastro, tente novamente.',
+        'Erro ao alterar endereço',
+        'Ocorreu um erro ao alterar o endereço. Verifique os campos e tente novamente.',
       );
     }
   };
@@ -187,6 +197,7 @@ const EditAddress = () => {
                 })}
                 description="Estado"
                 iconName="city"
+                name="state"
                 valueIni={uf}
               />
               <DropDown
@@ -199,6 +210,7 @@ const EditAddress = () => {
                 })}
                 description="Cidade"
                 iconName="city-variant"
+                name="city"
                 valueIni={nomeCidade}
               />
               <Input

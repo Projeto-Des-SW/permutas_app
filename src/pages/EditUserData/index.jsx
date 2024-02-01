@@ -109,6 +109,12 @@ const EditUserData = () => {
         const errors = getValidationErrors(err);
 
         formRef.current?.setErrors(errors);
+        if (errors.name || errors.email) {
+          Alert.alert(
+            'Erro ao alterar dados',
+            'Ocorreu um erro ao alterar os dados. Verifique as informações e tente novamente.',
+          );
+        }
         return;
       }
       console.log(err.toString());

@@ -46,9 +46,6 @@ const Dashboard = () => {
     loadData();
   }, [refresh]);
 
-  console.log('pokemon');
-  console.log(user);
-
   if (user.password_flag == true) {
     navigation.navigate('EditPassword');
   }

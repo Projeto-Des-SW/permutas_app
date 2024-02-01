@@ -198,11 +198,11 @@ const InterestList = () => {
           disabled={true}
         >
           {solicitation.governmentEmployeeReceiver.user.avatar ? (
-          <S.AvatarImg
-            source={{
-              uri: `${REACT_APP_API_URL}/${REACT_APP_AVATAR_URL}/${solicitation.governmentEmployeeReceiver.user.avatar}`,
-            }}
-          />
+            <S.AvatarImg
+              source={{
+                uri: `${REACT_APP_API_URL}/${REACT_APP_AVATAR_URL}/${solicitation.governmentEmployeeReceiver.user.avatar}`,
+              }}
+            />
           ) : (
             <FontAwesome name={'user-circle'} size={70} color="white" />
           )}
@@ -229,11 +229,11 @@ const InterestList = () => {
           disabled={solicitation.status !== 'pending'}
         >
           {solicitation.governmentEmployeeSender.user.avatar ? (
-          <S.AvatarImg
-            source={{
-              uri: `${REACT_APP_API_URL}/${REACT_APP_AVATAR_URL}/${solicitation.governmentEmployeeSender.user.avatar}`,
-            }}
-          />
+            <S.AvatarImg
+              source={{
+                uri: `${REACT_APP_API_URL}/${REACT_APP_AVATAR_URL}/${solicitation.governmentEmployeeSender.user.avatar}`,
+              }}
+            />
           ) : (
             <FontAwesome name={'user-circle'} size={70} color="white" />
           )}
@@ -340,13 +340,13 @@ const InterestList = () => {
     try {
       if (
         indexSolicitationSelected < 0 ||
-        indexSolicitationSelected >= solicitations.length
+        indexSolicitationSelected >= candidates.length
       )
         return;
 
       setOpenSolicitationModal(false);
       setLoading(true);
-      const { id } = solicitations[indexSolicitationSelected];
+      const { id } = candidates[indexSolicitationSelected];
       const token = await AsyncStorage.getItem('@Permutas:token');
 
       const response = await api.put(

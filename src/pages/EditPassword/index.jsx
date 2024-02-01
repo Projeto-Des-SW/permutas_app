@@ -68,12 +68,17 @@ const EditPassword = () => {
           const errors = getValidationErrors(err);
 
           formRef.current?.setErrors(errors);
+          if (errors.password || errors.oldPassword) {
+            Alert.alert(
+              'Erro ao alterar senha',
+              'A senha deve ter pelo menos 6 caracteres.',
+            );
+          }
           return;
         }
-        console.log(err.toString());
         Alert.alert(
-          'Erro no cadastro',
-          ' Ocorreu um erro ao fazer cadastro, tente novamente.',
+          'Erro ao alterar senha',
+          'A senha antiga está incorreta. Tente novamente.',
         );
       }
     },

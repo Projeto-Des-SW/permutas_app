@@ -311,7 +311,10 @@ const InterestList = () => {
           {
             text: 'OK',
             onPress: () => {
-              navigate('ChatDetails', { chat_id: response.data.id });
+              navigate('ChatDetails', {
+                chat_id: response.data.chat_room.id,
+                sender_name: response.data.chat_sender.name,
+              });
             },
           },
         ],

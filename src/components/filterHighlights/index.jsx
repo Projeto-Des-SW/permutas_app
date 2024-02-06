@@ -177,7 +177,7 @@ const filterHighlights = ({ isVisible, toggleModal, filterFunction }) => {
               </FilterBlockHeader>
 
               <FilterBlockBody>
-                <DropDown
+                {/* <DropDown
                   onChange={(value) => setUf(value)}
                   valores={state.map((estado) => {
                     return {
@@ -200,7 +200,7 @@ const filterHighlights = ({ isVisible, toggleModal, filterFunction }) => {
                   valueIni={uf}
                   description="Região"
                   iconName="map-marker-radius-outline"
-                />
+                /> */}
                 <DropDown
                   onChange={(value) => setUf(value)}
                   valores={state.map((estado) => {

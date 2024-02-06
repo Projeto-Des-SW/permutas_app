@@ -65,7 +65,9 @@ const EditUserData = () => {
       setLoading(true);
       formRef.current?.setErrors({});
       const schema = Yup.object().shape({
-        name: Yup.string().required('Nome obrigatório'),
+        name: Yup.string()
+          .matches(/^[A-Za-zÀ-ÖØ-öø-ÿ ]*$/, 'O nome deve conter apenas letras')
+          .required('Nome obrigatório'),
         email: Yup.string()
           .email('Digite um e-mail válido')
           .required('E-mail obrigatório'),
@@ -109,7 +111,12 @@ const EditUserData = () => {
         const errors = getValidationErrors(err);
 
         formRef.current?.setErrors(errors);
-        if (errors.name || errors.email) {
+        if (errors.name) {
+          Alert.alert(
+            'Erro ao alterar nome',
+            'O campo de nome deve conter apenas letras. Verifique as informações e tente novamente.',
+          );
+        } else {
           Alert.alert(
             'Erro ao alterar dados',
             'Ocorreu um erro ao alterar os dados. Verifique as informações e tente novamente.',

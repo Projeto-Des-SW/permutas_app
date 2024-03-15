@@ -50,7 +50,7 @@ const Dashboard = () => {
     navigation.navigate('EditPassword');
   }
 
-  async function loadData(state = '', city = '', institution = '') {
+  async function loadData(state = '', city = '', institution = '', region = '') {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem('@Permutas:token');
@@ -62,7 +62,12 @@ const Dashboard = () => {
           },
         },
       );
-      setData(response.data);
+      if(region === '')
+        setData(response.data);
+      else {
+        const filteredData = response.data.filter((item) => item.destinationAddress.region === region);
+        setData(filteredData);
+      }
       setLoading(false);
     } catch (error) {
       setLoading(false);

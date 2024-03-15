@@ -101,7 +101,7 @@ const SecondStep = ({ route }) => {
           ref={formRef}
           onSubmit={handleConfirm}
           style={{ marginTop: 20 }}
-        >
+          >
           <Input
             autoCapitalize="words"
             name="name"
@@ -109,7 +109,7 @@ const SecondStep = ({ route }) => {
             placeholder="Nome"
             returnKeyType="next"
             editable={false}
-            value={name}
+            value={name.length > 29 ? `${name.slice(0, 29)}...` : name}
           />
           <Input
             name="position"
@@ -117,7 +117,7 @@ const SecondStep = ({ route }) => {
             placeholder="Cargo"
             returnKeyType="next"
             editable={false}
-            value={position}
+            value={position.length > 29 ? `${position.slice(0, 29)}...` : position}
           />
           <Input
             name="role"
@@ -125,7 +125,7 @@ const SecondStep = ({ route }) => {
             placeholder="Função"
             returnKeyType="next"
             editable={false}
-            value={role}
+            value={role.length > 29 ? `${role.slice(0, 29)}...` : role}
           />
           <Input
             name="institution"
@@ -133,7 +133,11 @@ const SecondStep = ({ route }) => {
             placeholder="Instituição"
             returnKeyType="done"
             editable={false}
-            value={institution}
+            value={
+              institution.length > 29
+                ? `${institution.slice(0, 29).toUpperCase()}...`
+                : institution.toUpperCase()
+            }
           />
           <Input
             name="allocation"
@@ -141,7 +145,11 @@ const SecondStep = ({ route }) => {
             placeholder="Alocação"
             returnKeyType="done"
             editable={false}
-            value={allocation}
+            value={
+              allocation.length > 29
+                ? `${allocation.slice(0, 29)}...`
+                : allocation
+            }
           />
           <Input
             name="state"

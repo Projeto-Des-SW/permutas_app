@@ -35,6 +35,8 @@ const filterHighlights = ({ isVisible, toggleModal, filterFunction }) => {
   const [nomeCidade, setNomeCidade] = useState('');
   const [cities, setCities] = useState([]);
   const [uf, setUf] = useState('');
+  const [region, setRegion] = useState([]);
+  const [nomeRegiao, setNomeRegiao] = useState('');
   const [loading, setLoading] = useState(false);
   const [clearLocation, setClearLocation] = useState(false);
   const [institution, setInstitution] = useState('');
@@ -48,6 +50,23 @@ const filterHighlights = ({ isVisible, toggleModal, filterFunction }) => {
         const stateResponse = response.data;
         stateResponse.sort((a, b) => a.sigla > b.sigla);
         setState(stateResponse);
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+      }
+    }
+    getState();
+  }, []);
+
+  useEffect(() => {
+    async function getState() {
+      try {
+        setLoading(true);
+        const response = await apiIbge.get('/localidades/regioes');
+        const regionResponse = response?.data;
+        regionResponse.sort((a, b) => a.sigla > b.sigla);
+        setRegion(regionResponse);
         setLoading(false);
       } catch (err) {
         setLoading(false);
@@ -99,6 +118,7 @@ const filterHighlights = ({ isVisible, toggleModal, filterFunction }) => {
     setUf(null);
     setNomeCidade(null);
     setCities([]);
+    setNomeRegiao(null);
   }
 
   function handleClearInstitution() {
@@ -107,8 +127,6 @@ const filterHighlights = ({ isVisible, toggleModal, filterFunction }) => {
 
   const getInstitutionsData = async (page, name) => {
     setLoading(true);
-    console.log('alou');
-    console.log(page, name);
     try {
       const token = await AsyncStorage.getItem('@Permutas:token');
       const response = await api.get(`/institution?page=${page}&name=${name}`, {
@@ -127,11 +145,7 @@ const filterHighlights = ({ isVisible, toggleModal, filterFunction }) => {
 
   async function handleFilter() {
     toggleModal();
-    if (uf === 'null') {
-      console.log('aqui rapaz');
-      await filterFunction('', '', institution);
-    }
-    await filterFunction(uf, nomeCidade, institution);
+    await filterFunction(uf !== null ? uf : '', nomeCidade !== null ? nomeCidade : '', institution, nomeRegiao !== null ? nomeRegiao : '');
   }
 
   return (
@@ -188,19 +202,19 @@ const filterHighlights = ({ isVisible, toggleModal, filterFunction }) => {
                   valueIni={uf}
                   description="Cargo"
                   iconName="account-cog"
-                />
+                />*/}
                 <DropDown
-                  onChange={(value) => setUf(value)}
-                  valores={state.map((estado) => {
+                  onChange={(value) => setNomeRegiao(value)}
+                  valores={region.map((reg) => {
                     return {
-                      label: estado.sigla,
-                      value: estado.sigla,
+                      label: reg.nome,
+                      value: reg.sigla,
                     };
                   })}
-                  valueIni={uf}
+                  valueIni={nomeRegiao}
                   description="Região"
                   iconName="map-marker-radius-outline"
-                /> */}
+                />
                 <DropDown
                   onChange={(value) => setUf(value)}
                   valores={state.map((estado) => {
